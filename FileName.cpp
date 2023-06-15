@@ -16,6 +16,7 @@ int keyState[256] = { 0 };
 int count = 0;
 
 int shot_img;
+int ResonanceAtTwilight_audio;
 
 //キー入力状態を更新する関数
 void KeyUpdate(void)
@@ -59,6 +60,8 @@ void Update(void) //毎フレーム処理
 	}
 	if (keyState[KEY_INPUT_X] == TRUE) //単発入力
 	{
+		StopSoundMem(ResonanceAtTwilight_audio);
+		PlaySoundMem(ResonanceAtTwilight_audio, DX_PLAYTYPE_BACK);
 		x += 30;
 	}
 	DrawCircle(x, 200, 32, GetColor(255, 255, 0));
@@ -68,6 +71,10 @@ void ImgInit(void)
 {
 	shot_img = LoadGraph("shot.png");
 }
+void AudioInit(void)
+{
+	ResonanceAtTwilight_audio = LoadSoundMem("ResonanceAtTwilight.mp3");
+}
 
 // プログラムは WinMain から始まる
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
@@ -75,10 +82,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 	ChangeWindowMode(TRUE);//非全画面にセット
 	SetGraphMode(Window_Width, Window_Height, 32);//画面サイズ指定
 	SetOutApplicationLogValidFlag(FALSE);//Log.txtを生成しないように設定
+	SetMainWindowText("鏡像の歌姫 - Reflection of Diva -");
+
 
 	if (DxLib_Init() == -1) { return -1; }		// ＤＸライブラリ初期化処理  エラーが起きたら直ちに終了
 
 	ImgInit(); //画像・音の読み込み
+	AudioInit();
 
 	while (ProcessMessage() == 0)
 	{
