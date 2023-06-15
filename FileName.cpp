@@ -6,6 +6,11 @@
 const int Window_Width = 800;
 const int Window_Height = 600;
 
+int mouseX = 0;//マウス座標
+int mouseY = 0;//マウス座標
+
+int count = 0;
+
 int shot_img;
 
 void Update(void) //毎フレーム処理
@@ -16,6 +21,10 @@ void Update(void) //毎フレーム処理
 	DrawCircle(200, 100, 30, GetColor(0, 255, 0), 1);
 	DrawBox(50, 200, 100, 300, GetColor(0, 0, 255), 1);
 	DrawLine(200, 200, 300, 330, GetColor(255, 255, 255), 1);
+	
+	count++;
+	DrawFormatString(100, 100, GetColor(255, 255, 255), "frame %d", count);
+	DrawFormatString(100, 120, GetColor(255, 255, 255), "sec %d", count / 60);
 }
 
 // プログラムは WinMain から始まります
