@@ -1,19 +1,21 @@
 #include <stdio.h>
 #include <DxLib.h>
+#define PI 3.141592654
 
 //変数宣言エリア
 const int Window_Width = 800;
 const int Window_Height = 600;
 
-int orivia_img;
+int shot_img;
 
 void Update(void) //毎フレーム処理
 {
-	DrawGraph(0, 100, orivia_img, 0);
-
-	DrawPixel(Window_Width / 2, Window_Height / 2 - 20, GetColor(255, 255, 255));	// 点を打つ
+	DrawRotaGraph(300, 100, 5.0, PI/4, shot_img, TRUE); //画像の描画
 	DrawPixel(Window_Width / 2, Window_Height / 2, GetColor(255, 255, 255));	// 点を打つ
-	DrawPixel(Window_Width / 2, Window_Height / 2 + 20, GetColor(255, 255, 255));	// 点を打つ
+	DrawCircle(100, 100, 30, GetColor(255, 0, 0), 0);
+	DrawCircle(200, 100, 30, GetColor(0, 255, 0), 1);
+	DrawBox(50, 200, 100, 300, GetColor(0, 0, 255), 1);
+	DrawLine(200, 200, 300, 330, GetColor(255, 255, 255), 1);
 }
 
 // プログラムは WinMain から始まります
@@ -21,12 +23,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 {
 	ChangeWindowMode(TRUE);//非全画面にセット
 	SetGraphMode(Window_Width, Window_Height, 32);//画面サイズ指定
-	SetOutApplicationLogValidFlag(TRUE);//Log.txtを生成しないように設定
+	SetOutApplicationLogValidFlag(FALSE);//Log.txtを生成しないように設定
 
 	if (DxLib_Init() == -1) { return -1; }		// ＤＸライブラリ初期化処理  エラーが起きたら直ちに終了
 
 	//画像・音の読み込み
-	orivia_img = LoadGraph("orivia.png");
+	shot_img = LoadGraph("shot.png");
 
 	while (ProcessMessage() == 0)
 	{
