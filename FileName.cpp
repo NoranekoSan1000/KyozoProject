@@ -6,8 +6,9 @@
 const int Window_Width = 800;
 const int Window_Height = 600;
 
-int mouseX = 0;//マウス座標
-int mouseY = 0;//マウス座標
+//マウス座標
+int mouseX = 0;
+int mouseY = 0;
 
 //キー取得用の配列
 char buf[256] = { 0 };
