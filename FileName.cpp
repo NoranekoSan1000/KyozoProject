@@ -1,11 +1,10 @@
 #include <stdio.h>
 #include <DxLib.h>
+#include <math.h>
 #include "PlayerAction.h"
 #define PI 3.141592654
-
-//変数宣言エリア
-const static int WINDOW_WIDTH = 800;
-const int WINDOW_HEIGHT = 600;
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
 
 //マウス座標
 int mouseX = 0;
@@ -15,37 +14,37 @@ int mouseY = 0;
 char buf[256] = { 0 };
 int KeyState[256] = { 0 };
 
-int FrameCount = 0;
-
-//プレイヤーの座標
-int px = 320;
-int py = 320;
-
+//画像、音楽
 int shot_img;
 int player_img;
 int status_img;
 int ResonanceAtTwilight_audio;
 
+//プレイヤーの座標
+int px = 320;
+int py = 320;
+
+//敵の座標
+int enX[3];
+int enY[3];
+int enHitBoxSize[3];
+
+int FrameCount = 0;
+
+const int Player_HitBoxSize = 4;
 
 void Update(void) //毎フレーム処理
 {
 	DrawRotaGraph(10, 10, 1.0, 0, shot_img, TRUE); //画像の描画
-	
-	DrawCircle(100, 100, 30, GetColor(255, 0, 0), 0);
-	DrawCircle(200, 100, 30, GetColor(0, 255, 0), 1);
 
 	DrawBox(0, 0, 100, WINDOW_HEIGHT, GetColor(0, 0, 0), 1);
-	DrawRotaGraph(WINDOW_WIDTH - 100, 300, 0.75, 0, status_img, TRUE); //画像の描画
+	DrawRotaGraph(700, 300, 0.8, 0, status_img, TRUE); //画像の描画
 
 	FrameCount++;
 	DrawFormatString(WINDOW_WIDTH - 100, 100, GetColor(255, 255, 255), "frame %d", FrameCount);
 	DrawFormatString(WINDOW_WIDTH - 100, 120, GetColor(255, 255, 255), "sec %d", FrameCount / 60);
-
 	GetMousePoint(&mouseX, &mouseY); //マウス座標更新
 	DrawFormatString(20, 50, GetColor(255, 255, 255), "MX:%3d MY:%3d", mouseX, mouseY); //左上に文字（マウスの座標）を描画
-
-	DrawFormatString(100, 100, GetColor(255, 255, 255), "Z KEY %d", KeyState[KEY_INPUT_Z]);
-	DrawFormatString(100, 120, GetColor(255, 255, 255), "X KEY %d", KeyState[KEY_INPUT_X]);
 
 	if (KeyState[KEY_INPUT_X] == TRUE) //単発入力
 	{
@@ -54,9 +53,20 @@ void Update(void) //毎フレーム処理
 		PlaySoundMem(ResonanceAtTwilight_audio, DX_PLAYTYPE_BACK);
 	}
 
+	enX[0] = 200;
+	enY[0] = 200;
+	enHitBoxSize[0] = 30;
+
+	DrawCircle(enX[0], enY[0], enHitBoxSize[0], GetColor(255, 0, 0), 1);
+
+	//敵との座標チェック
+	float dis = sqrt(pow((double)enX[0] -px, 2) + pow((double)enY[0] - py, 2));
+	DrawFormatString(WINDOW_WIDTH - 100, 300, GetColor(255, 255, 255), "%f" , dis);
+	if (dis <= 30 + Player_HitBoxSize) DrawFormatString(WINDOW_WIDTH - 100, 350, GetColor(255, 255, 255), "Hit");
+
 	PlayerMove(KeyState, &px, &py);//プレイヤーの移動
 	DrawRotaGraph(px, py, 1.0, 0, player_img, TRUE); //画像の描画
-	DrawCircle(px, py, 8, GetColor(100, 180, 255)); // プレイヤー
+	DrawCircle(px, py, Player_HitBoxSize, GetColor(255, 255, 80)); // プレイヤーの当たり判定
 
 }
 
