@@ -28,15 +28,17 @@ struct PlayerBullet
 	bool exist;
 	int posX;
 	int posY;
+	int HitBoxSize;
 };
 const int PLAYER_BULLET_AMOUNT = 50;
 PlayerBullet p_bullet[PLAYER_BULLET_AMOUNT];
 
-void PlayerBulletGenerate(int num ,int x, int y)
+void PlayerBulletGenerate(int num ,int x, int y,int hitboxsize)
 {
 	p_bullet[num].exist = true;
 	p_bullet[num].posX = x;
 	p_bullet[num].posY = y;
+	p_bullet[num].HitBoxSize = hitboxsize;
 }
 
 void PlayerBulletDestroy(int num)
@@ -90,7 +92,7 @@ void Update(void) //毎フレーム処理
 		{
 			if (p_bullet[i].exist == false)
 			{
-				PlayerBulletGenerate(i, px, py);
+				PlayerBulletGenerate(i, px, py, 8);
 				break;
 			}	
 		}
@@ -98,7 +100,7 @@ void Update(void) //毎フレーム処理
 
 	for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++)
 	{
-		if (p_bullet[i].exist == true) DrawCircle(p_bullet[i].posX, p_bullet[i].posY, 10, GetColor(0, 100, 100), 1);
+		if (p_bullet[i].exist == true) DrawCircle(p_bullet[i].posX, p_bullet[i].posY, p_bullet[i].HitBoxSize, GetColor(0, 100, 100), 1);
 		else continue;
 
 		p_bullet[i].posY -= 10;
@@ -115,7 +117,7 @@ void Update(void) //毎フレーム処理
 		{
 			//敵との座標チェック
 			float dis = sqrt(pow((double)enemy[j].enX - p_bullet[i].posX, 2) + pow((double)enemy[j].enY - p_bullet[i].posY, 2));
-			if (dis <= enemy[j].enHitBoxSize + 10)//被弾判定
+			if (dis <= enemy[j].enHitBoxSize + p_bullet[i].HitBoxSize)//被弾判定
 			{		
 				EnemyDestroy(j);
 				PlayerBulletDestroy(i);
@@ -178,7 +180,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 	SetGraphMode(WINDOW_WIDTH, WINDOW_HEIGHT, 32);//画面サイズ指定
 	SetOutApplicationLogValidFlag(FALSE);//Log.txtを生成しないように設定
 	SetMainWindowText("鏡像の歌姫 - Reflection of Diva -");
-	SetBackgroundColor(0, 255, 0);
+	SetBackgroundColor(0, 200, 200);
 
 	if (DxLib_Init() == -1) { return -1; }		// ＤＸライブラリ初期化処理  エラーが起きたら直ちに終了
 
