@@ -24,20 +24,14 @@ int px = InitialPosX;
 int py = InitialPosY;
 
 //敵
-class Enemy{
+struct Enemy{
 public:
+	bool exist;
 	int enX;
 	int enY;
 	int enHitBoxSize;
-	Enemy(int x, int y, int size)
-	{
-		enX = x;
-		enY = y;
-		enHitBoxSize = size;
-	};
 };
-
-Enemy enemy[3]{ {120,80,20},{220,20,20},{320,220,20} };
+Enemy enemy[20];
 
 int FrameCount = 0;
 
@@ -52,20 +46,36 @@ void Update(void) //毎フレーム処理
 
 	DrawFormatString(WINDOW_WIDTH - 100, 120, GetColor(255, 255, 255), "sec %d", FrameCount++ / 60);
 
-	if (KeyState[KEY_INPUT_X] == TRUE) //単発入力
+	if (KeyState[KEY_INPUT_A] == TRUE) //単発入力
 	{
-		PlayBGM(ResonanceAtTwilight_audio);
+		for (int i = 0; i < 20; i++) 
+		{
+			if (enemy[i].exist == false) 
+			{
+				enemy[i].exist = true;
+				enemy[i].enX = px;
+				enemy[i].enY = py - 50;
+				enemy[i].enHitBoxSize = 20;
+				DrawFormatString(WINDOW_WIDTH - 100, 90, GetColor(255, 255, 255), "%d\n", i);
+				break;
+			}
+		}
 	}
 
-	for (int i = 0; i < 3; i++) 
+	for (int i = 0; i < 20; i++) 
 	{
-		DrawCircle(enemy[i].enX, enemy[i].enY, enemy[i].enHitBoxSize, GetColor(255, 0, 0), 1);
+		if (enemy[i].exist == true) DrawCircle(enemy[i].enX, enemy[i].enY, enemy[i].enHitBoxSize, GetColor(255, 0, 0), 1);
 
 		//敵との座標チェック
 		float dis = sqrt(pow((double)enemy[i].enX - px, 2) + pow((double)enemy[i].enY - py, 2));
 		if (dis <= enemy[i].enHitBoxSize + Player_HitBoxSize)
 		{
 			//被弾判定
+			enemy[i].exist = false;
+			enemy[i].enX = NULL;
+			enemy[i].enY = NULL;
+			enemy[i].enHitBoxSize = NULL;
+
 			px = InitialPosX;
 			py = InitialPosY;
 			Life -= 1;
@@ -104,6 +114,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 
 	ImageInit(); //画像の読み込み <- Image.cpp
 	AudioInit(); //音声の読み込み <- Audio.cpp
+	PlayBGM(ResonanceAtTwilight_audio);
 
 	while (ProcessMessage() == 0)
 	{
