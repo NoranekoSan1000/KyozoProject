@@ -55,16 +55,18 @@ struct Enemy
 	int enX;
 	int enY;
 	int enHitBoxSize;
+	int moveSpeed;
 };
 const int ENEMY_AMOUNT = 20;
 Enemy enemy[ENEMY_AMOUNT];
 
-void EnemyGenerate(int num,int x, int y, int hitboxsize) 
+void EnemyGenerate(int num,int x, int y, int hitboxsize,int movespeed) 
 {
 	enemy[num].exist = true;
 	enemy[num].enX = x;
 	enemy[num].enY = y;
 	enemy[num].enHitBoxSize = hitboxsize;
+	enemy[num].moveSpeed = movespeed;
 }
 
 void EnemyDestroy(int num)
@@ -73,6 +75,7 @@ void EnemyDestroy(int num)
 	enemy[num].enX = NULL;
 	enemy[num].enY = NULL;
 	enemy[num].enHitBoxSize = NULL;
+	enemy[num].moveSpeed = NULL;
 }
 
 void Update(void) //毎フレーム処理
@@ -92,7 +95,7 @@ void Update(void) //毎フレーム処理
 		{
 			if (p_bullet[i].exist == false)
 			{
-				PlayerBulletGenerate(i, px, py, 8);
+				PlayerBulletGenerate(i, px, py, 6);
 				break;
 			}	
 		}
@@ -103,10 +106,10 @@ void Update(void) //毎フレーム処理
 		if (p_bullet[i].exist == true) DrawCircle(p_bullet[i].posX, p_bullet[i].posY, p_bullet[i].HitBoxSize, GetColor(0, 100, 100), 1);
 		else continue;
 
-		p_bullet[i].posY -= 10;
+		p_bullet[i].posY -= 12;
 
 		//画面外で消滅
-		if (p_bullet[i].posY < -50)
+		if (p_bullet[i].posY < -20)
 		{
 			PlayerBulletDestroy(i);
 			continue;
@@ -133,7 +136,7 @@ void Update(void) //毎フレーム処理
 		{
 			if (enemy[i].exist == false) 
 			{
-				EnemyGenerate(i,px,py-300,16);
+				EnemyGenerate(i,px,py-600,16,3);
 				DrawFormatString(WINDOW_WIDTH - 100, 90, GetColor(255, 255, 255), "%d\n", i);
 				break;
 			}
@@ -144,6 +147,8 @@ void Update(void) //毎フレーム処理
 	{
 		if (enemy[i].exist == true) DrawCircle(enemy[i].enX, enemy[i].enY, enemy[i].enHitBoxSize, GetColor(255, 0, 0), 1);
 		else continue;
+
+		enemy[i].enY += enemy[i].moveSpeed;
 
 		//敵との座標チェック
 		float dis = sqrt(pow((double)enemy[i].enX - px, 2) + pow((double)enemy[i].enY - py, 2));
