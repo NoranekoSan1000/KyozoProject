@@ -2,11 +2,11 @@
 
 int shot_img;
 int player_img;
-int status_img;
+int gameFrame_img;
 
 void ImageInit(void)// ‰æ‘œ‚Ì‰Šú‰»
 {
-	shot_img = LoadGraph("shot.png");
-	player_img = LoadGraph("player.png");
-	status_img = LoadGraph("status.png");
+	shot_img = LoadGraph("image/shot.png");
+	player_img = LoadGraph("image/player.png");
+	gameFrame_img = LoadGraph("image/gameFrame.png");
 }

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <DxLib.h>
 #include <math.h>
-#include "PlayerAction.h"
+#include "Player.h"
 #include "Image.h"
 #include "Audio.h"
 #define PI 3.141592654
@@ -48,7 +48,7 @@ void Update(void) //毎フレーム処理
 	DrawRotaGraph(10, 10, 1.0, 0, shot_img, TRUE); //画像の描画
 
 	DrawBox(0, 0, 100, WINDOW_HEIGHT, GetColor(0, 0, 0), 1);
-	DrawRotaGraph(700, 300, 0.8, 0, status_img, TRUE); //画像の描画
+	DrawRotaGraph(700, 300, 0.8, 0, gameFrame_img, TRUE); //画像の描画
 
 	DrawFormatString(WINDOW_WIDTH - 100, 120, GetColor(255, 255, 255), "sec %d", FrameCount++ / 60);
 
@@ -94,7 +94,7 @@ void KeyUpdate(void)
 // プログラムは WinMain から始まる
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
 {
-	ChangeWindowMode(FALSE);//非全画面にセット
+	ChangeWindowMode(TRUE);//非全画面にセット
 	SetGraphMode(WINDOW_WIDTH, WINDOW_HEIGHT, 32);//画面サイズ指定
 	SetOutApplicationLogValidFlag(FALSE);//Log.txtを生成しないように設定
 	SetMainWindowText("鏡像の歌姫 - Reflection of Diva -");

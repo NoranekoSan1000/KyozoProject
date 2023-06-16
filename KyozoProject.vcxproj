@@ -142,11 +142,11 @@
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Image.cpp" />
-    <ClCompile Include="PlayerAction.cpp" />
+    <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Image.h" />
-    <ClInclude Include="PlayerAction.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Audio.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
