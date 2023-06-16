@@ -104,7 +104,11 @@ void Update(void) //毎フレーム処理
 		p_bullet[i].posY -= 10;
 
 		//画面外で消滅
-		if(p_bullet)
+		if (p_bullet[i].posY < -50)
+		{
+			PlayerBulletDestroy(i);
+			continue;
+		}
 
 		//敵に当たる
 		for (int j = 0; j < ENEMY_AMOUNT; j++) 
@@ -112,10 +116,11 @@ void Update(void) //毎フレーム処理
 			//敵との座標チェック
 			float dis = sqrt(pow((double)enemy[j].enX - p_bullet[i].posX, 2) + pow((double)enemy[j].enY - p_bullet[i].posY, 2));
 			if (dis <= enemy[j].enHitBoxSize + 10)//被弾判定
-			{
-				Score += 100;
+			{		
 				EnemyDestroy(j);
 				PlayerBulletDestroy(i);
+				Score += 100;
+				break;
 			}
 		}
 	}
@@ -126,7 +131,7 @@ void Update(void) //毎フレーム処理
 		{
 			if (enemy[i].exist == false) 
 			{
-				EnemyGenerate(i,px,py-80,16);
+				EnemyGenerate(i,px,py-300,16);
 				DrawFormatString(WINDOW_WIDTH - 100, 90, GetColor(255, 255, 255), "%d\n", i);
 				break;
 			}
