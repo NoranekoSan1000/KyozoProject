@@ -8,9 +8,7 @@
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
-//マウス座標
-int mouseX = 0;
-int mouseY = 0;
+int FrameCount = 0;
 
 //キー取得用の配列
 char buf[256] = { 0 };
@@ -22,6 +20,7 @@ const int InitialPosY = 550;
 const int Player_HitBoxSize = 4;
 int px = InitialPosX;
 int py = InitialPosY;
+int Life = 10;
 
 //敵
 struct Enemy{
@@ -33,9 +32,21 @@ public:
 };
 Enemy enemy[20];
 
-int FrameCount = 0;
+void EnemyGenerate(int num,int x, int y, int hitboxsize) 
+{
+	enemy[num].exist = true;
+	enemy[num].enX = x;
+	enemy[num].enY = y;
+	enemy[num].enHitBoxSize = hitboxsize;
+}
 
-int Life = 10;
+void EnemyDestroy(int num)
+{
+	enemy[num].exist = false;
+	enemy[num].enX = NULL;
+	enemy[num].enY = NULL;
+	enemy[num].enHitBoxSize = NULL;
+}
 
 void Update(void) //毎フレーム処理
 {
@@ -52,10 +63,7 @@ void Update(void) //毎フレーム処理
 		{
 			if (enemy[i].exist == false) 
 			{
-				enemy[i].exist = true;
-				enemy[i].enX = px;
-				enemy[i].enY = py - 50;
-				enemy[i].enHitBoxSize = 20;
+				EnemyGenerate(i,px,py-80,20);
 				DrawFormatString(WINDOW_WIDTH - 100, 90, GetColor(255, 255, 255), "%d\n", i);
 				break;
 			}
@@ -65,16 +73,14 @@ void Update(void) //毎フレーム処理
 	for (int i = 0; i < 20; i++) 
 	{
 		if (enemy[i].exist == true) DrawCircle(enemy[i].enX, enemy[i].enY, enemy[i].enHitBoxSize, GetColor(255, 0, 0), 1);
+		else continue;
 
 		//敵との座標チェック
 		float dis = sqrt(pow((double)enemy[i].enX - px, 2) + pow((double)enemy[i].enY - py, 2));
 		if (dis <= enemy[i].enHitBoxSize + Player_HitBoxSize)
 		{
 			//被弾判定
-			enemy[i].exist = false;
-			enemy[i].enX = NULL;
-			enemy[i].enY = NULL;
-			enemy[i].enHitBoxSize = NULL;
+			EnemyDestroy(i);
 
 			px = InitialPosX;
 			py = InitialPosY;
