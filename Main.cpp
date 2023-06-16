@@ -20,6 +20,7 @@ const int InitialPosY = 550;
 const int Player_HitBoxSize = 4;
 int px = InitialPosX;
 int py = InitialPosY;
+int Score = 0;
 int Life = 10;
 
 struct PlayerBullet
@@ -79,7 +80,9 @@ void Update(void) //毎フレーム処理
 	DrawBox(0, 0, 100, WINDOW_HEIGHT, GetColor(0, 0, 0), 1);
 	DrawRotaGraph(700, 300, 0.8, 0, gameFrame_img, TRUE); //画像の描画
 
-	DrawFormatString(WINDOW_WIDTH - 100, 120, GetColor(255, 255, 255), "sec %d", FrameCount++ / 60);
+	DrawFormatString(WINDOW_WIDTH - 200, 30, GetColor(255, 255, 255), "Score : %d", Score);
+	DrawFormatString(WINDOW_WIDTH - 200, 60, GetColor(255, 255, 255), "Life : %d", Life);
+	DrawFormatString(WINDOW_WIDTH - 200, 120, GetColor(255, 255, 255), "sec %d", FrameCount++ / 60);
 
 	if (KeyState[KEY_INPUT_Z] == TRUE) //単発入力
 	{
@@ -100,13 +103,17 @@ void Update(void) //毎フレーム処理
 
 		p_bullet[i].posY -= 10;
 
+		//画面外で消滅
+		if(p_bullet)
+
+		//敵に当たる
 		for (int j = 0; j < ENEMY_AMOUNT; j++) 
 		{
 			//敵との座標チェック
 			float dis = sqrt(pow((double)enemy[j].enX - p_bullet[i].posX, 2) + pow((double)enemy[j].enY - p_bullet[i].posY, 2));
-			if (dis <= enemy[j].enHitBoxSize + 10)
+			if (dis <= enemy[j].enHitBoxSize + 10)//被弾判定
 			{
-				//被弾判定
+				Score += 100;
 				EnemyDestroy(j);
 				PlayerBulletDestroy(i);
 			}
@@ -141,8 +148,6 @@ void Update(void) //毎フレーム処理
 			Life -= 1;
 		}
 	}
-
-	DrawFormatString(WINDOW_WIDTH - 100, 6, GetColor(255, 255, 255), "Life : %d", Life);
 
 	PlayerMove(KeyState, &px, &py);//プレイヤーの移動
 	DrawRotaGraph(px, py, 1.0, 0, player_img, TRUE); //画像の描画
