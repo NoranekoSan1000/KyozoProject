@@ -2,6 +2,8 @@
 #include <DxLib.h>
 #include <math.h>
 #include "PlayerAction.h"
+#include "Image.h"
+#include "Audio.h"
 #define PI 3.141592654
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -13,12 +15,6 @@ int mouseY = 0;
 //キー取得用の配列
 char buf[256] = { 0 };
 int KeyState[256] = { 0 };
-
-//画像、音楽
-int shot_img;
-int player_img;
-int status_img;
-int ResonanceAtTwilight_audio;
 
 //プレイヤー
 const int InitialPosX = 350;
@@ -58,9 +54,7 @@ void Update(void) //毎フレーム処理
 
 	if (KeyState[KEY_INPUT_X] == TRUE) //単発入力
 	{
-		StopSoundMem(ResonanceAtTwilight_audio);
-		ChangeVolumeSoundMem(100, ResonanceAtTwilight_audio);
-		PlaySoundMem(ResonanceAtTwilight_audio, DX_PLAYTYPE_BACK);
+		PlayBGM(ResonanceAtTwilight_audio);
 	}
 
 	for (int i = 0; i < 3; i++) 
@@ -97,21 +91,10 @@ void KeyUpdate(void)
 	}
 }
 
-void ImgInit(void)
-{
-	shot_img = LoadGraph("shot.png");
-	player_img = LoadGraph("player.png");
-	status_img = LoadGraph("status.png");
-}
-void AudioInit(void)
-{
-	ResonanceAtTwilight_audio = LoadSoundMem("ResonanceAtTwilight.mp3");
-}
-
 // プログラムは WinMain から始まる
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
 {
-	ChangeWindowMode(TRUE);//非全画面にセット
+	ChangeWindowMode(FALSE);//非全画面にセット
 	SetGraphMode(WINDOW_WIDTH, WINDOW_HEIGHT, 32);//画面サイズ指定
 	SetOutApplicationLogValidFlag(FALSE);//Log.txtを生成しないように設定
 	SetMainWindowText("鏡像の歌姫 - Reflection of Diva -");
@@ -119,8 +102,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 
 	if (DxLib_Init() == -1) { return -1; }		// ＤＸライブラリ初期化処理  エラーが起きたら直ちに終了
 
-	ImgInit(); //画像・音の読み込み
-	AudioInit();
+	ImageInit(); //画像の読み込み <- Image.cpp
+	AudioInit(); //音声の読み込み <- Audio.cpp
 
 	while (ProcessMessage() == 0)
 	{
