@@ -22,15 +22,39 @@ int px = InitialPosX;
 int py = InitialPosY;
 int Life = 10;
 
+struct PlayerBullet
+{
+	bool exist;
+	int posX;
+	int posY;
+};
+const int PLAYER_BULLET_AMOUNT = 50;
+PlayerBullet p_bullet[PLAYER_BULLET_AMOUNT];
+
+void PlayerBulletGenerate(int num ,int x, int y)
+{
+	p_bullet[num].exist = true;
+	p_bullet[num].posX = x;
+	p_bullet[num].posY = y;
+}
+
+void PlayerBulletDestroy(int num)
+{
+	p_bullet[num].exist = false;
+	p_bullet[num].posX = NULL;
+	p_bullet[num].posY = NULL;
+}
+
 //敵
-struct Enemy{
-public:
+struct Enemy
+{
 	bool exist;
 	int enX;
 	int enY;
 	int enHitBoxSize;
 };
-Enemy enemy[20];
+const int ENEMY_AMOUNT = 20;
+Enemy enemy[ENEMY_AMOUNT];
 
 void EnemyGenerate(int num,int x, int y, int hitboxsize) 
 {
@@ -57,20 +81,52 @@ void Update(void) //毎フレーム処理
 
 	DrawFormatString(WINDOW_WIDTH - 100, 120, GetColor(255, 255, 255), "sec %d", FrameCount++ / 60);
 
+	if (KeyState[KEY_INPUT_Z] == TRUE) //単発入力
+	{
+		for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++)
+		{
+			if (p_bullet[i].exist == false)
+			{
+				PlayerBulletGenerate(i, px, py);
+				break;
+			}	
+		}
+	}
+
+	for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++)
+	{
+		if (p_bullet[i].exist == true) DrawCircle(p_bullet[i].posX, p_bullet[i].posY, 10, GetColor(0, 100, 100), 1);
+		else continue;
+
+		p_bullet[i].posY -= 10;
+
+		for (int j = 0; j < ENEMY_AMOUNT; j++) 
+		{
+			//敵との座標チェック
+			float dis = sqrt(pow((double)enemy[j].enX - p_bullet[i].posX, 2) + pow((double)enemy[j].enY - p_bullet[i].posY, 2));
+			if (dis <= enemy[j].enHitBoxSize + 10)
+			{
+				//被弾判定
+				EnemyDestroy(j);
+				PlayerBulletDestroy(i);
+			}
+		}
+	}
+
 	if (KeyState[KEY_INPUT_A] == TRUE) //単発入力
 	{
-		for (int i = 0; i < 20; i++) 
+		for (int i = 0; i < ENEMY_AMOUNT; i++) 
 		{
 			if (enemy[i].exist == false) 
 			{
-				EnemyGenerate(i,px,py-80,20);
+				EnemyGenerate(i,px,py-80,16);
 				DrawFormatString(WINDOW_WIDTH - 100, 90, GetColor(255, 255, 255), "%d\n", i);
 				break;
 			}
 		}
 	}
 
-	for (int i = 0; i < 20; i++) 
+	for (int i = 0; i < ENEMY_AMOUNT; i++)
 	{
 		if (enemy[i].exist == true) DrawCircle(enemy[i].enX, enemy[i].enY, enemy[i].enHitBoxSize, GetColor(255, 0, 0), 1);
 		else continue;
@@ -80,8 +136,6 @@ void Update(void) //毎フレーム処理
 		if (dis <= enemy[i].enHitBoxSize + Player_HitBoxSize)
 		{
 			//被弾判定
-			EnemyDestroy(i);
-
 			px = InitialPosX;
 			py = InitialPosY;
 			Life -= 1;
