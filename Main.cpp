@@ -8,7 +8,7 @@
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
-int FrameCount = 0;
+double FrameCount = 0;
 
 //キー取得用の配列
 char buf[256] = { 0 };
@@ -31,6 +31,7 @@ struct PlayerBullet
 	int HitBoxSize;
 };
 const int PLAYER_BULLET_AMOUNT = 50;
+float ShotCoolTime = 0;
 PlayerBullet p_bullet[PLAYER_BULLET_AMOUNT];
 
 void PlayerBulletGenerate(int num ,int x, int y,int hitboxsize)
@@ -78,6 +79,23 @@ void EnemyDestroy(int num)
 	enemy[num].moveSpeed = NULL;
 }
 
+void PlayerShot(void) 
+{
+	if (KeyState[KEY_INPUT_Z] > 0)
+	{
+		if (ShotCoolTime > 0) return;
+		for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++)
+		{
+			if (p_bullet[i].exist == false)//ショット設定格納場所の空きを確認
+			{
+				PlayerBulletGenerate(i, px, py, 6);
+				ShotCoolTime = 15;//フレームで設定
+				break;
+			}
+		}
+	}
+}
+
 void Update(void) //毎フレーム処理
 {
 	DrawRotaGraph(10, 10, 1.0, 0, shot_img, TRUE); //画像の描画
@@ -87,19 +105,10 @@ void Update(void) //毎フレーム処理
 
 	DrawFormatString(WINDOW_WIDTH - 200, 30, GetColor(255, 255, 255), "Score : %d", Score);
 	DrawFormatString(WINDOW_WIDTH - 200, 60, GetColor(255, 255, 255), "Life : %d", Life);
-	DrawFormatString(WINDOW_WIDTH - 200, 120, GetColor(255, 255, 255), "sec %d", FrameCount++ / 60);
+	DrawFormatString(WINDOW_WIDTH - 200, 120, GetColor(255, 255, 255), "sec %.2lf", FrameCount++ / 60);
 
-	if (KeyState[KEY_INPUT_Z] == TRUE) //単発入力
-	{
-		for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++)
-		{
-			if (p_bullet[i].exist == false)
-			{
-				PlayerBulletGenerate(i, px, py, 6);
-				break;
-			}	
-		}
-	}
+	if(ShotCoolTime >= 0) ShotCoolTime--;
+	PlayerShot();
 
 	for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++)
 	{
@@ -149,6 +158,13 @@ void Update(void) //毎フレーム処理
 		else continue;
 
 		enemy[i].enY += enemy[i].moveSpeed;
+
+		//画面外で消滅
+		if (enemy[i].enY > WINDOW_HEIGHT + 30)
+		{
+			EnemyDestroy(i);
+			continue;
+		}
 
 		//敵との座標チェック
 		float dis = sqrt(pow((double)enemy[i].enX - px, 2) + pow((double)enemy[i].enY - py, 2));
