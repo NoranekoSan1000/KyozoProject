@@ -1,6 +1,16 @@
 #include <DxLib.h>
+//ƒvƒŒƒCƒ„[
+int InitialPosX = 350;
+int InitialPosY = 550;
+int Player_HitBoxSize = 4;
+int px = InitialPosX;
+int py = InitialPosY;
 
-void PlayerMove(int* keyState, int* player_x, int* player_y)
+int Score = 0;
+int Life = 10;
+
+
+void PlayerMove(int* keyState)
 {
 	int WINDOW_WIDTH = 580;
 	int WINDOW_HEIGHT = 600;
@@ -12,20 +22,20 @@ void PlayerMove(int* keyState, int* player_x, int* player_y)
 	if (keyState[KEY_INPUT_LSHIFT] > 0) slow = 0.5;
 	else slow = 1;
 
-	if (keyState[KEY_INPUT_RIGHT] > 0 && *player_x < WINDOW_WIDTH - PLAYER_SIZE_X) //Œp‘±“ü—Í
+	if (keyState[KEY_INPUT_RIGHT] > 0 && px < WINDOW_WIDTH - PLAYER_SIZE_X) //Œp‘±“ü—Í
 	{
-		*player_x += (int)MOVE_SPEED * slow;
+		px += (int)MOVE_SPEED * slow;
 	}
-	if (keyState[KEY_INPUT_LEFT] > 0 && *player_x > 100 + PLAYER_SIZE_X) //Œp‘±“ü—Í
+	if (keyState[KEY_INPUT_LEFT] > 0 && px > 100 + PLAYER_SIZE_X) //Œp‘±“ü—Í
 	{
-		*player_x -= (int)MOVE_SPEED * slow;
+		px -= (int)MOVE_SPEED * slow;
 	}
-	if (keyState[KEY_INPUT_DOWN] > 0 && *player_y < WINDOW_HEIGHT - PLAYER_SIZE_Y) //Œp‘±“ü—Í
+	if (keyState[KEY_INPUT_DOWN] > 0 && py < WINDOW_HEIGHT - PLAYER_SIZE_Y) //Œp‘±“ü—Í
 	{
-		*player_y += (int)MOVE_SPEED * slow;
+		py += (int)MOVE_SPEED * slow;
 	}
-	if (keyState[KEY_INPUT_UP] > 0 && *player_y > 0 + PLAYER_SIZE_Y) //Œp‘±“ü—Í
+	if (keyState[KEY_INPUT_UP] > 0 && py > 0 + PLAYER_SIZE_Y) //Œp‘±“ü—Í
 	{
-		*player_y -= (int)MOVE_SPEED * slow;
+		py -= (int)MOVE_SPEED * slow;
 	}
 }

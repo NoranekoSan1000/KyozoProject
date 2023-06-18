@@ -14,15 +14,6 @@ double FrameCount = 0;
 char buf[256] = { 0 };
 int KeyState[256] = { 0 };
 
-//プレイヤー
-const int InitialPosX = 350;
-const int InitialPosY = 550;
-const int Player_HitBoxSize = 4;
-int px = InitialPosX;
-int py = InitialPosY;
-int Score = 0;
-int Life = 10;
-
 struct PlayerBullet
 {
 	bool exist;
@@ -177,7 +168,7 @@ void Update(void) //毎フレーム処理
 		}
 	}
 
-	PlayerMove(KeyState, &px, &py);//プレイヤーの移動
+	PlayerMove(KeyState);//プレイヤーの移動
 	DrawRotaGraph(px, py, 1.0, 0, player_img, TRUE); //画像の描画
 	DrawCircle(px, py, Player_HitBoxSize, GetColor(255, 255, 80)); // プレイヤーの当たり判定
 
