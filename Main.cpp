@@ -50,7 +50,7 @@ struct Enemy
 	int moveSpeed;
 };
 const int ENEMY_AMOUNT = 20;
-Enemy enemy[ENEMY_AMOUNT];
+struct Enemy enemy[ENEMY_AMOUNT];
 
 void EnemyGenerate(int num,int x, int y, int hitboxsize,int movespeed) 
 {
