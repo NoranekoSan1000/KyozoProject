@@ -23,7 +23,7 @@ struct PlayerBullet
 };
 const int PLAYER_BULLET_AMOUNT = 50;
 float ShotCoolTime = 0;
-PlayerBullet p_bullet[PLAYER_BULLET_AMOUNT];
+struct PlayerBullet p_bullet[PLAYER_BULLET_AMOUNT];
 
 void PlayerBulletGenerate(int num ,int x, int y,int hitboxsize)
 {
@@ -80,7 +80,7 @@ void PlayerShot(void)
 			if (p_bullet[i].exist == false)//ショット設定格納場所の空きを確認
 			{
 				PlayerBulletGenerate(i, px, py, 6);
-				ShotCoolTime = 15;//フレームで設定
+				ShotCoolTime = 10;//フレームで設定
 				break;
 			}
 		}
