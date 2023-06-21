@@ -28,16 +28,8 @@ void ViewStatus(void)
 	DrawFormatString(WINDOW_WIDTH - 200, 120, GetColor(255, 255, 255), "sec %.2lf", FrameCount++ / 60);
 }
 
-void Update(void) //毎フレーム処理
+void PlayerBulletAction(void)
 {
-	ViewStatus();
-
-	if (P_ShotCoolTime >= 0) P_ShotCoolTime--;
-	if (KeyState[KEY_INPUT_Z] > 0)
-	{
-		PlayerShotGenerate(px, py);//射撃
-	}
-	
 	for (int i = 0; i < P_Bullet_Amount; i++)
 	{
 		if (P_Bullet_exist[i] == true) DrawCircle(P_Bullet_PosX[i], P_Bullet_PosY[i], P_Bullet_HitBoxSize[i], GetColor(0, 100, 100), 1);
@@ -58,7 +50,7 @@ void Update(void) //毎フレーム処理
 			//敵との座標チェック
 			float dis = sqrt(pow((double)Enemy_X[j] - P_Bullet_PosX[i], 2) + pow((double)Enemy_Y[j] - P_Bullet_PosY[i], 2));
 			if (dis <= Enemy_HitBoxSize[j] + P_Bullet_HitBoxSize[i])//被弾判定
-			{		
+			{
 				EnemyDestroy(j);
 				PlayerBulletDestroy(i);
 				Score += 100;
@@ -66,22 +58,13 @@ void Update(void) //毎フレーム処理
 			}
 		}
 	}
+}
 
-	if (KeyState[KEY_INPUT_A] == TRUE) //単発入力
-	{
-		for (int i = 0; i < Enemy_Amount; i++)
-		{
-			if (Enemy_exist[i] == false)
-			{
-				EnemyGenerate(i, px, py - 600, 16, 3, 0);
-				DrawFormatString(WINDOW_WIDTH - 100, 90, GetColor(255, 255, 255), "%d\n", i);
-				break;
-			}
-		}
-	}
-
+void EnemyAction(void)
+{
 	for (int i = 0; i < Enemy_Amount; i++)
 	{
+		//敵キャラ画像表示
 		if (Enemy_exist[i] == true) DrawCircle(Enemy_X[i], Enemy_Y[i], Enemy_HitBoxSize[i], GetColor(255, 0, 0), 1);
 		else continue;
 
@@ -104,6 +87,37 @@ void Update(void) //毎フレーム処理
 			Life -= 1;
 		}
 	}
+}
+
+void EnemySpawn(void) 
+{
+	if (KeyState[KEY_INPUT_A] == TRUE) //単発入力
+	{
+		for (int i = 0; i < Enemy_Amount; i++)
+		{
+			if (Enemy_exist[i] == false)
+			{
+				EnemyGenerate(i, px, py - 600, 16, 3, 0);
+				DrawFormatString(WINDOW_WIDTH - 100, 90, GetColor(255, 255, 255), "%d\n", i);
+				break;
+			}
+		}
+	}
+}
+
+void Update(void) //毎フレーム処理
+{
+	ViewStatus();
+
+	if (P_ShotCoolTime >= 0) P_ShotCoolTime--;
+	if (KeyState[KEY_INPUT_Z] > 0)
+	{
+		PlayerShotGenerate(px, py);//射撃
+	}
+
+	PlayerBulletAction();
+	EnemyAction();
+	EnemySpawn();
 
 	PlayerMove(KeyState);//プレイヤーの移動
 	DrawRotaGraph(px, py, 1.0, 0, player_img, TRUE); //画像の描画
