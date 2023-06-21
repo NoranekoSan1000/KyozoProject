@@ -31,7 +31,7 @@ void ViewStatus(void)
 
 void PlayerBulletAction(void)
 {
-	for (int i = 0; i < P_Bullet_Amount; i++)
+	for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++)
 	{
 		if (P_Bullet_exist[i] == true) DrawCircle(P_Bullet_PosX[i], P_Bullet_PosY[i], P_Bullet_HitBoxSize[i], GetColor(0, 100, 100), 1);
 		else continue;
@@ -45,25 +45,12 @@ void PlayerBulletAction(void)
 			continue;
 		}
 
-		//“G‚É’e‚ª“–‚½‚é
-		for (int j = 0; j < Enemy_Amount; j++)
-		{
-			//“G‚Æ‚ÌÀ•Wƒ`ƒFƒbƒN
-			float dis = sqrt(pow((double)Enemy_X[j] - P_Bullet_PosX[i], 2) + pow((double)Enemy_Y[j] - P_Bullet_PosY[i], 2));
-			if (dis <= Enemy_HitBoxSize[j] + P_Bullet_HitBoxSize[i])//”í’e”»’è
-			{
-				EnemyDestroy(j);
-				PlayerBulletDestroy(i);
-				Score += 100;
-				break;
-			}
-		}
 	}
 }
 
 void EnemyAction(void)
 {
-	for (int i = 0; i < Enemy_Amount; i++)
+	for (int i = 0; i < ENEMY_AMOUNT; i++)
 	{
 		//“GƒLƒƒƒ‰‰æ‘œ•\Ž¦
 		if (Enemy_exist[i] == true) DrawCircle(Enemy_X[i], Enemy_Y[i], Enemy_HitBoxSize[i], GetColor(255, 0, 0), 1);
@@ -78,7 +65,7 @@ void EnemyAction(void)
 			continue;
 		}
 
-		//“G‚Æ‚ÌÀ•Wƒ`ƒFƒbƒN
+		//“G‚ÆƒvƒŒƒCƒ„[‚ªÚG
 		float dis = sqrt(pow((double)Enemy_X[i] - px, 2) + pow((double)Enemy_Y[i] - py, 2));
 		if (dis <= Enemy_HitBoxSize[i] + Player_HitBoxSize)
 		{
@@ -87,6 +74,20 @@ void EnemyAction(void)
 			py = InitialPosY;
 			Life -= 1;
 		}
+
+		//ƒ_ƒ[ƒWorŽ€–S
+		for (int j = 0; j < PLAYER_BULLET_AMOUNT; j++)
+		{
+			//“G‚Æ‚ÌÀ•Wƒ`ƒFƒbƒN
+			float dis = sqrt(pow((double)Enemy_X[i] - P_Bullet_PosX[j], 2) + pow((double)Enemy_Y[i] - P_Bullet_PosY[j], 2));
+			if (dis <= Enemy_HitBoxSize[i] + P_Bullet_HitBoxSize[j])//”í’e”»’è
+			{
+				EnemyDestroy(i);
+				PlayerBulletDestroy(j);
+				Score += 100;
+				break;
+			}
+		}
 	}
 }
 
@@ -94,7 +95,7 @@ void EnemySpawn(void)
 {
 	if (KeyState[KEY_INPUT_A] == TRUE) //’P”­“ü—Í
 	{
-		for (int i = 0; i < Enemy_Amount; i++)
+		for (int i = 0; i < ENEMY_AMOUNT; i++)
 		{
 			if (Enemy_exist[i] == false)
 			{

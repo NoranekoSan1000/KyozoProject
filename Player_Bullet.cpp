@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include "GameData.h"
 
-
 void PlayerBulletGenerate(int num, int x, int y, int hitboxsize)
 {
 	P_Bullet_exist[num] = true;
@@ -21,7 +20,7 @@ void PlayerBulletDestroy(int num)
 void PlayerShotGenerate(int px,int py)
 {
 	if (P_ShotCoolTime > 0) return;
-	for (int i = 0; i < P_Bullet_Amount; i++)
+	for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++)
 	{
 		if (P_Bullet_exist[i] == false)//ショット設定格納場所の空きを確認
 		{
