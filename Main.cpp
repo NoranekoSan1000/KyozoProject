@@ -5,6 +5,7 @@
 #include "Image.h"
 #include "Audio.h"
 #include "Enemy.h"
+#include "Player_Bullet.h"
 #define PI 3.141592654
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -14,48 +15,6 @@ double FrameCount = 0;
 //キー取得用の配列
 char buf[256] = { 0 };
 int KeyState[256] = { 0 };
-
-const int PLAYER_BULLET_AMOUNT = 50;
-bool P_Bullet_exist[PLAYER_BULLET_AMOUNT];
-int P_Bullet_PosX[PLAYER_BULLET_AMOUNT];
-int P_Bullet_PosY[PLAYER_BULLET_AMOUNT];
-int P_Bullet_HitBoxSize[PLAYER_BULLET_AMOUNT];
-
-float ShotCoolTime = 0;
-
-void PlayerBulletGenerate(int num ,int x, int y,int hitboxsize)
-{
-	P_Bullet_exist[num] = true;
-	P_Bullet_PosX[num] = x;
-	P_Bullet_PosY[num] = y;
-	P_Bullet_HitBoxSize[num] = hitboxsize;
-}
-
-void PlayerBulletDestroy(int num)
-{
-	P_Bullet_exist[num] = false;
-	P_Bullet_PosX[num] = NULL;
-	P_Bullet_PosY[num] = NULL;
-	P_Bullet_HitBoxSize[num] = NULL;
-}
-
-
-void PlayerShot(void) 
-{
-	if (KeyState[KEY_INPUT_Z] > 0)
-	{
-		if (ShotCoolTime > 0) return;
-		for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++)
-		{
-			if (P_Bullet_exist[i] == false)//ショット設定格納場所の空きを確認
-			{
-				PlayerBulletGenerate(i, px, py, 6);
-				ShotCoolTime = 10;//フレームで設定
-				break;
-			}
-		}
-	}
-}
 
 void Update(void) //毎フレーム処理
 {
@@ -68,10 +27,13 @@ void Update(void) //毎フレーム処理
 	DrawFormatString(WINDOW_WIDTH - 200, 60, GetColor(255, 255, 255), "Life : %d", Life);
 	DrawFormatString(WINDOW_WIDTH - 200, 120, GetColor(255, 255, 255), "sec %.2lf", FrameCount++ / 60);
 
-	if(ShotCoolTime >= 0) ShotCoolTime--;
-	PlayerShot();
-
-	for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++)
+	if (P_ShotCoolTime >= 0) P_ShotCoolTime--;
+	if (KeyState[KEY_INPUT_Z] > 0)//射撃
+	{
+		PlayerShot(px, py);
+	}
+	
+	for (int i = 0; i < P_Bullet_Amount; i++)
 	{
 		if (P_Bullet_exist[i] == true) DrawCircle(P_Bullet_PosX[i], P_Bullet_PosY[i], P_Bullet_HitBoxSize[i], GetColor(0, 100, 100), 1);
 		else continue;
@@ -85,7 +47,7 @@ void Update(void) //毎フレーム処理
 			continue;
 		}
 
-		//敵に当たる
+		//敵に弾が当たる
 		for (int j = 0; j < Enemy_Amount; j++)
 		{
 			//敵との座標チェック
@@ -106,7 +68,7 @@ void Update(void) //毎フレーム処理
 		{
 			if (Enemy_exist[i] == false)
 			{
-				EnemyGenerate(i,px,py-600,16,3);
+				EnemyGenerate(i, px, py - 600, 16, 3, 0);
 				DrawFormatString(WINDOW_WIDTH - 100, 90, GetColor(255, 255, 255), "%d\n", i);
 				break;
 			}
@@ -118,7 +80,7 @@ void Update(void) //毎フレーム処理
 		if (Enemy_exist[i] == true) DrawCircle(Enemy_X[i], Enemy_Y[i], Enemy_HitBoxSize[i], GetColor(255, 0, 0), 1);
 		else continue;
 
-		Enemy_Y[i] += Enemy_MoveSpeed[i];
+		EnemyMove(i);
 
 		//画面外で消滅
 		if (Enemy_Y[i] > WINDOW_HEIGHT + 30)
