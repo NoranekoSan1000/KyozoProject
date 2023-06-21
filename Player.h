@@ -1,2 +1,11 @@
 #pragma once
-void PlayerMove(int* keyState, int* player_x, int* player_y);
+//ƒvƒŒƒCƒ„[
+extern int InitialPosX;
+extern int InitialPosY;
+extern int Player_HitBoxSize;
+extern int px;
+extern int py;
+extern int Score;
+extern int Life;
+
+void PlayerMove(int* keyState);
