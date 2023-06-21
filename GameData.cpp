@@ -8,6 +8,7 @@ int px = InitialPosX;
 int py = InitialPosY;
 int Score = 0;
 int Life = 10;
+float DamagedCoolTime = 0;
 
 //ÉvÉåÉCÉÑÅ[ÇÃíe
 bool P_Bullet_exist[PLAYER_BULLET_AMOUNT];
@@ -23,3 +24,4 @@ int Enemy_Y[ENEMY_AMOUNT];
 int Enemy_HitBoxSize[ENEMY_AMOUNT];
 int Enemy_MoveSpeed[ENEMY_AMOUNT];
 int MovePattern[ENEMY_AMOUNT];
+int Enemy_HP[ENEMY_AMOUNT];

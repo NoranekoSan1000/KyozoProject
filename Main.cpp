@@ -7,9 +7,6 @@
 #include "Enemy.h"
 #include "Player_Bullet.h"
 #include "GameData.h"
-#define PI 3.141592654
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
 
 double FrameCount = 0;
 
@@ -70,9 +67,14 @@ void EnemyAction(void)
 		if (dis <= Enemy_HitBoxSize[i] + Player_HitBoxSize)
 		{
 			//被弾判定
-			px = InitialPosX;
-			py = InitialPosY;
-			Life -= 1;
+			if (DamagedCoolTime <= 0)
+			{
+				px = InitialPosX;
+				py = InitialPosY;
+				Life -= 1;
+				DamagedCoolTime = 120;
+			}
+			
 		}
 
 		//ダメージor死亡
@@ -82,9 +84,17 @@ void EnemyAction(void)
 			float dis = sqrt(pow((double)Enemy_X[i] - P_Bullet_PosX[j], 2) + pow((double)Enemy_Y[i] - P_Bullet_PosY[j], 2));
 			if (dis <= Enemy_HitBoxSize[i] + P_Bullet_HitBoxSize[j])//被弾判定
 			{
-				EnemyDestroy(i);
 				PlayerBulletDestroy(j);
-				Score += 100;
+				if(Enemy_HP[i] > 0)
+				{
+					Score += 1;
+					Enemy_HP[i] -= 1;
+				}
+				else 
+				{
+					Score += 100;
+					EnemyDestroy(i);
+				}			
 				break;
 			}
 		}
@@ -99,7 +109,7 @@ void EnemySpawn(void)
 		{
 			if (Enemy_exist[i] == false)
 			{
-				EnemyGenerate(i, px, py - 600, 16, 3, 0);
+				EnemyGenerate(i, px, py - 600, 16, 3, 0, 5);
 				DrawFormatString(WINDOW_WIDTH - 100, 90, GetColor(255, 255, 255), "%d\n", i);
 				break;
 			}
@@ -112,18 +122,21 @@ void Update(void) //毎フレーム処理
 	ViewStatus();
 
 	if (P_ShotCoolTime >= 0) P_ShotCoolTime--;
-	if (KeyState[KEY_INPUT_Z] > 0)
-	{
-		PlayerShotGenerate(px, py);//射撃
-	}
+	if (DamagedCoolTime >= 0) DamagedCoolTime--;
+
+	if (KeyState[KEY_INPUT_Z] > 0) PlayerShotGenerate(px, py);//射撃
 
 	PlayerBulletAction();
 	EnemyAction();
 	EnemySpawn();
 
 	PlayerMove(KeyState);//プレイヤーの移動
-	DrawRotaGraph(px, py, 1.0, 0, player_img, TRUE); //画像の描画
-	DrawCircle(px, py, Player_HitBoxSize, GetColor(255, 255, 80)); // プレイヤーの当たり判定
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
+	DrawCircle(px, py, DamagedCoolTime, GetColor(100, 100, 255)); // 被弾クールタイム中
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
+	DrawRotaGraph(px, py, 1.0, 0, player_img, TRUE); //プレイヤー画像の描画
+	DrawCircle(px, py, Player_HitBoxSize, GetColor(255, 255, 80)); // プレイヤーの当たり判定表示
 
 }
 
@@ -145,7 +158,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 	SetGraphMode(WINDOW_WIDTH, WINDOW_HEIGHT, 32);//画面サイズ指定
 	SetOutApplicationLogValidFlag(FALSE);//Log.txtを生成しないように設定
 	SetMainWindowText("鏡像の歌姫 - Reflection of Diva -");
-	SetBackgroundColor(0, 200, 200);
+	SetBackgroundColor(100, 100, 100);
 
 	if (DxLib_Init() == -1) { return -1; }		// ＤＸライブラリ初期化処理  エラーが起きたら直ちに終了
 

@@ -1,6 +1,9 @@
 #pragma once
+#define PI 3.141592654
 #define ENEMY_AMOUNT 20
 #define PLAYER_BULLET_AMOUNT 50
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
 //プレイヤー
 extern int InitialPosX;
 extern int InitialPosY;
@@ -9,6 +12,7 @@ extern int px;
 extern int py;
 extern int Score;
 extern int Life;
+extern float DamagedCoolTime;
 
 //プレイヤーの弾
 extern bool P_Bullet_exist[];
@@ -24,3 +28,4 @@ extern int Enemy_Y[];
 extern int Enemy_HitBoxSize[];
 extern int Enemy_MoveSpeed[];
 extern int MovePattern[];
+extern int Enemy_HP[];
