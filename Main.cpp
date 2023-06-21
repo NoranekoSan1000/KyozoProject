@@ -16,21 +16,26 @@ double FrameCount = 0;
 char buf[256] = { 0 };
 int KeyState[256] = { 0 };
 
-void Update(void) //毎フレーム処理
+void ViewStatus(void)
 {
-	DrawRotaGraph(10, 10, 1.0, 0, shot_img, TRUE); //画像の描画
-
+	//枠
 	DrawBox(0, 0, 100, WINDOW_HEIGHT, GetColor(0, 0, 0), 1);
-	DrawRotaGraph(700, 300, 0.8, 0, gameFrame_img, TRUE); //画像の描画
+	DrawRotaGraph(700, 300, 0.8, 0, gameFrame_img, TRUE);
 
+	//テキスト
 	DrawFormatString(WINDOW_WIDTH - 200, 30, GetColor(255, 255, 255), "Score : %d", Score);
 	DrawFormatString(WINDOW_WIDTH - 200, 60, GetColor(255, 255, 255), "Life : %d", Life);
 	DrawFormatString(WINDOW_WIDTH - 200, 120, GetColor(255, 255, 255), "sec %.2lf", FrameCount++ / 60);
+}
+
+void Update(void) //毎フレーム処理
+{
+	ViewStatus();
 
 	if (P_ShotCoolTime >= 0) P_ShotCoolTime--;
-	if (KeyState[KEY_INPUT_Z] > 0)//射撃
+	if (KeyState[KEY_INPUT_Z] > 0)
 	{
-		PlayerShot(px, py);
+		PlayerShotGenerate(px, py);//射撃
 	}
 	
 	for (int i = 0; i < P_Bullet_Amount; i++)

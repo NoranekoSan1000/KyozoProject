@@ -25,7 +25,7 @@ void PlayerBulletDestroy(int num)
 	P_Bullet_HitBoxSize[num] = NULL;
 }
 
-void PlayerShot(int px,int py)
+void PlayerShotGenerate(int px,int py)
 {
 	if (P_ShotCoolTime > 0) return;
 	for (int i = 0; i < P_Bullet_Amount; i++)

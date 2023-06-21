@@ -9,4 +9,4 @@ extern float P_ShotCoolTime;
 
 void PlayerBulletGenerate(int num, int x, int y, int hitboxsize);
 void PlayerBulletDestroy(int num);
-void PlayerShot(int px, int py);
+void PlayerShotGenerate(int px, int py);
