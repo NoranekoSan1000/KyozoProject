@@ -1,13 +1,5 @@
 #include <stdio.h>
-#define ENEMY_AMOUNT 20
-//“G
-int Enemy_Amount = ENEMY_AMOUNT;
-bool Enemy_exist[ENEMY_AMOUNT];
-int Enemy_X[ENEMY_AMOUNT];
-int Enemy_Y[ENEMY_AMOUNT];
-int Enemy_HitBoxSize[ENEMY_AMOUNT];
-int Enemy_MoveSpeed[ENEMY_AMOUNT];
-int MovePattern[ENEMY_AMOUNT];
+#include "GameData.h"
 
 void EnemyGenerate(int num, int x, int y, int hitboxsize, int movespeed, int movepattern)
 {

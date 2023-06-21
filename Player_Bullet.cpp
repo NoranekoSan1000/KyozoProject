@@ -1,13 +1,6 @@
 #include <stdio.h>
-#define PLAYER_BULLET_AMOUNT 50
+#include "GameData.h"
 
-int P_Bullet_Amount = PLAYER_BULLET_AMOUNT;
-bool P_Bullet_exist[PLAYER_BULLET_AMOUNT];
-int P_Bullet_PosX[PLAYER_BULLET_AMOUNT];
-int P_Bullet_PosY[PLAYER_BULLET_AMOUNT];
-int P_Bullet_HitBoxSize[PLAYER_BULLET_AMOUNT];
-
-float P_ShotCoolTime = 0;
 
 void PlayerBulletGenerate(int num, int x, int y, int hitboxsize)
 {

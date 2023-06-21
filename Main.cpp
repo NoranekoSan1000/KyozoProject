@@ -6,6 +6,7 @@
 #include "Audio.h"
 #include "Enemy.h"
 #include "Player_Bullet.h"
+#include "GameData.h"
 #define PI 3.141592654
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
