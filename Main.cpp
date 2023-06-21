@@ -41,33 +41,29 @@ void PlayerBulletDestroy(int num)
 }
 
 //敵
-struct Enemy
-{
-	bool exist;
-	int enX;
-	int enY;
-	int enHitBoxSize;
-	int moveSpeed;
-};
 const int ENEMY_AMOUNT = 20;
-struct Enemy enemy[ENEMY_AMOUNT];
+bool exist[ENEMY_AMOUNT];
+int enX[ENEMY_AMOUNT];
+int enY[ENEMY_AMOUNT];
+int enHitBoxSize[ENEMY_AMOUNT];
+int moveSpeed[ENEMY_AMOUNT];
 
 void EnemyGenerate(int num,int x, int y, int hitboxsize,int movespeed) 
 {
-	enemy[num].exist = true;
-	enemy[num].enX = x;
-	enemy[num].enY = y;
-	enemy[num].enHitBoxSize = hitboxsize;
-	enemy[num].moveSpeed = movespeed;
+	exist[num] = true;
+	enX[num] = x;
+	enY[num] = y;
+	enHitBoxSize[num] = hitboxsize;
+	moveSpeed[num] = movespeed;
 }
 
 void EnemyDestroy(int num)
 {
-	enemy[num].exist = false;
-	enemy[num].enX = NULL;
-	enemy[num].enY = NULL;
-	enemy[num].enHitBoxSize = NULL;
-	enemy[num].moveSpeed = NULL;
+	exist[num] = false;
+	enX[num] = NULL;
+	enY[num] = NULL;
+	enHitBoxSize[num] = NULL;
+	moveSpeed[num] = NULL;
 }
 
 void PlayerShot(void) 
@@ -119,8 +115,8 @@ void Update(void) //毎フレーム処理
 		for (int j = 0; j < ENEMY_AMOUNT; j++) 
 		{
 			//敵との座標チェック
-			float dis = sqrt(pow((double)enemy[j].enX - p_bullet[i].posX, 2) + pow((double)enemy[j].enY - p_bullet[i].posY, 2));
-			if (dis <= enemy[j].enHitBoxSize + p_bullet[i].HitBoxSize)//被弾判定
+			float dis = sqrt(pow((double)enX[j] - p_bullet[i].posX, 2) + pow((double)enY[j] - p_bullet[i].posY, 2));
+			if (dis <= enHitBoxSize[j] + p_bullet[i].HitBoxSize)//被弾判定
 			{		
 				EnemyDestroy(j);
 				PlayerBulletDestroy(i);
@@ -134,7 +130,7 @@ void Update(void) //毎フレーム処理
 	{
 		for (int i = 0; i < ENEMY_AMOUNT; i++) 
 		{
-			if (enemy[i].exist == false) 
+			if (exist[i] == false) 
 			{
 				EnemyGenerate(i,px,py-600,16,3);
 				DrawFormatString(WINDOW_WIDTH - 100, 90, GetColor(255, 255, 255), "%d\n", i);
@@ -145,21 +141,21 @@ void Update(void) //毎フレーム処理
 
 	for (int i = 0; i < ENEMY_AMOUNT; i++)
 	{
-		if (enemy[i].exist == true) DrawCircle(enemy[i].enX, enemy[i].enY, enemy[i].enHitBoxSize, GetColor(255, 0, 0), 1);
+		if (exist[i] == true) DrawCircle(enX[i], enY[i], enHitBoxSize[i], GetColor(255, 0, 0), 1);
 		else continue;
 
-		enemy[i].enY += enemy[i].moveSpeed;
+		enY[i] += moveSpeed[i];
 
 		//画面外で消滅
-		if (enemy[i].enY > WINDOW_HEIGHT + 30)
+		if (enY[i] > WINDOW_HEIGHT + 30)
 		{
 			EnemyDestroy(i);
 			continue;
 		}
 
 		//敵との座標チェック
-		float dis = sqrt(pow((double)enemy[i].enX - px, 2) + pow((double)enemy[i].enY - py, 2));
-		if (dis <= enemy[i].enHitBoxSize + Player_HitBoxSize)
+		float dis = sqrt(pow((double)enX[i] - px, 2) + pow((double)enY[i] - py, 2));
+		if (dis <= enHitBoxSize[i] + Player_HitBoxSize)
 		{
 			//被弾判定
 			px = InitialPosX;
