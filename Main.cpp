@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Image.h"
 #include "Audio.h"
+#include "Enemy.h"
 #define PI 3.141592654
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -40,31 +41,6 @@ void PlayerBulletDestroy(int num)
 	p_bullet[num].posY = NULL;
 }
 
-//敵
-const int ENEMY_AMOUNT = 20;
-bool exist[ENEMY_AMOUNT];
-int enX[ENEMY_AMOUNT];
-int enY[ENEMY_AMOUNT];
-int enHitBoxSize[ENEMY_AMOUNT];
-int moveSpeed[ENEMY_AMOUNT];
-
-void EnemyGenerate(int num,int x, int y, int hitboxsize,int movespeed) 
-{
-	exist[num] = true;
-	enX[num] = x;
-	enY[num] = y;
-	enHitBoxSize[num] = hitboxsize;
-	moveSpeed[num] = movespeed;
-}
-
-void EnemyDestroy(int num)
-{
-	exist[num] = false;
-	enX[num] = NULL;
-	enY[num] = NULL;
-	enHitBoxSize[num] = NULL;
-	moveSpeed[num] = NULL;
-}
 
 void PlayerShot(void) 
 {
@@ -112,7 +88,7 @@ void Update(void) //毎フレーム処理
 		}
 
 		//敵に当たる
-		for (int j = 0; j < ENEMY_AMOUNT; j++) 
+		for (int j = 0; j < Enemy_Amount; j++)
 		{
 			//敵との座標チェック
 			float dis = sqrt(pow((double)enX[j] - p_bullet[i].posX, 2) + pow((double)enY[j] - p_bullet[i].posY, 2));
@@ -128,7 +104,7 @@ void Update(void) //毎フレーム処理
 
 	if (KeyState[KEY_INPUT_A] == TRUE) //単発入力
 	{
-		for (int i = 0; i < ENEMY_AMOUNT; i++) 
+		for (int i = 0; i < Enemy_Amount; i++)
 		{
 			if (exist[i] == false) 
 			{
@@ -139,7 +115,7 @@ void Update(void) //毎フレーム処理
 		}
 	}
 
-	for (int i = 0; i < ENEMY_AMOUNT; i++)
+	for (int i = 0; i < Enemy_Amount; i++)
 	{
 		if (exist[i] == true) DrawCircle(enX[i], enY[i], enHitBoxSize[i], GetColor(255, 0, 0), 1);
 		else continue;
