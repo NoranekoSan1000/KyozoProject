@@ -38,3 +38,12 @@ void PlayerMove(int* keyState)
 		py -= (int)MOVE_SPEED * slow;
 	}
 }
+
+void ViewPlayer(void)
+{
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
+	DrawCircle(px, py, DamagedCoolTime, GetColor(100, 100, 255)); // 被弾クールタイム中
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
+	DrawRotaGraph(px, py, 1.0, 0, player_img, TRUE); //プレイヤー画像の描画
+	DrawCircle(px, py, Player_HitBoxSize, GetColor(255, 255, 80)); // プレイヤーの当たり判定表示
+}

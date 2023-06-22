@@ -35,13 +35,7 @@ void Update(void) //毎フレーム処理
 	EnemyAction();
 	
 	PlayerMove(KeyState);//プレイヤーの移動
-
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
-	DrawCircle(px, py, DamagedCoolTime, GetColor(100, 100, 255)); // 被弾クールタイム中
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
-	DrawRotaGraph(px, py, 1.0, 0, player_img, TRUE); //プレイヤー画像の描画
-	DrawCircle(px, py, Player_HitBoxSize, GetColor(255, 255, 80)); // プレイヤーの当たり判定表示
-
+	ViewPlayer();//プレイヤー表示
 }
 
 //キー入力状態を更新する関数

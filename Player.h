@@ -10,3 +10,4 @@ extern int Life;
 extern float DamagedCoolTime;
 
 void PlayerMove(int* keyState);
+void ViewPlayer(void);
