@@ -23,19 +23,19 @@ void ViewStatus(void)
 
 void Update(void) //毎フレーム処理
 {
-	ViewStatus();
-
 	if (P_ShotCoolTime >= 0) P_ShotCoolTime--;
 	if (DamagedCoolTime >= 0) DamagedCoolTime--;
-
-	if (KeyState[KEY_INPUT_Z] > 0) PlayerShotGenerate(px, py);//射撃
+	
 	if (KeyState[KEY_INPUT_A] == TRUE) EnemySpawn();
+	EnemyAction();
 
 	PlayerBulletAction();
-	EnemyAction();
 	
+	if (KeyState[KEY_INPUT_Z] > 0) PlayerShotGenerate(px, py);//射撃
 	PlayerMove(KeyState);//プレイヤーの移動
 	ViewPlayer();//プレイヤー表示
+
+	ViewStatus();
 }
 
 //キー入力状態を更新する関数

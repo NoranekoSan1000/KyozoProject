@@ -4,10 +4,10 @@
 #include <math.h>
 #include "Image.h"
 #include "Audio.h"
-#define PI 3.141592654
+#define PI 3.14159265359
 
 #define ENEMY_AMOUNT 20
-#define PLAYER_BULLET_AMOUNT 50
+#define PLAYER_BULLET_AMOUNT 80
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600

@@ -1,21 +1,35 @@
 #include <DxLib.h>
 int ResonanceAtTwilight_audio;
+int SE_PlayerShot;
 
-int Volume = 100;
+int BGMVolume = 100;
+int SEVolume = 100;
 
 void AudioInit(void)
 {
 	ResonanceAtTwilight_audio = LoadSoundMem("ResonanceAtTwilight.mp3");
+	SE_PlayerShot = LoadSoundMem("SE_PlayerShot.mp3");
 }
 
 void PlayBGM(int music)
 {
 	StopSoundMem(music);
-	ChangeVolumeSoundMem(Volume, music);//volume 0-255
-	PlaySoundMem(music, DX_PLAYTYPE_BACK);
+	ChangeVolumeSoundMem(BGMVolume, music);//volume 0-255
+	PlaySoundMem(music, DX_PLAYTYPE_LOOP);
 }
 
-void VolumeSetting(int newVolume)
+void PlaySE(int se)
 {
-	Volume = newVolume;
+	ChangeVolumeSoundMem(SEVolume, se);//volume 0-255
+	PlaySoundMem(se, DX_PLAYTYPE_BACK);
+}
+
+void BGMVolumeSetting(int newVolume)
+{
+	BGMVolume = newVolume;
+}
+
+void SEVolumeSetting(int newVolume)
+{
+	SEVolume = newVolume;
 }
