@@ -1,12 +1,7 @@
-#include <stdio.h>
-#include <DxLib.h>
-#include <math.h>
+#include "GameData.h"
 #include "Player.h"
-#include "Image.h"
-#include "Audio.h"
 #include "Enemy.h"
 #include "Player_Bullet.h"
-#include "GameData.h"
 
 double FrameCount = 0;
 
@@ -26,97 +21,6 @@ void ViewStatus(void)
 	DrawFormatString(WINDOW_WIDTH - 200, 120, GetColor(255, 255, 255), "sec %.2lf", FrameCount++ / 60);
 }
 
-void PlayerBulletAction(void)
-{
-	for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++)
-	{
-		if (P_Bullet_exist[i] == true) DrawCircle(P_Bullet_PosX[i], P_Bullet_PosY[i], P_Bullet_HitBoxSize[i], GetColor(0, 100, 100), 1);
-		else continue;
-
-		P_Bullet_PosY[i] -= 12;
-
-		//画面外で消滅
-		if (P_Bullet_PosY[i] < -20)
-		{
-			PlayerBulletDestroy(i);
-			continue;
-		}
-
-	}
-}
-
-void EnemyAction(void)
-{
-	for (int i = 0; i < ENEMY_AMOUNT; i++)
-	{
-		//敵キャラ画像表示
-		if (Enemy_exist[i] == true) DrawCircle(Enemy_X[i], Enemy_Y[i], Enemy_HitBoxSize[i], GetColor(255, 0, 0), 1);
-		else continue;
-
-		EnemyMove(i);
-
-		//画面外で消滅
-		if (Enemy_Y[i] > WINDOW_HEIGHT + 30)
-		{
-			EnemyDestroy(i);
-			continue;
-		}
-
-		//敵とプレイヤーが接触
-		float dis = sqrt(pow((double)Enemy_X[i] - px, 2) + pow((double)Enemy_Y[i] - py, 2));
-		if (dis <= Enemy_HitBoxSize[i] + Player_HitBoxSize)
-		{
-			//被弾判定
-			if (DamagedCoolTime <= 0)
-			{
-				px = InitialPosX;
-				py = InitialPosY;
-				Life -= 1;
-				DamagedCoolTime = 120;
-			}
-			
-		}
-
-		//ダメージor死亡
-		for (int j = 0; j < PLAYER_BULLET_AMOUNT; j++)
-		{
-			//敵との座標チェック
-			float dis = sqrt(pow((double)Enemy_X[i] - P_Bullet_PosX[j], 2) + pow((double)Enemy_Y[i] - P_Bullet_PosY[j], 2));
-			if (dis <= Enemy_HitBoxSize[i] + P_Bullet_HitBoxSize[j])//被弾判定
-			{
-				PlayerBulletDestroy(j);
-				if(Enemy_HP[i] > 0)
-				{
-					Score += 1;
-					Enemy_HP[i] -= 1;
-				}
-				else 
-				{
-					Score += 100;
-					EnemyDestroy(i);
-				}			
-				break;
-			}
-		}
-	}
-}
-
-void EnemySpawn(void) 
-{
-	if (KeyState[KEY_INPUT_A] == TRUE) //単発入力
-	{
-		for (int i = 0; i < ENEMY_AMOUNT; i++)
-		{
-			if (Enemy_exist[i] == false)
-			{
-				EnemyGenerate(i, px, py - 600, 16, 3, 0, 5);
-				DrawFormatString(WINDOW_WIDTH - 100, 90, GetColor(255, 255, 255), "%d\n", i);
-				break;
-			}
-		}
-	}
-}
-
 void Update(void) //毎フレーム処理
 {
 	ViewStatus();
@@ -125,11 +29,11 @@ void Update(void) //毎フレーム処理
 	if (DamagedCoolTime >= 0) DamagedCoolTime--;
 
 	if (KeyState[KEY_INPUT_Z] > 0) PlayerShotGenerate(px, py);//射撃
+	if (KeyState[KEY_INPUT_A] == TRUE) EnemySpawn();
 
 	PlayerBulletAction();
 	EnemyAction();
-	EnemySpawn();
-
+	
 	PlayerMove(KeyState);//プレイヤーの移動
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);

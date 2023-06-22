@@ -1,19 +1,27 @@
-#include <DxLib.h>
 #include "GameData.h"
+#define PLAYER_SIZE_X 12
+#define PLAYER_SIZE_Y 24
+
+//ƒvƒŒƒCƒ„[
+int InitialPosX = 350;
+int InitialPosY = 550;
+int Player_HitBoxSize = 4;
+int px = InitialPosX;
+int py = InitialPosY;
+int Score = 0;
+int Life = 10;
+float DamagedCoolTime = 0;
 
 void PlayerMove(int* keyState)
 {
-	int Frame_WIDTH = 580;
-	int Frame_HEIGHT = 600;
-	const int MOVE_SPEED = 4;
+	int MOVE_SPEED = 4;
 	float slow = 1;
-	const int PLAYER_SIZE_X = 12;
-	const int PLAYER_SIZE_Y = 24;
+	
 
 	if (keyState[KEY_INPUT_LSHIFT] > 0) slow = 0.5;
 	else slow = 1;
 
-	if (keyState[KEY_INPUT_RIGHT] > 0 && px < Frame_WIDTH - PLAYER_SIZE_X) //Œp‘±“ü—Í
+	if (keyState[KEY_INPUT_RIGHT] > 0 && px < FRAME_WIDTH - PLAYER_SIZE_X) //Œp‘±“ü—Í
 	{
 		px += (int)MOVE_SPEED * slow;
 	}
@@ -21,7 +29,7 @@ void PlayerMove(int* keyState)
 	{
 		px -= (int)MOVE_SPEED * slow;
 	}
-	if (keyState[KEY_INPUT_DOWN] > 0 && py < Frame_HEIGHT - PLAYER_SIZE_Y) //Œp‘±“ü—Í
+	if (keyState[KEY_INPUT_DOWN] > 0 && py < FRAME_HEIGHT - PLAYER_SIZE_Y) //Œp‘±“ü—Í
 	{
 		py += (int)MOVE_SPEED * slow;
 	}

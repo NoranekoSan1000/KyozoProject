@@ -1,5 +1,15 @@
-#include <stdio.h>
 #include "GameData.h"
+#include "Player.h"
+#include "Player_Bullet.h"
+
+//敵
+bool Enemy_exist[ENEMY_AMOUNT];
+int Enemy_X[ENEMY_AMOUNT];
+int Enemy_Y[ENEMY_AMOUNT];
+int Enemy_HitBoxSize[ENEMY_AMOUNT];
+int Enemy_MoveSpeed[ENEMY_AMOUNT];
+int MovePattern[ENEMY_AMOUNT];
+int Enemy_HP[ENEMY_AMOUNT];
 
 void EnemyGenerate(int num, int x, int y, int hitboxsize, int movespeed, int movepattern, int hp)
 {
@@ -23,6 +33,19 @@ void EnemyDestroy(int num)
 	Enemy_HP[num] = NULL;
 }
 
+void EnemySpawn(void)
+{
+	for (int i = 0; i < ENEMY_AMOUNT; i++)
+	{
+		if (Enemy_exist[i] == false)
+		{
+			EnemyGenerate(i, px, py - 600, 16, 3, 0, 5);
+			DrawFormatString(WINDOW_WIDTH - 100, 90, GetColor(255, 255, 255), "%d\n", i);
+			break;
+		}
+	}
+}
+
 void EnemyMove(int num)//退場
 {
 	switch (MovePattern[num])
@@ -32,6 +55,62 @@ void EnemyMove(int num)//退場
 			break;
 		default:
 			break;
+	}
+}
+
+void EnemyAction(void)
+{
+	for (int i = 0; i < ENEMY_AMOUNT; i++)
+	{
+		//敵キャラ画像表示
+		if (Enemy_exist[i] == true) DrawCircle(Enemy_X[i], Enemy_Y[i], Enemy_HitBoxSize[i], GetColor(255, 0, 0), 1);
+		else continue;
+
+		EnemyMove(i);
+
+		//画面外で消滅
+		if (Enemy_Y[i] > WINDOW_HEIGHT + 30)
+		{
+			EnemyDestroy(i);
+			continue;
+		}
+
+		//敵とプレイヤーが接触
+		float dis = sqrt(pow((double)Enemy_X[i] - px, 2) + pow((double)Enemy_Y[i] - py, 2));
+		if (dis <= Enemy_HitBoxSize[i] + Player_HitBoxSize)
+		{
+			//被弾判定
+			if (DamagedCoolTime <= 0)
+			{
+				px = InitialPosX;
+				py = InitialPosY;
+				Life -= 1;
+				DamagedCoolTime = 120;
+			}
+
+		}
+
+		//ダメージor死亡
+		for (int j = 0; j < PLAYER_BULLET_AMOUNT; j++)
+		{
+			//敵との座標チェック
+			float dis = sqrt(pow((double)Enemy_X[i] - P_Bullet_PosX[j], 2) + pow((double)Enemy_Y[i] - P_Bullet_PosY[j], 2));
+			if (dis <= Enemy_HitBoxSize[i] + P_Bullet_HitBoxSize[j])//被弾判定
+			{
+				PlayerBulletDestroy(j);
+				if (Enemy_HP[i] > 0)
+				{
+					Score += 1;
+					Enemy_HP[i] -= 1;
+				}
+				else
+				{
+					Score += 100;
+					EnemyDestroy(i);
+				}
+				break;
+			}
+		}
 	}
 }
 
