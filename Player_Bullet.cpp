@@ -33,7 +33,6 @@ float AngleCalc(int px, int py)
 {
 	float tmp;
 	tmp = (float)atan2((Enemy_Y[CloseEnemy] - py), (Enemy_X[CloseEnemy] - px));
-	DrawFormatString(WINDOW_WIDTH - 400, 120, GetColor(255, 255, 255), "Score : %lf", tmp);
 	return tmp;
 }
 
