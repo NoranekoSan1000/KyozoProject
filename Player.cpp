@@ -11,6 +11,7 @@ int py = InitialPosY;
 int Score = 0;
 int Life = 10;
 float DamagedCoolTime = 0;
+float P_ShotCoolTime = 0;
 
 void PlayerMove(int* keyState)
 {

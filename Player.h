@@ -8,6 +8,7 @@ extern int py;
 extern int Score;
 extern int Life;
 extern float DamagedCoolTime;
+extern float P_ShotCoolTime;
 
 void PlayerMove(int* keyState);
 void ViewPlayer(void);

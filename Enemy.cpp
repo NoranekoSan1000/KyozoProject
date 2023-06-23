@@ -13,7 +13,7 @@ int MovePattern[ENEMY_AMOUNT];
 int Enemy_HP[ENEMY_AMOUNT];
 float Enemy_dist[ENEMY_AMOUNT];
 
-int CloseEnemy = NULL;
+int CloseEnemy = -1;
 float CloseDist = 700;
 
 void EnemyGenerate(int num, int x, int y, int hitboxsize, int movespeed, int movepattern, int hp)
@@ -38,7 +38,7 @@ void EnemyDestroy(int num)
 	Enemy_HP[num] = NULL;
 	Enemy_dist[num] = NULL;
 
-	CloseEnemy = NULL;//近いキャラをリセット
+	CloseEnemy = -1;//近いキャラをリセット
 	CloseDist = 700;
 }
 
@@ -97,7 +97,7 @@ void EnemyAction(void)
 		Enemy_dist[i] = sqrt(pow((double)Enemy_X[i] - px, 2) + pow((double)Enemy_Y[i] - py, 2));
 
 		CheckDistance(i);
-		DrawFormatString(WINDOW_WIDTH - 400, 30, GetColor(255, 255, 255), "Score : %lf", CloseDist);
+		DrawFormatString(WINDOW_WIDTH - 400, 30, GetColor(255, 255, 255), "Score : %d", CloseEnemy);
 
 		if (Enemy_dist[i] <= Enemy_HitBoxSize[i] + Player_HitBoxSize)
 		{

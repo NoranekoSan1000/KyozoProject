@@ -21,6 +21,20 @@ void ViewStatus(void)
 	DrawFormatString(WINDOW_WIDTH - 200, 120, GetColor(255, 255, 255), "sec %.2lf", FrameCount++ / 60);
 }
 
+void PlayerShotAction()
+{
+	if (KeyState[KEY_INPUT_Z] > 0)
+	{
+		if (P_ShotCoolTime > 0) return;
+		PlayerShot(px, py, 0);//射撃
+		PlayerShot(px, py, 1);//射撃
+		PlayerShot(px, py, 2);//射撃
+		PlayerShot(px, py, 5);//射撃
+		PlayerShot(px, py, 6);//射撃
+		P_ShotCoolTime = 10;//フレームで設定
+	}
+}
+
 void Update(void) //毎フレーム処理
 {
 	if (P_ShotCoolTime >= 0) P_ShotCoolTime--;
@@ -29,9 +43,9 @@ void Update(void) //毎フレーム処理
 	if (KeyState[KEY_INPUT_A] == TRUE) EnemySpawn();
 	EnemyAction();
 
+	PlayerShotAction();
 	PlayerBulletAction();
 	
-	if (KeyState[KEY_INPUT_Z] > 0) PlayerShotGenerate(px, py);//射撃
 	PlayerMove(KeyState);//プレイヤーの移動
 	ViewPlayer();//プレイヤー表示
 

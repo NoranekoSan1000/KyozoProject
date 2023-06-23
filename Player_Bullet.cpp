@@ -1,6 +1,5 @@
 #include "GameData.h"
 #include "Enemy.h"
-#include "Player.h"
 
 //ƒvƒŒƒCƒ„[‚Ì’e
 bool P_Bullet_exist[PLAYER_BULLET_AMOUNT];
@@ -8,7 +7,6 @@ int P_Bullet_PosX[PLAYER_BULLET_AMOUNT];
 int P_Bullet_PosY[PLAYER_BULLET_AMOUNT];
 int P_Bullet_HitBoxSize[PLAYER_BULLET_AMOUNT];
 int P_Bullet_MovePattern[PLAYER_BULLET_AMOUNT];
-float P_ShotCoolTime = 0;
 
 void PlayerBulletGenerate(int num, int x, int y, int hitboxsize, int pattern)
 {
@@ -28,19 +26,14 @@ void PlayerBulletDestroy(int num)
 	P_Bullet_MovePattern[num] = NULL;
 }
 
-void PlayerShotGenerate(int px,int py)
+void PlayerShot(int px,int py,int type)
 {
-	if (P_ShotCoolTime > 0) return;
 	for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++)
 	{
 		if (P_Bullet_exist[i] == false)//ƒVƒ‡ƒbƒgÝ’èŠi”[êŠ‚Ì‹ó‚«‚ðŠm”F
 		{
 			PlaySE(SE_PlayerShot); //Œø‰Ê‰¹
-			PlayerBulletGenerate(i, px, py, 4, 0);
-			PlayerBulletGenerate(i+1, px, py, 4, 3);/////////////////‹ó‚«ƒ`ƒFƒbƒN•K—v////////////////////
-			//PlayerBulletGenerate(i+1, px, py, 4, 1);
-			//PlayerBulletGenerate(i+2, px, py, 4, 2);
-			P_ShotCoolTime = 10;//ƒtƒŒ[ƒ€‚ÅÝ’è
+			PlayerBulletGenerate(i, px, py, 4, type);
 			break;
 		}
 	}
@@ -51,27 +44,33 @@ void BulletMove(int num)
 	float angle = (3 * PI / 2);//ã•û
 	float speed = 12;
 
-	float xv, yv, v; //ƒxƒNƒgƒ‹
 	switch (P_Bullet_MovePattern[num])
 	{
 	case 0://’¼i
 		P_Bullet_PosX[num] += cos(angle) * speed;
 		P_Bullet_PosY[num] += sin(angle) * speed;
 		break;
-	case 1://‰EŽÎ‚ß
+	case 1://‰EŽÎ‚ß’†
 		P_Bullet_PosX[num] += cos(angle + 0.3) * speed;
 		P_Bullet_PosY[num] += sin(angle + 0.3) * speed;
 		break;
-	case 2://¶ŽÎ‚ß
+	case 2://¶ŽÎ‚ß’†
 		P_Bullet_PosX[num] += cos(angle - 0.2) * speed;
 		P_Bullet_PosY[num] += sin(angle - 0.2) * speed;
 		break;
 	case 3://‹ß‚¢“G‘_‚¢
-		xv = (Enemy_X[CloseEnemy] - P_Bullet_PosX[num]);
-		yv = (Enemy_Y[CloseEnemy] - P_Bullet_PosY[num]);
-		v = sqrt((xv * xv) + (yv * yv));
-		P_Bullet_PosX[num] += (xv / v) * speed;
-		P_Bullet_PosY[num] += (yv / v) * speed;	
+		P_Bullet_PosX[num] += cos(angle + 0.15) * speed;
+		P_Bullet_PosY[num] += sin(angle + 0.15) * speed;
+		break;
+	case 4://‹ß‚¢“G‘_‚¢
+		P_Bullet_PosX[num] += cos(angle - 0.05) * speed;
+		P_Bullet_PosY[num] += sin(angle - 0.05) * speed;
+		break;
+	case 5://‹ß‚¢“G‘_‚¢
+
+		break;
+	case 6://‹ß‚¢“G‘_‚¢
+
 		break;
 	default:
 		break;
@@ -91,7 +90,7 @@ void PlayerBulletAction(void)
 		BulletMove(i);
 
 		//‰æ–ÊŠO‚ÅÁ–Å
-		if (P_Bullet_PosY[i] < -20)
+		if (P_Bullet_PosY[i] < -20 || P_Bullet_PosY[i] > FRAME_HEIGHT || 0 > P_Bullet_PosX[i] || P_Bullet_PosX[i] > FRAME_WIDTH)
 		{
 			PlayerBulletDestroy(i);
 			continue;
