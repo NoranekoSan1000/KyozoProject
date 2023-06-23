@@ -1,5 +1,6 @@
 #pragma once
 #include <stdio.h>
+#include <algorithm>
 #include <DxLib.h>
 #include <math.h>
 #include "Image.h"

@@ -1,6 +1,7 @@
 #include "GameData.h"
 #include "Player.h"
 #include "Player_Bullet.h"
+using namespace std;
 
 //“G
 bool Enemy_exist[ENEMY_AMOUNT];
@@ -10,6 +11,10 @@ int Enemy_HitBoxSize[ENEMY_AMOUNT];
 int Enemy_MoveSpeed[ENEMY_AMOUNT];
 int MovePattern[ENEMY_AMOUNT];
 int Enemy_HP[ENEMY_AMOUNT];
+float Enemy_dist[ENEMY_AMOUNT];
+
+int CloseEnemy = NULL;
+int CloseDist = 700;
 
 void EnemyGenerate(int num, int x, int y, int hitboxsize, int movespeed, int movepattern, int hp)
 {
@@ -31,6 +36,10 @@ void EnemyDestroy(int num)
 	Enemy_MoveSpeed[num] = NULL;
 	MovePattern[num] = NULL;
 	Enemy_HP[num] = NULL;
+	Enemy_dist[num] = NULL;
+
+	CloseEnemy = NULL;//‹ß‚¢ƒLƒƒƒ‰‚ðƒŠƒZƒbƒg
+	CloseDist = 700;
 }
 
 void EnemySpawn(void)
@@ -58,6 +67,15 @@ void EnemyMove(int num)
 	}
 }
 
+void CheckDistance(int num) 
+{
+	if (Enemy_dist[num] < CloseDist)
+	{
+		CloseEnemy = num;
+	}
+	CloseDist = Enemy_dist[CloseEnemy];
+}
+
 void EnemyAction(void)
 {
 	for (int i = 0; i < ENEMY_AMOUNT; i++)
@@ -76,8 +94,12 @@ void EnemyAction(void)
 		}
 
 		//“G‚ÆƒvƒŒƒCƒ„[‚ªÚG
-		float dis = sqrt(pow((double)Enemy_X[i] - px, 2) + pow((double)Enemy_Y[i] - py, 2));
-		if (dis <= Enemy_HitBoxSize[i] + Player_HitBoxSize)
+		Enemy_dist[i] = sqrt(pow((double)Enemy_X[i] - px, 2) + pow((double)Enemy_Y[i] - py, 2));
+
+		CheckDistance(i);
+		DrawFormatString(WINDOW_WIDTH - 400, 30, GetColor(255, 255, 255), "Score : %lf", Enemy_dist[CloseEnemy]);
+
+		if (Enemy_dist[i] <= Enemy_HitBoxSize[i] + Player_HitBoxSize)
 		{
 			//”í’e”»’è
 			if (DamagedCoolTime <= 0)
