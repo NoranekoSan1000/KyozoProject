@@ -37,7 +37,7 @@ void PlayerShotGenerate(int px,int py)
 		{
 			PlaySE(SE_PlayerShot); //効果音
 			PlayerBulletGenerate(i, px, py, 4, 0);
-			PlayerBulletGenerate(i, px, py, 4, 3);
+			PlayerBulletGenerate(i+1, px, py, 4, 3);/////////////////空きチェック必要////////////////////
 			//PlayerBulletGenerate(i+1, px, py, 4, 1);
 			//PlayerBulletGenerate(i+2, px, py, 4, 2);
 			P_ShotCoolTime = 10;//フレームで設定
