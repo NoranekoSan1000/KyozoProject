@@ -36,6 +36,7 @@ void PlayerShotGenerate(int px,int py)
 		if (P_Bullet_exist[i] == false)//ƒVƒ‡ƒbƒgİ’èŠi”[êŠ‚Ì‹ó‚«‚ğŠm”F
 		{
 			PlaySE(SE_PlayerShot); //Œø‰Ê‰¹
+			PlayerBulletGenerate(i, px, py, 4, 0);
 			PlayerBulletGenerate(i, px, py, 4, 3);
 			//PlayerBulletGenerate(i+1, px, py, 4, 1);
 			//PlayerBulletGenerate(i+2, px, py, 4, 2);
@@ -66,19 +67,11 @@ void BulletMove(int num)
 		P_Bullet_PosY[num] += sin(angle - 0.2) * speed;
 		break;
 	case 3://‹ß‚¢“G‘_‚¢
-		if (CloseEnemy == NULL) 
-		{
-			P_Bullet_PosX[num] += cos(angle) * speed;
-			P_Bullet_PosY[num] += sin(angle) * speed;
-		}
-		else
-		{
-			xv = (Enemy_X[CloseEnemy] - P_Bullet_PosX[num]);
-			yv = (Enemy_Y[CloseEnemy] - P_Bullet_PosY[num]);
-			v = sqrt((xv * xv) + (yv * yv));
-			P_Bullet_PosX[num] += (xv / v) * speed;
-			P_Bullet_PosY[num] += (yv / v) * speed;
-		}	
+		xv = (Enemy_X[CloseEnemy] - P_Bullet_PosX[num]);
+		yv = (Enemy_Y[CloseEnemy] - P_Bullet_PosY[num]);
+		v = sqrt((xv * xv) + (yv * yv));
+		P_Bullet_PosX[num] += (xv / v) * speed;
+		P_Bullet_PosY[num] += (yv / v) * speed;	
 		break;
 	default:
 		break;
