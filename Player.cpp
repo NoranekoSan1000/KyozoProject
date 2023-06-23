@@ -8,6 +8,7 @@ int InitialPosY = 550;
 int Player_HitBoxSize = 4;
 int px = InitialPosX;
 int py = InitialPosY;
+int Level = 0;
 int Score = 0;
 int Life = 10;
 float DamagedCoolTime = 0;
