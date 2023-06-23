@@ -48,7 +48,7 @@ void EnemySpawn(void)
 	{
 		if (Enemy_exist[i] == false)
 		{
-			EnemyGenerate(i, px, py - 600, 12, 3, 0, 5);
+			EnemyGenerate(i, px, py - 600, 12, 2, 0, 5);
 			DrawFormatString(WINDOW_WIDTH - 100, 90, GetColor(255, 255, 255), "%d\n", i);
 			break;
 		}

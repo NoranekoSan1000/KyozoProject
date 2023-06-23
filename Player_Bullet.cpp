@@ -7,14 +7,16 @@ int P_Bullet_PosX[PLAYER_BULLET_AMOUNT];
 int P_Bullet_PosY[PLAYER_BULLET_AMOUNT];
 int P_Bullet_HitBoxSize[PLAYER_BULLET_AMOUNT];
 int P_Bullet_MovePattern[PLAYER_BULLET_AMOUNT];
+float P_Bullet_Angle[PLAYER_BULLET_AMOUNT];
 
-void PlayerBulletGenerate(int num, int x, int y, int hitboxsize, int pattern)
+void PlayerBulletGenerate(int num, int x, int y, int hitboxsize, int pattern,float angle)
 {
 	P_Bullet_exist[num] = true;
 	P_Bullet_PosX[num] = x;
 	P_Bullet_PosY[num] = y;
 	P_Bullet_HitBoxSize[num] = hitboxsize;
 	P_Bullet_MovePattern[num] = pattern;
+	P_Bullet_Angle[num] = angle;
 }
 
 void PlayerBulletDestroy(int num)
@@ -24,16 +26,30 @@ void PlayerBulletDestroy(int num)
 	P_Bullet_PosY[num] = NULL;
 	P_Bullet_HitBoxSize[num] = NULL;
 	P_Bullet_MovePattern[num] = NULL;
+	P_Bullet_Angle[num] = NULL;
+}
+
+float AngleCalc(int px, int py)
+{
+	float tmp;
+	tmp = (float)atan2((Enemy_Y[CloseEnemy] - py), (Enemy_X[CloseEnemy] - px));
+	DrawFormatString(WINDOW_WIDTH - 400, 120, GetColor(255, 255, 255), "Score : %lf", tmp);
+	return tmp;
 }
 
 void PlayerShot(int px,int py,int type)
 {
+	float angle;
 	for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++)
 	{
 		if (P_Bullet_exist[i] == false)//ƒVƒ‡ƒbƒgÝ’èŠi”[êŠ‚Ì‹ó‚«‚ðŠm”F
 		{
 			PlaySE(SE_PlayerShot); //Œø‰Ê‰¹
-			PlayerBulletGenerate(i, px, py, 4, type);
+			angle = AngleCalc(px,py);
+
+			if (CloseEnemy == -1 && type == 5) type = 3;
+			if (CloseEnemy == -1 && type == 6) type = 4;
+			PlayerBulletGenerate(i, px, py, 4, type, angle);
 			break;
 		}
 	}
@@ -42,7 +58,7 @@ void PlayerShot(int px,int py,int type)
 void BulletMove(int num)
 {
 	float angle = (3 * PI / 2);//ã•û
-	float speed = 12;
+	float speed = 14;
 
 	switch (P_Bullet_MovePattern[num])
 	{
@@ -50,27 +66,29 @@ void BulletMove(int num)
 		P_Bullet_PosX[num] += cos(angle) * speed;
 		P_Bullet_PosY[num] += sin(angle) * speed;
 		break;
-	case 1://‰EŽÎ‚ß’†
-		P_Bullet_PosX[num] += cos(angle + 0.3) * speed;
-		P_Bullet_PosY[num] += sin(angle + 0.3) * speed;
-		break;
-	case 2://¶ŽÎ‚ß’†
-		P_Bullet_PosX[num] += cos(angle - 0.2) * speed;
-		P_Bullet_PosY[num] += sin(angle - 0.2) * speed;
-		break;
-	case 3://‹ß‚¢“G‘_‚¢
+	case 1://‰EŽÎ‚ß¬
 		P_Bullet_PosX[num] += cos(angle + 0.15) * speed;
 		P_Bullet_PosY[num] += sin(angle + 0.15) * speed;
 		break;
-	case 4://‹ß‚¢“G‘_‚¢
-		P_Bullet_PosX[num] += cos(angle - 0.05) * speed;
-		P_Bullet_PosY[num] += sin(angle - 0.05) * speed;
+	case 2://¶ŽÎ‚ß¬
+		P_Bullet_PosX[num] += cos(angle - 0.10) * speed;
+		P_Bullet_PosY[num] += sin(angle - 0.10) * speed;
+		break;
+	case 3://‰EŽÎ‚ß’†
+		P_Bullet_PosX[num] += cos(angle + 0.3) * speed;
+		P_Bullet_PosY[num] += sin(angle + 0.3) * speed;
+		break;
+	case 4://¶ŽÎ‚ß’†
+		P_Bullet_PosX[num] += cos(angle - 0.25) * speed;
+		P_Bullet_PosY[num] += sin(angle - 0.25) * speed;
 		break;
 	case 5://‹ß‚¢“G‘_‚¢
-
+		P_Bullet_PosX[num] += cos(P_Bullet_Angle[num] + 0.05) * speed;
+		P_Bullet_PosY[num] += sin(P_Bullet_Angle[num] + 0.05) * speed;
 		break;
 	case 6://‹ß‚¢“G‘_‚¢
-
+		P_Bullet_PosX[num] += cos(P_Bullet_Angle[num] + 0.05) * speed;
+		P_Bullet_PosY[num] += sin(P_Bullet_Angle[num] + 0.05) * speed;
 		break;
 	default:
 		break;
