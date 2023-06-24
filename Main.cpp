@@ -26,12 +26,12 @@ void PlayerShotAction()
 	if (KeyState[KEY_INPUT_Z] > 0)
 	{
 		if (P_ShotCoolTime > 0) return;
-		PlayerShot(px, py, 0);//射撃
+		PlayerShot(px, py-4, 0);//射撃
 		PlayerShot(px, py, 1);//射撃
 		PlayerShot(px, py, 2);//射撃
-		PlayerShot(px, py, 5);//射撃
-		PlayerShot(px, py, 6);//射撃
-		P_ShotCoolTime = 10;//フレームで設定
+		PlayerShot(px+8, py+12, 5);//射撃
+		PlayerShot(px-8, py+12, 6);//射撃
+		P_ShotCoolTime = 8;//フレームで設定
 	}
 }
 
