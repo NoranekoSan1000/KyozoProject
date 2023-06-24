@@ -3,6 +3,7 @@
 #include "Enemy.h"
 #include "Player_Bullet.h"
 
+SceneManager GameScene = Title_Scene;
 double FrameCount = 0;
 
 //キー取得用の配列
@@ -12,8 +13,10 @@ int KeyState[256] = { 0 };
 void ViewStatus(void)
 {
 	//枠
-	DrawBox(0, 0, 100, WINDOW_HEIGHT, GetColor(0, 0, 0), 1);
-	DrawRotaGraph(700, 300, 0.8, 0, gameFrame_img, TRUE);
+	DrawBox(0, 0, 25, WINDOW_HEIGHT, GetColor(0, 0, 0), 1);
+	DrawBox(0, 0, WINDOW_WIDTH, 25, GetColor(0, 0, 0), 1);
+	DrawBox(0, WINDOW_HEIGHT-25, WINDOW_WIDTH, WINDOW_HEIGHT, GetColor(0, 0, 0), 1);
+	DrawRotaGraph(750, 400, 1, 0, gameFrame_img, TRUE);
 
 	//テキスト
 	DrawFormatString(WINDOW_WIDTH - 200, 30, GetColor(255, 255, 255), "Score : %d", Score);
@@ -26,30 +29,39 @@ void PlayerShotAction()
 	if (KeyState[KEY_INPUT_Z] > 0)
 	{
 		if (P_ShotCoolTime > 0) return;
-		PlayerShot(px, py-4, 0);//射撃
-		PlayerShot(px, py, 1);//射撃
-		PlayerShot(px, py, 2);//射撃
-		PlayerShot(px+8, py+12, 5);//射撃
-		PlayerShot(px-8, py+12, 6);//射撃
+		PlayerShot(px, py-8, 0);//射撃
+		PlayerShot(px, py-4, 1);//射撃
+		PlayerShot(px, py-4, 2);//射撃
+		PlayerShot(px+8, py+8, 5);//射撃
+		PlayerShot(px-8, py+8, 6);//射撃
 		P_ShotCoolTime = 8;//フレームで設定
 	}
 }
 
 void Update(void) //毎フレーム処理
 {
-	if (P_ShotCoolTime >= 0) P_ShotCoolTime--;
-	if (DamagedCoolTime >= 0) DamagedCoolTime--;
-	
-	if (KeyState[KEY_INPUT_A] == TRUE) EnemySpawn();
-	EnemyAction();
+	if (GameScene == Title_Scene)
+	{
+		DrawRotaGraph(450, 400, 1, 0, Title_img, TRUE);
+		if (KeyState[KEY_INPUT_A] == TRUE) GameScene = Stage1_Scene;
+	}
+	if (GameScene == Stage1_Scene)
+	{
+		if (P_ShotCoolTime >= 0) P_ShotCoolTime--;
+		if (DamagedCoolTime >= 0) DamagedCoolTime--;
 
-	PlayerShotAction();
-	PlayerBulletAction();
-	
-	PlayerMove(KeyState);//プレイヤーの移動
-	ViewPlayer();//プレイヤー表示
+		if (KeyState[KEY_INPUT_A] == TRUE) EnemySpawn();
+		EnemyAction();
 
-	ViewStatus();
+		PlayerShotAction();
+		PlayerBulletAction();
+
+		PlayerMove(KeyState);//プレイヤーの移動
+		ViewPlayer();//プレイヤー表示
+
+		ViewStatus();
+	}
+
 }
 
 //キー入力状態を更新する関数
@@ -76,7 +88,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 
 	ImageInit(); //画像の読み込み <- Image.cpp
 	AudioInit(); //音声の読み込み <- Audio.cpp
-	PlayBGM(BGM[4]);
+	PlayBGM(BGM[0]);
 
 	while (ProcessMessage() == 0)
 	{

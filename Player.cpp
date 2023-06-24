@@ -16,28 +16,26 @@ float P_ShotCoolTime = 0;
 
 void PlayerMove(int* keyState)
 {
-	int MOVE_SPEED = 4;
-	float slow = 1;
+	int MOVE_SPEED = 5;
 	
-
-	if (keyState[KEY_INPUT_LSHIFT] > 0) slow = 0.5;
-	else slow = 1;
+	if (keyState[KEY_INPUT_LSHIFT] > 0) MOVE_SPEED = 2;
+	else MOVE_SPEED = 5;
 
 	if (keyState[KEY_INPUT_RIGHT] > 0 && px < FRAME_WIDTH - PLAYER_SIZE_X) //Œp‘±“ü—Í
 	{
-		px += (int)MOVE_SPEED * slow;
+		px += (int)MOVE_SPEED;
 	}
-	if (keyState[KEY_INPUT_LEFT] > 0 && px > 100 + PLAYER_SIZE_X) //Œp‘±“ü—Í
+	if (keyState[KEY_INPUT_LEFT] > 0 && px > 25 + PLAYER_SIZE_X) //Œp‘±“ü—Í
 	{
-		px -= (int)MOVE_SPEED * slow;
+		px -= (int)MOVE_SPEED;
 	}
 	if (keyState[KEY_INPUT_DOWN] > 0 && py < FRAME_HEIGHT - PLAYER_SIZE_Y) //Œp‘±“ü—Í
 	{
-		py += (int)MOVE_SPEED * slow;
+		py += (int)MOVE_SPEED;
 	}
-	if (keyState[KEY_INPUT_UP] > 0 && py > 0 + PLAYER_SIZE_Y) //Œp‘±“ü—Í
+	if (keyState[KEY_INPUT_UP] > 0 && py > 25 + PLAYER_SIZE_Y) //Œp‘±“ü—Í
 	{
-		py -= (int)MOVE_SPEED * slow;
+		py -= (int)MOVE_SPEED;
 	}
 }
 
