@@ -103,8 +103,10 @@ void PlayerBulletAction(void)
 		if (P_Bullet_exist[i] == true) DrawCircle(P_Bullet_PosX[i], P_Bullet_PosY[i], P_Bullet_HitBoxSize[i], GetColor(100, 100, 255), 1);
 		else continue;
 		
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200);
 		if(0 <= P_Bullet_MovePattern[i] && P_Bullet_MovePattern[i] <= 2 ) DrawRotaGraph(P_Bullet_PosX[i], P_Bullet_PosY[i], 1.0, 0, PlayerShot01_img, TRUE);
 		else DrawRotaGraph(P_Bullet_PosX[i], P_Bullet_PosY[i], 1.0, 0, PlayerShot02_img, TRUE);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
 
 		BulletMove(i);
 
