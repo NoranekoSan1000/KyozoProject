@@ -2,6 +2,8 @@
 int BGM[9];
 int SE_PlayerShot;
 
+int NowPlayBGM;
+
 int BGMVolume = 100;
 int SEVolume = 100;
 
@@ -23,9 +25,11 @@ void AudioInit(void)
 
 void PlayBGM(int music)
 {
-	StopSoundMem(music);
-	ChangeVolumeSoundMem(BGMVolume, music);//volume 0-255
-	PlaySoundMem(music, DX_PLAYTYPE_LOOP);
+	if (music == NowPlayBGM) return;
+	StopSoundMem(NowPlayBGM);
+	NowPlayBGM = music;
+	ChangeVolumeSoundMem(BGMVolume, NowPlayBGM);//volume 0-255
+	PlaySoundMem(NowPlayBGM, DX_PLAYTYPE_LOOP);
 }
 
 void PlaySE(int se)

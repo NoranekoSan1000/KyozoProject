@@ -10,6 +10,20 @@ double FrameCount = 0;
 char buf[256] = { 0 };
 int KeyState[256] = { 0 };
 
+void PlayerShotAction()
+{
+	if (KeyState[KEY_INPUT_Z] > 0)
+	{
+		if (P_ShotCoolTime > 0) return;
+		PlayerShot(px, py - 8, 0);//射撃
+		PlayerShot(px, py - 4, 1);//射撃
+		PlayerShot(px, py - 4, 2);//射撃
+		PlayerShot(px + 8, py + 8, 5);//射撃
+		PlayerShot(px - 8, py + 8, 6);//射撃
+		P_ShotCoolTime = 8;//フレームで設定
+	}
+}
+
 void ViewStatus(void)
 {
 	//枠
@@ -24,42 +38,84 @@ void ViewStatus(void)
 	DrawFormatString(WINDOW_WIDTH - 200, 120, GetColor(255, 255, 255), "sec %.2lf", FrameCount++ / 60);
 }
 
-void PlayerShotAction()
+int intu;
+void ViewBackGround(void)//背景ループ
 {
-	if (KeyState[KEY_INPUT_Z] > 0)
-	{
-		if (P_ShotCoolTime > 0) return;
-		PlayerShot(px, py-8, 0);//射撃
-		PlayerShot(px, py-4, 1);//射撃
-		PlayerShot(px, py-4, 2);//射撃
-		PlayerShot(px+8, py+8, 5);//射撃
-		PlayerShot(px-8, py+8, 6);//射撃
-		P_ShotCoolTime = 8;//フレームで設定
-	}
+	intu += 2;
+	DrawRotaGraph(300, 0 + intu, 1, 0, background_img, TRUE);
+	if (intu >= 800) intu = 0;
+}
+
+void GameProcess(void)
+{
+	ViewBackGround();
+
+	if (P_ShotCoolTime >= 0) P_ShotCoolTime--;
+	if (DamagedCoolTime >= 0) DamagedCoolTime--;
+
+	if (KeyState[KEY_INPUT_A] == TRUE) EnemySpawn();
+	EnemyAction();
+
+	PlayerShotAction();
+	PlayerBulletAction();
+
+	PlayerMove(KeyState);//プレイヤーの移動
+	ViewPlayer();//プレイヤー表示
+
+	ViewStatus();
 }
 
 void Update(void) //毎フレーム処理
 {
 	if (GameScene == Title_Scene)
 	{
+		PlayBGM(BGM[0]);
 		DrawRotaGraph(450, 400, 1, 0, Title_img, TRUE);
-		if (KeyState[KEY_INPUT_A] == TRUE) GameScene = Stage1_Scene;
+		if (KeyState[KEY_INPUT_P] == TRUE)
+		{
+			KeyState[KEY_INPUT_P] = 2;
+			GameScene = Stage1_Scene;	
+		}
 	}
 	if (GameScene == Stage1_Scene)
 	{
-		if (P_ShotCoolTime >= 0) P_ShotCoolTime--;
-		if (DamagedCoolTime >= 0) DamagedCoolTime--;
-
-		if (KeyState[KEY_INPUT_A] == TRUE) EnemySpawn();
-		EnemyAction();
-
-		PlayerShotAction();
-		PlayerBulletAction();
-
-		PlayerMove(KeyState);//プレイヤーの移動
-		ViewPlayer();//プレイヤー表示
-
-		ViewStatus();
+		PlayBGM(BGM[1]);
+		GameProcess();
+		if (KeyState[KEY_INPUT_P] == TRUE)
+		{
+			KeyState[KEY_INPUT_P] = 2;
+			GameScene = Stage2_Scene;		
+		}
+	}
+	if (GameScene == Stage2_Scene)
+	{
+		PlayBGM(BGM[3]);
+		GameProcess();
+		if (KeyState[KEY_INPUT_P] == TRUE)
+		{
+			KeyState[KEY_INPUT_P] = 2;
+			GameScene = Stage3_Scene;
+		}
+	}
+	if (GameScene == Stage3_Scene)
+	{
+		PlayBGM(BGM[5]);
+		GameProcess();
+		if (KeyState[KEY_INPUT_P] == TRUE)
+		{
+			KeyState[KEY_INPUT_P] = 2;
+			GameScene = Stage4_Scene;
+		}
+	}
+	if (GameScene == Stage4_Scene)
+	{
+		PlayBGM(BGM[7]);
+		GameProcess();
+		if (KeyState[KEY_INPUT_P] == TRUE)
+		{
+			KeyState[KEY_INPUT_P] = 2;
+			GameScene = Title_Scene;
+		}
 	}
 
 }
@@ -70,8 +126,18 @@ void KeyUpdate(void)
 	GetHitKeyStateAll(buf);
 	for (int i = 0; i < 256; i++)
 	{
-		if (buf[i] == 1) KeyState[i]++;
-		else KeyState[i] = 0;
+		if (buf[i] == 0)
+		{		
+			if (KeyState[i] > 0) // 押されていない
+			{
+				KeyState[i] = -1;		// ESCキーが離れた瞬間
+			}
+			else
+			{
+				KeyState[i] = 0;		// ESCキーが離れている状態
+			}		
+		}
+		else KeyState[i]++;// 押されている
 	}
 }
 

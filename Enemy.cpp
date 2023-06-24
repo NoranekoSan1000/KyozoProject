@@ -97,7 +97,6 @@ void EnemyAction(void)
 		Enemy_dist[i] = sqrt(pow((double)Enemy_X[i] - px, 2) + pow((double)Enemy_Y[i] - py, 2));
 
 		CheckDistance(i);
-		DrawFormatString(WINDOW_WIDTH - 400, 30, GetColor(255, 255, 255), "Score : %d", CloseEnemy);
 
 		if (Enemy_dist[i] <= Enemy_HitBoxSize[i] + Player_HitBoxSize)
 		{

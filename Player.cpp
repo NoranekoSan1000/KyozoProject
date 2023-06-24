@@ -3,8 +3,8 @@
 #define PLAYER_SIZE_Y 24
 
 //ÉvÉåÉCÉÑÅ[
-int InitialPosX = 350;
-int InitialPosY = 550;
+int InitialPosX = 325;
+int InitialPosY = 675;
 int Player_HitBoxSize = 4;
 int px = InitialPosX;
 int py = InitialPosY;
