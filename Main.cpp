@@ -46,6 +46,35 @@ void ViewBackGround(void)//背景ループ
 	if (intu >= 800) intu = 0;
 }
 
+bool FadeIn = false;
+bool FadeOut = false;
+int fadeALPHA = 256;
+void ViewFadeWindow(void)
+{
+	if (FadeIn) {
+		if (FadeOut) FadeOut = false;
+		if (fadeALPHA <= 0)
+		{
+			fadeALPHA = 0;
+			FadeIn = false;
+		}
+		else fadeALPHA -= 2;
+	}
+	if (FadeOut) {
+		if (FadeIn) FadeIn = false;
+		if (fadeALPHA >= 256)
+		{
+			fadeALPHA = 256;
+			FadeOut = false;
+		}
+		else fadeALPHA += 2;
+	}
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, fadeALPHA);
+	DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, GetColor(0, 0, 0), 1);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
+}
+
 void GameProcess(void)
 {
 	ViewBackGround();
@@ -62,19 +91,36 @@ void GameProcess(void)
 	PlayerMove(KeyState);//プレイヤーの移動
 	ViewPlayer();//プレイヤー表示
 
-	ViewStatus();
+	ViewFadeWindow();
+	ViewStatus();	
+}
+
+bool ChangeSceneActive = false;
+SceneManager nextScene;
+void ChangeScene(void)
+{
+	if (!ChangeSceneActive) return;
+	FadeOut = true;
+	if (fadeALPHA == 256)
+	{
+		GameScene = nextScene;
+		FadeIn = true;
+		ChangeSceneActive = false;
+	}
 }
 
 void Update(void) //毎フレーム処理
 {
+	ChangeScene();
+
 	if (GameScene == Title_Scene)
 	{
 		PlayBGM(BGM[0]);
 		DrawRotaGraph(450, 400, 1, 0, Title_img, TRUE);
 		if (KeyState[KEY_INPUT_P] == TRUE)
-		{
-			KeyState[KEY_INPUT_P] = 2;
-			GameScene = Stage1_Scene;	
+		{		
+			ChangeSceneActive = true;
+			nextScene = Stage1_Scene;
 		}
 	}
 	if (GameScene == Stage1_Scene)
@@ -82,9 +128,9 @@ void Update(void) //毎フレーム処理
 		PlayBGM(BGM[1]);
 		GameProcess();
 		if (KeyState[KEY_INPUT_P] == TRUE)
-		{
-			KeyState[KEY_INPUT_P] = 2;
-			GameScene = Stage2_Scene;		
+		{	
+			ChangeSceneActive = true;
+			nextScene = Stage2_Scene;
 		}
 	}
 	if (GameScene == Stage2_Scene)
@@ -93,8 +139,8 @@ void Update(void) //毎フレーム処理
 		GameProcess();
 		if (KeyState[KEY_INPUT_P] == TRUE)
 		{
-			KeyState[KEY_INPUT_P] = 2;
-			GameScene = Stage3_Scene;
+			ChangeSceneActive = true;
+			nextScene = Stage3_Scene;
 		}
 	}
 	if (GameScene == Stage3_Scene)
@@ -103,8 +149,8 @@ void Update(void) //毎フレーム処理
 		GameProcess();
 		if (KeyState[KEY_INPUT_P] == TRUE)
 		{
-			KeyState[KEY_INPUT_P] = 2;
-			GameScene = Stage4_Scene;
+			ChangeSceneActive = true;
+			nextScene = Stage4_Scene;
 		}
 	}
 	if (GameScene == Stage4_Scene)
@@ -113,8 +159,8 @@ void Update(void) //毎フレーム処理
 		GameProcess();
 		if (KeyState[KEY_INPUT_P] == TRUE)
 		{
-			KeyState[KEY_INPUT_P] = 2;
-			GameScene = Title_Scene;
+			ChangeSceneActive = true;
+			nextScene = Title_Scene;
 		}
 	}
 
