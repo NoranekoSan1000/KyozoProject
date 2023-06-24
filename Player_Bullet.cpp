@@ -32,7 +32,7 @@ void PlayerBulletDestroy(int num)
 float AngleCalc(int px, int py)
 {
 	float tmp;
-	tmp = (float)atan2((Enemy_Y[CloseEnemy] - py), (Enemy_X[CloseEnemy] - px));
+	tmp = (float)atan2((Enemy_Y[CloseEnemy]+40 - py), (Enemy_X[CloseEnemy] - px));
 	return tmp;
 }
 

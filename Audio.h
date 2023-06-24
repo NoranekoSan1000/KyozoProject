@@ -1,5 +1,5 @@
 #pragma once
-extern int ResonanceAtTwilight_audio;
+extern int BGM[];
 extern int SE_PlayerShot;
 
 void AudioInit(void);

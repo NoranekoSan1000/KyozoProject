@@ -76,7 +76,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 
 	ImageInit(); //‰æ‘œ‚Ì“Ç‚İ‚İ <- Image.cpp
 	AudioInit(); //‰¹º‚Ì“Ç‚İ‚İ <- Audio.cpp
-	PlayBGM(ResonanceAtTwilight_audio);
+	PlayBGM(BGM[4]);
 
 	while (ProcessMessage() == 0)
 	{
