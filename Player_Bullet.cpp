@@ -119,3 +119,8 @@ void PlayerBulletAction(void)
 
 	}
 }
+
+void PlayerBulletClear(void)
+{
+	for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++) PlayerBulletDestroy(i);
+}

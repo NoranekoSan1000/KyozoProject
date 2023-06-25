@@ -18,3 +18,4 @@ void EnemySpawn(void);
 void CheckDistance(int num);
 void EnemyMove(int num);
 void EnemyAction(void);
+void EnemyClear(void);

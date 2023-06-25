@@ -3,7 +3,6 @@
 #include "Enemy.h"
 #include "Player_Bullet.h"
 
-SceneManager GameScene = Title_Scene;
 double FrameCount = 0;
 
 //キー取得用の配列
@@ -42,42 +41,14 @@ int intu;
 void ViewBackGround(void)//背景ループ
 {
 	intu += 2;
-	DrawRotaGraph(300, 0 + intu, 1, 0, background_img, TRUE);
+	DrawRotaGraph(300, 0 + intu, 1, 0, backgroundBack_img, TRUE);
+	DrawRotaGraph(300, 0 + intu, 1, 0, backgroundFront_img, TRUE);
 	if (intu >= 800) intu = 0;
-}
-
-bool FadeIn = false;
-bool FadeOut = false;
-int fadeALPHA = 256;
-void ViewFadeWindow(void)
-{
-	if (FadeIn) {
-		if (FadeOut) FadeOut = false;
-		if (fadeALPHA <= 0)
-		{
-			fadeALPHA = 0;
-			FadeIn = false;
-		}
-		else fadeALPHA -= 2;
-	}
-	if (FadeOut) {
-		if (FadeIn) FadeIn = false;
-		if (fadeALPHA >= 256)
-		{
-			fadeALPHA = 256;
-			FadeOut = false;
-		}
-		else fadeALPHA += 2;
-	}
-
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, fadeALPHA);
-	DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, GetColor(0, 0, 0), 1);
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
 }
 
 void GameProcess(void)
 {
-	ViewBackGround();
+	ViewBackGround(); //Fade用黒背景
 
 	if (P_ShotCoolTime >= 0) P_ShotCoolTime--;
 	if (DamagedCoolTime >= 0) DamagedCoolTime--;
@@ -95,32 +66,31 @@ void GameProcess(void)
 	ViewStatus();	
 }
 
-bool ChangeSceneActive = false;
-SceneManager nextScene;
-void ChangeScene(void)
-{
-	if (!ChangeSceneActive) return;
-	FadeOut = true;
-	if (fadeALPHA == 256)
-	{
-		GameScene = nextScene;
-		FadeIn = true;
-		ChangeSceneActive = false;
-	}
-}
-
 void Update(void) //毎フレーム処理
 {
-	ChangeScene();
+	ChangeScene();//fadeを用いたシーンチェンジ　ChangeSceneActive -> trueで実行
 
 	if (GameScene == Title_Scene)
 	{
 		PlayBGM(BGM[0]);
 		DrawRotaGraph(450, 400, 1, 0, Title_img, TRUE);
-		if (KeyState[KEY_INPUT_P] == TRUE)
+		if (KeyState[KEY_INPUT_S] == TRUE)
 		{		
 			ChangeSceneActive = true;
-			nextScene = Stage1_Scene;
+			nextScene = DifficultyLvSelect_Scene;//シーン遷移用。この２つはセット
+		}
+	}
+	if (GameScene == DifficultyLvSelect_Scene)
+	{
+		DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, GetColor(0, 0, 0), 1);
+		DrawRotaGraph(450, 140, 1, 0, DifficultyLv_img[0], TRUE);
+		DrawRotaGraph(450, 310, 1, 0, DifficultyLv_img[1], TRUE);
+		DrawRotaGraph(450, 480, 1, 0, DifficultyLv_img[2], TRUE);
+		DrawRotaGraph(450, 650, 1, 0, DifficultyLv_img[3], TRUE);
+		if (KeyState[KEY_INPUT_P] == TRUE)
+		{
+			ChangeSceneActive = true;
+			nextScene = Stage1_Scene;//シーン遷移用。この２つはセット
 		}
 	}
 	if (GameScene == Stage1_Scene)

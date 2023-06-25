@@ -135,3 +135,7 @@ void EnemyAction(void)
 	}
 }
 
+void EnemyClear(void)
+{
+	for (int i = 0; i < ENEMY_AMOUNT; i++) EnemyDestroy(i);
+}

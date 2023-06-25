@@ -145,6 +145,7 @@
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Player_Bullet.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameData.h" />

@@ -13,3 +13,4 @@ void PlayerBulletDestroy(int num);
 void PlayerShot(int px, int py, int type);
 void BulletMove(int num);
 void PlayerBulletAction(void);
+void PlayerBulletClear(void);
