@@ -25,6 +25,7 @@ void PlayerShotAction()
 
 void ViewStatus(void)
 {
+
 	//˜g
 	DrawBox(0, 0, 25, WINDOW_HEIGHT, GetColor(0, 0, 0), 1);
 	DrawBox(0, 0, WINDOW_WIDTH, 25, GetColor(0, 0, 0), 1);
