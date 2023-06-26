@@ -105,7 +105,7 @@ void EnemyAction(void)
 		CheckDistance(i);
 
 		//âÊñ äOÇ≈è¡ñ≈
-		if (/*E_Bullet_PosY[i] < -20 || */E_Bullet_PosY[i] > FRAME_HEIGHT || 0 > E_Bullet_PosX[i] || E_Bullet_PosX[i] > FRAME_WIDTH)
+		if (/*E_Bullet_PosY[i] < -20 || */Enemy_Y[i] > FRAME_HEIGHT || 0 > Enemy_X[i] || Enemy_X[i] > FRAME_WIDTH)
 		{
 			EnemyDestroy(i);
 			continue;

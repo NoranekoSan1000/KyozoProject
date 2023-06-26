@@ -5,6 +5,7 @@ extern int InitialPosY;
 extern int Player_HitBoxSize;
 extern int px;
 extern int py;
+extern int Level;
 extern int Score;
 extern int Life;
 extern float DamagedCoolTime;

@@ -15,11 +15,24 @@ void PlayerShotAction()
 	if (KeyState[KEY_INPUT_Z] > 0)
 	{
 		if (P_ShotCoolTime > 0) return;
-		PlayerShot(px, py - 8, 0);//ŽËŒ‚
-		PlayerShot(px, py - 4, 1);//ŽËŒ‚
-		PlayerShot(px, py - 4, 2);//ŽËŒ‚
-		PlayerShot(px + 8, py + 8, 5);//ŽËŒ‚
-		PlayerShot(px - 8, py + 8, 6);//ŽËŒ‚
+		if (Level >= 0)
+		{
+			PlayerShot(px, py - 8, 0);//ŽËŒ‚
+		}
+		if (Level >= 1 && Level < 3)//‘_‚¢Lv1
+		{
+			PlayerShot(px, py + 20, 7);//ŽËŒ‚
+		}
+		if (Level >= 2)
+		{
+			PlayerShot(px, py - 4, 1);//ŽËŒ‚
+			PlayerShot(px, py - 4, 2);//ŽËŒ‚
+		}
+		if (Level >= 3)//‘_‚¢Lv2
+		{
+			PlayerShot(px + 8, py + 8, 5);//ŽËŒ‚
+			PlayerShot(px - 8, py + 8, 6);//ŽËŒ‚
+		}
 		P_ShotCoolTime = 8;//ƒtƒŒ[ƒ€‚ÅÝ’è
 	}
 }

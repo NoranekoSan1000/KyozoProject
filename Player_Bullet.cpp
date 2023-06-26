@@ -48,6 +48,7 @@ void PlayerShot(int px,int py,int type)
 
 			if (CloseEnemy == -1 && type == 5) type = 3;
 			if (CloseEnemy == -1 && type == 6) type = 4;
+			if (CloseEnemy == -1 && type == 7) type = 8;
 			PlayerBulletGenerate(i, px, py, 4, type, angle);
 			break;
 		}
@@ -88,6 +89,14 @@ void BulletMove(int num)
 	case 6://ãﬂÇ¢ìGë_Ç¢
 		P_Bullet_PosX[num] += cos(P_Bullet_Angle[num] + 0.05) * speed;
 		P_Bullet_PosY[num] += sin(P_Bullet_Angle[num] + 0.05) * speed;
+		break;
+	case 7://ãﬂÇ¢ìGë_Ç¢
+		P_Bullet_PosX[num] += cos(P_Bullet_Angle[num] + 0.05) * speed;
+		P_Bullet_PosY[num] += sin(P_Bullet_Angle[num] + 0.05) * speed;
+		break;
+	case 8://íºêi
+		P_Bullet_PosX[num] += cos(angle) * speed;
+		P_Bullet_PosY[num] += sin(angle) * speed;
 		break;
 	default:
 		break;
