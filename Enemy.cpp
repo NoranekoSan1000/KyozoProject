@@ -17,7 +17,7 @@ float Enemy_dist[ENEMY_AMOUNT];
 float E_ShotCoolTime[ENEMY_AMOUNT];
 
 int CloseEnemy = -1;
-float CloseDist = 700;
+float CloseDist = 800;
 
 void EnemyGenerate(int num, int x, int y, int hitboxsize, int movespeed, int movepattern, int hp, int ct)
 {
@@ -44,7 +44,7 @@ void EnemyDestroy(int num)
 	E_ShotCoolTime[num] = NULL;
 
 	CloseEnemy = -1;//近いキャラをリセット
-	CloseDist = 700;
+	CloseDist = 800;
 }
 
 void EnemySpawn(void)
@@ -53,8 +53,7 @@ void EnemySpawn(void)
 	{
 		if (Enemy_exist[i] == false)
 		{
-			EnemyGenerate(i, px, py - 800, 12, 2, 0, 5, 0);
-			DrawFormatString(WINDOW_WIDTH - 100, 90, GetColor(255, 255, 255), "%d\n", i);
+			EnemyGenerate(i, px, py - 900, 12, 2, 0, 5, 0);
 			break;
 		}
 	}
@@ -84,7 +83,7 @@ void CheckDistance(int num)
 void EnemyShotAction(int num)
 {
 	if (E_ShotCoolTime[num] > 0) return;
-	EnemyShot(Enemy_X[num], Enemy_Y[num], 4, 1);//射撃
+	EnemyShot(Enemy_X[num], Enemy_Y[num], 4, 5);//射撃
 	E_ShotCoolTime[num] = 60;//フレームで設定
 }
 
@@ -98,7 +97,6 @@ void EnemyAction(void)
 
 		EnemyMove(i); 
 
-		DrawFormatString(WINDOW_WIDTH - 450, 30, GetColor(255, 255, 255), "test : %lf", E_ShotCoolTime[i]);
 		if (E_ShotCoolTime[i] >= 0) E_ShotCoolTime[i]--;
 		EnemyShotAction(i);
 

@@ -1,4 +1,5 @@
 #include "GameData.h"
+#include "Enemy_Bullet.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "Player_Bullet.h"
@@ -57,8 +58,10 @@ void GameProcess(void)
 	if (KeyState[KEY_INPUT_A] == TRUE) EnemySpawn();
 	EnemyAction();
 
+	EnemyBulletAction();//敵の弾の処理
+
 	PlayerShotAction();
-	PlayerBulletAction();
+	PlayerBulletAction(); //レイヤーの弾の処理
 
 	PlayerMove(KeyState);//プレイヤーの移動
 	ViewPlayer();//プレイヤー表示

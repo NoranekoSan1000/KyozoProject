@@ -13,4 +13,5 @@ float EnemyAngleCalc(int en_x, int en_y);
 void EnemyShot(int en_x, int en_y, int size, int type);
 void EnemyBulletMove(int num);
 void EnemyBulletHit(int num);
+void EnemyBulletAction(void);
 void EnemyBulletClear(void);
