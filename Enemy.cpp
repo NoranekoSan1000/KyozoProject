@@ -1,6 +1,7 @@
 #include "GameData.h"
 #include "Player.h"
 #include "Player_Bullet.h"
+#include "Enemy_Bullet.h"
 using namespace std;
 
 //敵
@@ -13,10 +14,12 @@ int MovePattern[ENEMY_AMOUNT];
 int Enemy_HP[ENEMY_AMOUNT];
 float Enemy_dist[ENEMY_AMOUNT];
 
+float E_ShotCoolTime[ENEMY_AMOUNT];
+
 int CloseEnemy = -1;
 float CloseDist = 700;
 
-void EnemyGenerate(int num, int x, int y, int hitboxsize, int movespeed, int movepattern, int hp)
+void EnemyGenerate(int num, int x, int y, int hitboxsize, int movespeed, int movepattern, int hp, int ct)
 {
 	Enemy_exist[num] = true;
 	Enemy_X[num] = x;
@@ -25,6 +28,7 @@ void EnemyGenerate(int num, int x, int y, int hitboxsize, int movespeed, int mov
 	Enemy_MoveSpeed[num] = movespeed;
 	MovePattern[num] = movepattern;
 	Enemy_HP[num] = hp;
+	E_ShotCoolTime[num] = ct;
 }
 
 void EnemyDestroy(int num)
@@ -37,6 +41,7 @@ void EnemyDestroy(int num)
 	MovePattern[num] = NULL;
 	Enemy_HP[num] = NULL;
 	Enemy_dist[num] = NULL;
+	E_ShotCoolTime[num] = NULL;
 
 	CloseEnemy = -1;//近いキャラをリセット
 	CloseDist = 700;
@@ -48,7 +53,7 @@ void EnemySpawn(void)
 	{
 		if (Enemy_exist[i] == false)
 		{
-			EnemyGenerate(i, px, py - 600, 12, 2, 0, 5);
+			EnemyGenerate(i, px, py - 800, 12, 2, 0, 5, 0);
 			DrawFormatString(WINDOW_WIDTH - 100, 90, GetColor(255, 255, 255), "%d\n", i);
 			break;
 		}
@@ -76,6 +81,13 @@ void CheckDistance(int num)
 	CloseDist = Enemy_dist[CloseEnemy];
 }
 
+void EnemyShotAction(int num)
+{
+	if (E_ShotCoolTime[num] > 0) return;
+	EnemyShot(Enemy_X[num], Enemy_Y[num], 4, 1);//射撃
+	E_ShotCoolTime[num] = 60;//フレームで設定
+}
+
 void EnemyAction(void)
 {
 	for (int i = 0; i < ENEMY_AMOUNT; i++)
@@ -84,10 +96,14 @@ void EnemyAction(void)
 		if (Enemy_exist[i] == true) DrawCircle(Enemy_X[i], Enemy_Y[i], Enemy_HitBoxSize[i], GetColor(255, 0, 0), 1);
 		else continue;
 
-		EnemyMove(i);
+		EnemyMove(i); 
+
+		DrawFormatString(WINDOW_WIDTH - 450, 30, GetColor(255, 255, 255), "test : %lf", E_ShotCoolTime[i]);
+		if (E_ShotCoolTime[i] >= 0) E_ShotCoolTime[i]--;
+		EnemyShotAction(i);
 
 		//画面外で消滅
-		if (Enemy_Y[i] > WINDOW_HEIGHT + 30)
+		if (/*E_Bullet_PosY[i] < -20 || */E_Bullet_PosY[i] > FRAME_HEIGHT || 0 > E_Bullet_PosX[i] || E_Bullet_PosX[i] > FRAME_WIDTH)
 		{
 			EnemyDestroy(i);
 			continue;

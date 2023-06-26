@@ -10,12 +10,15 @@ extern int MovePattern[];
 extern int Enemy_HP[];
 extern float Enemy_dist[];
 
+extern float E_ShotCoolTime[];
+
 extern int CloseEnemy;
 
-void EnemyGenerate(int num, int x, int y, int hitboxsize, int movespeed, int movepattern, int hp);
+void EnemyGenerate(int num, int x, int y, int hitboxsize, int movespeed, int movepattern, int hp, int ct);
 void EnemyDestroy(int num);
 void EnemySpawn(void);
 void CheckDistance(int num);
 void EnemyMove(int num);
 void EnemyAction(void);
+void EnemyShotAction(int num);
 void EnemyClear(void);
