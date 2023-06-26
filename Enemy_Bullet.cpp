@@ -80,8 +80,8 @@ void EnemyBulletMove(int num)
 		E_Bullet_PosY[num] += sin(angle - 0.25) * speed;
 		break;
 	case 5://‹ß‚¢“G‘_‚¢
-		E_Bullet_PosX[num] += cos(E_Bullet_Angle[num]- 0.1) * speed;
-		E_Bullet_PosY[num] += sin(E_Bullet_Angle[num]- 0.1) * speed;
+		E_Bullet_PosX[num] += cos(E_Bullet_Angle[num]- 0.05) * speed;
+		E_Bullet_PosY[num] += sin(E_Bullet_Angle[num]- 0.05) * speed;
 		break;
 	default:
 		break;
@@ -119,8 +119,6 @@ void EnemyBulletAction(void)
 
 		if (E_Bullet_exist[i] == true) DrawCircle(E_Bullet_PosX[i], E_Bullet_PosY[i], E_Bullet_HitBoxSize[i], GetColor(100, 100, 255), 1);
 		else continue;
-
-		DrawFormatString(WINDOW_WIDTH - 450, 30, GetColor(255, 255, 255), "test : %d", i);
 
 		DrawRotaGraph(E_Bullet_PosX[i], E_Bullet_PosY[i], 1.0, 0, PlayerShot01_img, TRUE);//‰æ‘œ
 

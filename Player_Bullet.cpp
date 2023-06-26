@@ -32,7 +32,7 @@ void PlayerBulletDestroy(int num)
 float AngleCalc(int px, int py)
 {
 	float tmp;
-	tmp = (float)atan2((Enemy_Y[CloseEnemy]+40 - py), (Enemy_X[CloseEnemy] - px));
+	tmp = (float)atan2((Enemy_Y[CloseEnemy] + 40 - py), (Enemy_X[CloseEnemy] - px));
 	return tmp;
 }
 
@@ -96,10 +96,8 @@ void BulletMove(int num)
 
 void PlayerBulletAction(void)
 {
-	
 	for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++)
 	{
-		
 		if (P_Bullet_exist[i] == true) DrawCircle(P_Bullet_PosX[i], P_Bullet_PosY[i], P_Bullet_HitBoxSize[i], GetColor(100, 100, 255), 1);
 		else continue;
 		
@@ -116,7 +114,6 @@ void PlayerBulletAction(void)
 			PlayerBulletDestroy(i);
 			continue;
 		}
-
 	}
 }
 

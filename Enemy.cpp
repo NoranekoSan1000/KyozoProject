@@ -17,7 +17,7 @@ float Enemy_dist[ENEMY_AMOUNT];
 float E_ShotCoolTime[ENEMY_AMOUNT];
 
 int CloseEnemy = -1;
-float CloseDist = 800;
+float CloseDist = 1100;
 
 void EnemyGenerate(int num, int x, int y, int hitboxsize, int movespeed, int movepattern, int hp, int ct)
 {
@@ -44,7 +44,7 @@ void EnemyDestroy(int num)
 	E_ShotCoolTime[num] = NULL;
 
 	CloseEnemy = -1;//近いキャラをリセット
-	CloseDist = 800;
+	CloseDist = 1100;
 }
 
 void EnemySpawn(void)
@@ -75,7 +75,7 @@ void CheckDistance(int num)
 {
 	if (Enemy_dist[num] < CloseDist)
 	{
-		CloseEnemy = num;
+		CloseEnemy = num;				////////誓い敵しょり　見直す
 	}
 	CloseDist = Enemy_dist[CloseEnemy];
 }
@@ -100,17 +100,19 @@ void EnemyAction(void)
 		if (E_ShotCoolTime[i] >= 0) E_ShotCoolTime[i]--;
 		EnemyShotAction(i);
 
+		//敵とプレイヤーが接触
+		Enemy_dist[i] = sqrt(pow((double)Enemy_X[i] - px, 2) + pow((double)Enemy_Y[i] - py, 2));
+		DrawFormatString(WINDOW_WIDTH - 450, 30, GetColor(255, 255, 255), "test : %lf", Enemy_dist[i]);
+		CheckDistance(i);
+		DrawFormatString(WINDOW_WIDTH - 450, 60, GetColor(255, 255, 255), "test : %lf", CloseDist);
+		DrawFormatString(WINDOW_WIDTH - 450, 90, GetColor(255, 255, 255), "test : %d", CloseEnemy);
+
 		//画面外で消滅
 		if (/*E_Bullet_PosY[i] < -20 || */E_Bullet_PosY[i] > FRAME_HEIGHT || 0 > E_Bullet_PosX[i] || E_Bullet_PosX[i] > FRAME_WIDTH)
 		{
 			EnemyDestroy(i);
 			continue;
 		}
-
-		//敵とプレイヤーが接触
-		Enemy_dist[i] = sqrt(pow((double)Enemy_X[i] - px, 2) + pow((double)Enemy_Y[i] - py, 2));
-
-		CheckDistance(i);
 
 		if (Enemy_dist[i] <= Enemy_HitBoxSize[i] + Player_HitBoxSize)
 		{

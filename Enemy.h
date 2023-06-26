@@ -13,6 +13,7 @@ extern float Enemy_dist[];
 extern float E_ShotCoolTime[];
 
 extern int CloseEnemy;
+extern float CloseDist;
 
 void EnemyGenerate(int num, int x, int y, int hitboxsize, int movespeed, int movepattern, int hp, int ct);
 void EnemyDestroy(int num);
