@@ -137,7 +137,6 @@ void Update(void) //毎フレーム処理
 			nextScene = Title_Scene;
 		}
 	}
-	//DrawFormatString(WINDOW_WIDTH - 450, 30, GetColor(255, 255, 255), "test : %d", CloseEnemy);
 }
 
 //キー入力状態を更新する関数

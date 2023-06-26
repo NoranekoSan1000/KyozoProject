@@ -75,7 +75,7 @@ void CheckDistance(int num)
 {
 	if (Enemy_dist[num] < CloseDist)
 	{
-		CloseEnemy = num;				////////¾‚¢“G‚µ‚å‚è@Œ©’¼‚·
+		CloseEnemy = num;
 	}
 	CloseDist = Enemy_dist[CloseEnemy];
 }
@@ -102,10 +102,7 @@ void EnemyAction(void)
 
 		//“G‚ÆƒvƒŒƒCƒ„[‚ªÚG
 		Enemy_dist[i] = sqrt(pow((double)Enemy_X[i] - px, 2) + pow((double)Enemy_Y[i] - py, 2));
-		DrawFormatString(WINDOW_WIDTH - 450, 30, GetColor(255, 255, 255), "test : %lf", Enemy_dist[i]);
 		CheckDistance(i);
-		DrawFormatString(WINDOW_WIDTH - 450, 60, GetColor(255, 255, 255), "test : %lf", CloseDist);
-		DrawFormatString(WINDOW_WIDTH - 450, 90, GetColor(255, 255, 255), "test : %d", CloseEnemy);
 
 		//‰æ–ÊŠO‚ÅÁ–Å
 		if (/*E_Bullet_PosY[i] < -20 || */E_Bullet_PosY[i] > FRAME_HEIGHT || 0 > E_Bullet_PosX[i] || E_Bullet_PosX[i] > FRAME_WIDTH)
