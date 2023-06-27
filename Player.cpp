@@ -10,9 +10,9 @@ int px = InitialPosX;
 int py = InitialPosY;
 int Power = 0;
 int NextPower[3] = { 20, 60, 120 };//LevelUp‚É•K—v‚ÈPower
-int Level = 2;
+int Level = 0;
 int Score = 0;
-int Life = 10;
+int Life = 4;
 float DamagedCoolTime = 0;
 float P_ShotCoolTime = 0;
 

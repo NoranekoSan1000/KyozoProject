@@ -95,7 +95,7 @@ void Update(void) //毎フレーム処理
 	{
 		PlayBGM(BGM[0]);
 		DrawRotaGraph(450, 400, 1, 0, Title_img, TRUE);
-		if (KeyState[KEY_INPUT_S] == TRUE)
+		if (KeyState[KEY_INPUT_Z] == TRUE)
 		{		
 			ChangeSceneActive = true;
 			nextScene = DifficultyLvSelect_Scene;//シーン遷移用。この２つはセット
@@ -121,7 +121,7 @@ void Update(void) //毎フレーム処理
 			}
 			
 		}
-		if (KeyState[KEY_INPUT_P] == TRUE)
+		if (KeyState[KEY_INPUT_Z] == TRUE)
 		{
 			ChangeSceneActive = true;
 			nextScene = Stage1_Scene;//シーン遷移用。この２つはセット
