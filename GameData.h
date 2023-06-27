@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <DxLib.h>
 #include <math.h>
+#include "KeyManager.h"
 #include "Image.h"
 #include "Audio.h"
 #include "SceneManager.h"

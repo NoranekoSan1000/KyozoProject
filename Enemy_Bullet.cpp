@@ -57,7 +57,7 @@ void EnemyShot(int en_x, int en_y, int size, int type)
 void EnemyBulletMove(int num)
 {
 	float angle = (PI / 2);//‰º•û
-	float speed = 12;
+	float speed = 8;
 
 	switch (E_Bullet_MovePattern[num])
 	{

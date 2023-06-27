@@ -6,10 +6,6 @@
 
 double FrameCount = 0;
 
-//キー取得用の配列
-char buf[256] = { 0 };
-int KeyState[256] = { 0 };
-
 void PlayerShotAction()
 {
 	if (KeyState[KEY_INPUT_Z] > 0)
@@ -39,7 +35,6 @@ void PlayerShotAction()
 
 void ViewStatus(void)
 {
-
 	//枠
 	DrawBox(0, 0, 25, WINDOW_HEIGHT, GetColor(0, 0, 0), 1);
 	DrawBox(0, 0, WINDOW_WIDTH, 25, GetColor(0, 0, 0), 1);
@@ -47,9 +42,11 @@ void ViewStatus(void)
 	DrawRotaGraph(750, 400, 1, 0, gameFrame_img, TRUE);
 
 	//テキスト
-	DrawFormatString(WINDOW_WIDTH - 200, 30, GetColor(255, 255, 255), "Score : %d", Score);
-	DrawFormatString(WINDOW_WIDTH - 200, 60, GetColor(255, 255, 255), "Life : %d", Life);
-	DrawFormatString(WINDOW_WIDTH - 200, 120, GetColor(255, 255, 255), "sec %.2lf", FrameCount++ / 60);
+	DrawFormatString(WINDOW_WIDTH - 250, 30, GetColor(255, 255, 255), "Score : %d", Score);
+	DrawFormatString(WINDOW_WIDTH - 250, 60, GetColor(255, 255, 255), "Life : %d", Life);
+	DrawFormatString(WINDOW_WIDTH - 250, 120, GetColor(255, 255, 255), "ShotLevel : %d", Level);
+	DrawFormatString(WINDOW_WIDTH - 250, 150, GetColor(255, 255, 255), "Power : %d", Power);
+	DrawFormatString(WINDOW_WIDTH - 250, 300, GetColor(255, 255, 255), "sec %.2lf", FrameCount++ / 60);
 }
 
 int intu;
@@ -76,7 +73,6 @@ void GameProcess(void)
 	PlayerShotAction();
 	PlayerBulletAction(); //レイヤーの弾の処理
 
-	PlayerMove(KeyState);//プレイヤーの移動
 	ViewPlayer();//プレイヤー表示
 
 	ViewFadeWindow();
@@ -149,27 +145,6 @@ void Update(void) //毎フレーム処理
 			ChangeSceneActive = true;
 			nextScene = Title_Scene;
 		}
-	}
-}
-
-//キー入力状態を更新する関数
-void KeyUpdate(void)
-{
-	GetHitKeyStateAll(buf);
-	for (int i = 0; i < 256; i++)
-	{
-		if (buf[i] == 0)
-		{		
-			if (KeyState[i] > 0) // 押されていない
-			{
-				KeyState[i] = -1;		// ESCキーが離れた瞬間
-			}
-			else
-			{
-				KeyState[i] = 0;		// ESCキーが離れている状態
-			}		
-		}
-		else KeyState[i]++;// 押されている
 	}
 }
 
