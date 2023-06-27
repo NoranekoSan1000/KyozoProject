@@ -42,10 +42,17 @@ void ViewStatus(void)
 	DrawRotaGraph(750, 400, 1, 0, gameFrame_img, TRUE);
 
 	//テキスト
-	DrawFormatString(WINDOW_WIDTH - 250, 30, GetColor(255, 255, 255), "Score : %d", Score);
-	DrawFormatString(WINDOW_WIDTH - 250, 60, GetColor(255, 255, 255), "Life : %d", Life);
-	DrawFormatString(WINDOW_WIDTH - 250, 120, GetColor(255, 255, 255), "ShotLevel : %d", Level);
-	DrawFormatString(WINDOW_WIDTH - 250, 150, GetColor(255, 255, 255), "Power : %d", Power);
+	DrawRotaGraph(WINDOW_WIDTH - 160, 40, 0.8, 0, helldiva_text_img, TRUE);
+	DrawRotaGraph(WINDOW_WIDTH - 240, 77, 0.8, 0, score_img, TRUE);
+	for (int i = 0; i < 6; i++) 
+	{
+		DrawRotaGraph(WINDOW_WIDTH - 160 + (25 * i), 80, 0.8, 0, NumberText_img[(Score / (int)pow(10, 5 - i)) % 10], TRUE);
+	}
+
+	
+	DrawFormatString(WINDOW_WIDTH - 250, 110, GetColor(255, 255, 255), "Life : %d", Life);
+	DrawFormatString(WINDOW_WIDTH - 250, 150, GetColor(255, 255, 255), "ShotLevel : %d", Level);
+	DrawFormatString(WINDOW_WIDTH - 250, 180, GetColor(255, 255, 255), "Power : %d", Power);
 	DrawFormatString(WINDOW_WIDTH - 250, 300, GetColor(255, 255, 255), "sec %.2lf", FrameCount++ / 60);
 }
 
