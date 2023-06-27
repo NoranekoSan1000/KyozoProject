@@ -17,3 +17,11 @@
 #define WINDOW_HEIGHT 800
 #define FRAME_WIDTH 600
 #define FRAME_HEIGHT 775
+
+enum Difficulty
+{
+	Easy,
+	Normal,
+	Hard,
+	HellDiva
+};

@@ -1,12 +1,9 @@
-#include<DxLib.h>
+#include "GameData.h"
 
 int Title_img;
 int DifficultyLv_img[4];
+int DifficultyText_img[4];
 
-int easy_text_img;
-int normal_text_img;
-int hard_text_img;
-int helldiva_text_img;		//enum DifficultyÇópÇ¢ÇÈ
 int score_img;
 int NumberText_img[10];
 int backgroundFront_img;
@@ -21,15 +18,16 @@ int gameFrame_img;
 
 void ImageInit(void)// âÊëúÇÃèâä˙âª
 {
-	DifficultyLv_img[0] = LoadGraph("image/easy.png");
-	DifficultyLv_img[1] = LoadGraph("image/normal.png");
-	DifficultyLv_img[2] = LoadGraph("image/hard.png");
-	DifficultyLv_img[3] = LoadGraph("image/helldiva.png");
+	DifficultyLv_img[Easy] = LoadGraph("image/easy.png");
+	DifficultyLv_img[Normal] = LoadGraph("image/normal.png");
+	DifficultyLv_img[Hard] = LoadGraph("image/hard.png");
+	DifficultyLv_img[HellDiva] = LoadGraph("image/helldiva.png");
 
-	easy_text_img = LoadGraph("image/easy_text.png");
-	normal_text_img = LoadGraph("image/normal_text.png");
-	hard_text_img = LoadGraph("image/hard_text.png");
-	helldiva_text_img = LoadGraph("image/helldiva_text.png");
+	DifficultyText_img[Easy] = LoadGraph("image/easy_text.png");
+	DifficultyText_img[Normal] = LoadGraph("image/normal_text.png");
+	DifficultyText_img[Hard] = LoadGraph("image/hard_text.png");
+	DifficultyText_img[HellDiva] = LoadGraph("image/helldiva_text.png");
+
 	score_img = LoadGraph("image/score.png");
 	for (int i = 0; i < 10; i++) 
 	{

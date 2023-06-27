@@ -5,6 +5,7 @@
 #include "Player_Bullet.h"
 
 double FrameCount = 0;
+int SelectDifficulty = 0;
 
 void PlayerShotAction()
 {
@@ -42,7 +43,7 @@ void ViewStatus(void)
 	DrawRotaGraph(750, 400, 1, 0, gameFrame_img, TRUE);
 
 	//テキスト
-	DrawRotaGraph(WINDOW_WIDTH - 160, 40, 0.8, 0, helldiva_text_img, TRUE);
+	DrawRotaGraph(WINDOW_WIDTH - 160, 40, 0.8, 0, DifficultyText_img[SelectDifficulty], TRUE);
 	DrawRotaGraph(WINDOW_WIDTH - 240, 77, 0.8, 0, score_img, TRUE);
 	for (int i = 0; i < 6; i++) 
 	{
@@ -103,10 +104,23 @@ void Update(void) //毎フレーム処理
 	if (GameScene == DifficultyLvSelect_Scene)
 	{
 		DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, GetColor(0, 0, 0), 1);
-		DrawRotaGraph(450, 140, 1, 0, DifficultyLv_img[0], TRUE);
-		DrawRotaGraph(450, 310, 1, 0, DifficultyLv_img[1], TRUE);
-		DrawRotaGraph(450, 480, 1, 0, DifficultyLv_img[2], TRUE);
-		DrawRotaGraph(450, 650, 1, 0, DifficultyLv_img[3], TRUE);
+		if (KeyState[KEY_INPUT_UP] == TRUE && SelectDifficulty > 0) SelectDifficulty--;
+		else if (KeyState[KEY_INPUT_UP] == TRUE && SelectDifficulty == 0) SelectDifficulty = 3;
+		if (KeyState[KEY_INPUT_DOWN] == TRUE && SelectDifficulty < 3) SelectDifficulty++;
+		else if (KeyState[KEY_INPUT_DOWN] == TRUE && SelectDifficulty == 3) SelectDifficulty = 0;
+		
+		
+		for (int i = 0; i < 4; i++)
+		{
+			if(SelectDifficulty == i) DrawRotaGraph(450, 140 + (i * 170), 1, 0, DifficultyLv_img[i], TRUE);//画像表示
+			else 
+			{
+				SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
+				DrawRotaGraph(450, 140 + (i * 170), 1, 0, DifficultyLv_img[i], TRUE);//画像表示
+				SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
+			}
+			
+		}
 		if (KeyState[KEY_INPUT_P] == TRUE)
 		{
 			ChangeSceneActive = true;
