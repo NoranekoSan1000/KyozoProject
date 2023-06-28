@@ -1,8 +1,9 @@
 #include "GameData.h"
-#include "Enemy_Bullet.h"
+#include "Item.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "Player_Bullet.h"
+#include "Enemy_Bullet.h"
 
 double FrameCount = 0;
 int SelectDifficulty = 0;
@@ -72,6 +73,8 @@ void GameProcess(void)
 
 	if (P_ShotCoolTime >= 0) P_ShotCoolTime--;
 	if (DamagedCoolTime >= 0) DamagedCoolTime--;
+
+	ItemAction();
 
 	if (KeyState[KEY_INPUT_A] == TRUE) EnemySpawn();
 	EnemyAction();

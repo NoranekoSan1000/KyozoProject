@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Player_Bullet.h"
 #include "Enemy_Bullet.h"
+#include "Item.h"
 using namespace std;
 
 //“G
@@ -137,9 +138,10 @@ void EnemyAction(void)
 					Score += 1;
 					Enemy_HP[i] -= 1;
 				}
-				else
+				else//€–S
 				{
-					Score += 100;
+					Score += 10;
+					ItemSpawn(Enemy_X[i],Enemy_Y[i]);//ƒAƒCƒeƒ€¶¬
 					EnemyDestroy(i);
 				}
 				break;
