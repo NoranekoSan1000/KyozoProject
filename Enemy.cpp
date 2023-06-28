@@ -48,14 +48,18 @@ void EnemyDestroy(int num)
 	CloseDist = 1100;
 }
 
-void EnemySpawn(void)
+void EnemySpawn(int pattern)
 {
-	for (int i = 0; i < ENEMY_AMOUNT; i++)
+	if (pattern == 0) return;
+	else if (pattern == 1) 
 	{
-		if (Enemy_exist[i] == false)
+		for (int i = 0; i < ENEMY_AMOUNT; i++)
 		{
-			EnemyGenerate(i, px, py - 900, 12, 2, 0, 5, 0);
-			break;
+			if (Enemy_exist[i] == false)
+			{
+				EnemyGenerate(i, 100, 0, 16, 2, 0, 5, 0);
+				break;
+			}
 		}
 	}
 }

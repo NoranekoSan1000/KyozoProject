@@ -17,7 +17,7 @@ extern float CloseDist;
 
 void EnemyGenerate(int num, int x, int y, int hitboxsize, int movespeed, int movepattern, int hp, int ct);
 void EnemyDestroy(int num);
-void EnemySpawn(void);
+void EnemySpawn(int pattern);
 void CheckDistance(int num);
 void EnemyMove(int num);
 void EnemyAction(void);

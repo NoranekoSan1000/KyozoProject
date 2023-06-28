@@ -1,6 +1,8 @@
 #include "GameData.h"
 #include "Enemy.h"
 #include "Player_Bullet.h"
+#include "Enemy_Bullet.h"
+#include "Item.h"
 
 bool FadeIn = false;
 bool FadeOut = false;
@@ -39,7 +41,9 @@ void ViewFadeWindow(void)
 void ObjectClear(void)
 {
 	PlayerBulletClear();
+	EnemyBulletClear();
 	EnemyClear();
+	ItemClear();
 }
 
 void ChangeScene(void)

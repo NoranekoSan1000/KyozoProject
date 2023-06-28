@@ -5,8 +5,19 @@
 #include "Player_Bullet.h"
 #include "Enemy_Bullet.h"
 
+int SpawnPattern[4][20] =
+{
+	{0,1,0,2,0,1,0,2,0,1,0,0,0,-1},//Stage1
+	{0,1,0,1,0,1,0,0,-1},
+	{0,1,0,1,0,1,0,0,-1},
+	{0,1,0,1,0,1,0,0,-1}
+};
+
 double FrameCount = 0;
 int SelectDifficulty = 0;
+
+float StageModeUpdateTime = 120;
+int NowStageMode = 0;
 
 void PlayerShotAction()
 {
@@ -55,7 +66,7 @@ void ViewStatus(void)
 	DrawFormatString(WINDOW_WIDTH - 250, 110, GetColor(255, 255, 255), "Life : %d", Life);
 	DrawFormatString(WINDOW_WIDTH - 250, 150, GetColor(255, 255, 255), "ShotLevel : %d", Level);
 	DrawFormatString(WINDOW_WIDTH - 250, 180, GetColor(255, 255, 255), "Power : %d / %d", Power,NextPower[Level]);
-	DrawFormatString(WINDOW_WIDTH - 250, 300, GetColor(255, 255, 255), "sec %.2lf", FrameCount++ / 60);
+	DrawFormatString(WINDOW_WIDTH - 250, 300, GetColor(255, 255, 255), "sec %d ",NowStageMode);
 }
 
 int intu;
@@ -71,12 +82,13 @@ void GameProcess(void)
 {
 	ViewBackGround(); //Fade用黒背景
 
+	if (StageModeUpdateTime >= 0) StageModeUpdateTime--;
+
 	if (P_ShotCoolTime >= 0) P_ShotCoolTime--;
 	if (DamagedCoolTime >= 0) DamagedCoolTime--;
 
 	ItemAction();
 
-	if (KeyState[KEY_INPUT_A] == TRUE) EnemySpawn();
 	EnemyAction();
 
 	EnemyBulletAction();//敵の弾の処理
@@ -93,6 +105,7 @@ void GameProcess(void)
 
 void Update(void) //毎フレーム処理
 {
+
 	ChangeScene();//fadeを用いたシーンチェンジ　ChangeSceneActive -> trueで実行
 
 	if (GameScene == Title_Scene)
@@ -135,11 +148,22 @@ void Update(void) //毎フレーム処理
 	{
 		PlayBGM(BGM[1]);
 		GameProcess();
-		if (KeyState[KEY_INPUT_P] == TRUE)
-		{	
-			ChangeSceneActive = true;
-			nextScene = Stage2_Scene;
+		if (StageModeUpdateTime < 0)//120フレーム毎に実行
+		{
+			NowStageMode++;
+			if (SpawnPattern[0][NowStageMode] == -1)
+			{
+				ChangeSceneActive = true;
+				nextScene = Stage2_Scene;
+				NowStageMode = 0;
+			}
+			else
+			{
+				EnemySpawn(SpawnPattern[0][NowStageMode]);//敵登場
+			}
+			StageModeUpdateTime = 120;
 		}
+		
 	}
 	if (GameScene == Stage2_Scene)
 	{
@@ -149,6 +173,7 @@ void Update(void) //毎フレーム処理
 		{
 			ChangeSceneActive = true;
 			nextScene = Stage3_Scene;
+			NowStageMode = 0;
 		}
 	}
 	if (GameScene == Stage3_Scene)
@@ -159,6 +184,7 @@ void Update(void) //毎フレーム処理
 		{
 			ChangeSceneActive = true;
 			nextScene = Stage4_Scene;
+			NowStageMode = 0;
 		}
 	}
 	if (GameScene == Stage4_Scene)
@@ -169,6 +195,7 @@ void Update(void) //毎フレーム処理
 		{
 			ChangeSceneActive = true;
 			nextScene = Title_Scene;
+			NowStageMode = 0;
 		}
 	}
 }

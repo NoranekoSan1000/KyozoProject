@@ -57,7 +57,7 @@ void EnemyShot(int en_x, int en_y, int size, int type)
 void EnemyBulletMove(int num)
 {
 	float angle = (PI / 2);//‰º•û
-	float speed = 8;
+	float speed = 6;
 
 	switch (E_Bullet_MovePattern[num])
 	{
@@ -120,7 +120,7 @@ void EnemyBulletAction(void)
 		if (E_Bullet_exist[i] == true) DrawCircle(E_Bullet_PosX[i], E_Bullet_PosY[i], E_Bullet_HitBoxSize[i], GetColor(100, 100, 255), 1);
 		else continue;
 
-		DrawRotaGraph(E_Bullet_PosX[i], E_Bullet_PosY[i], 1.0, 0, PlayerShot01_img, TRUE);//‰æ‘œ
+		DrawRotaGraph(E_Bullet_PosX[i], E_Bullet_PosY[i], 1.0, 0, EnemyShot01_img, TRUE);//‰æ‘œ
 
 		EnemyBulletMove(i);
 		EnemyBulletHit(i);

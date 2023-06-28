@@ -6,7 +6,7 @@ bool Item_exist[ITEM_AMOUNT];
 int Item_X[ITEM_AMOUNT];
 int Item_Y[ITEM_AMOUNT];
 int Item_HitBoxSize[ITEM_AMOUNT];
-
+bool CollectTime = false;
 
 void ItemGenerate(int num, int x, int y, int hitboxsize)
 {
@@ -30,7 +30,7 @@ void ItemSpawn(int en_x,int en_y)
 	{
 		if (Item_exist[i] == false)
 		{
-			ItemGenerate(i, en_x, en_y, 12);
+			ItemGenerate(i, en_x, en_y, 20);
 			break;
 		}
 	}
@@ -38,18 +38,33 @@ void ItemSpawn(int en_x,int en_y)
 
 void ItemMove(int num)
 {
-	Item_Y[num] += 2;
+	if (!CollectTime) Item_Y[num] += 2;
+	else
+	{
+		if (px < Item_X[num]) Item_X[num] -= 4;
+		else Item_X[num] += 4;
+		if (py < Item_Y[num]) Item_Y[num] -= 10;
+		else Item_Y[num] += 10;
+	}
+}
+
+void CollectItem(void) 
+{
+	if (py <= 150) CollectTime = true;
+	else CollectTime = false;
 }
 
 void ItemAction(void)
 {
+	CollectItem();//プレイヤーが画面上部へ行った時
+
 	for (int i = 0; i < ITEM_AMOUNT; i++)
 	{
 		//画像表示
-		if (Item_exist[i] == true) DrawCircle(Item_X[i], Item_Y[i], Item_HitBoxSize[i], GetColor(0, 0, 255), 1);
+		if (Item_exist[i] == true) DrawRotaGraph(Item_X[i], Item_Y[i], 1.0, 0, power_img, TRUE);//画像
 		else continue;
 
-		DrawRotaGraph(Item_X[i], Item_Y[i], 1.0, 0, power_img, TRUE);//画像
+		
 
 		ItemMove(i);
 
@@ -71,8 +86,6 @@ void ItemAction(void)
 			ItemDestroy(i);
 			continue;
 		}
-
-		
 	}
 }
 
