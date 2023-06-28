@@ -54,7 +54,7 @@ void ViewStatus(void)
 	
 	DrawFormatString(WINDOW_WIDTH - 250, 110, GetColor(255, 255, 255), "Life : %d", Life);
 	DrawFormatString(WINDOW_WIDTH - 250, 150, GetColor(255, 255, 255), "ShotLevel : %d", Level);
-	DrawFormatString(WINDOW_WIDTH - 250, 180, GetColor(255, 255, 255), "Power : %d", Power);
+	DrawFormatString(WINDOW_WIDTH - 250, 180, GetColor(255, 255, 255), "Power : %d / %d", Power,NextPower[Level]);
 	DrawFormatString(WINDOW_WIDTH - 250, 300, GetColor(255, 255, 255), "sec %.2lf", FrameCount++ / 60);
 }
 
@@ -84,6 +84,7 @@ void GameProcess(void)
 	PlayerShotAction();
 	PlayerBulletAction(); //レイヤーの弾の処理
 
+	LevelUp();
 	ViewPlayer();//プレイヤー表示
 
 	ViewFadeWindow();

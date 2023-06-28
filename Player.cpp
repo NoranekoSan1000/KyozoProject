@@ -9,12 +9,29 @@ int Player_HitBoxSize = 4;
 int px = InitialPosX;
 int py = InitialPosY;
 int Power = 0;
-int NextPower[3] = { 20, 60, 120 };//LevelUpに必要なPower
+int NextPower[3] = { 10, 40, 100 };//LevelUpに必要なPower
 int Level = 0;
 int Score = 0;
 int Life = 4;
 float DamagedCoolTime = 0;
 float P_ShotCoolTime = 0;
+
+void LevelUp(void)
+{
+	if (Power < NextPower[0])
+	{
+		Level = 0;
+	}
+	else if (Power >= NextPower[0] && Power < NextPower[1])
+	{
+		Level = 1;
+	}
+	else if (Power >= NextPower[1] && Power < NextPower[2])
+	{
+		Level = 2;
+	}
+	else Level = 3;
+}
 
 void PlayerMove(void)
 {

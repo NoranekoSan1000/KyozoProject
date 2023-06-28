@@ -13,5 +13,6 @@ extern int Life;
 extern float DamagedCoolTime;
 extern float P_ShotCoolTime;
 
+void LevelUp(void);
 void PlayerMove(void);
 void ViewPlayer(void);
