@@ -12,7 +12,7 @@ int Power = 0;
 int NextPower[3] = { 10, 40, 100 };//LevelUp‚É•K—v‚ÈPower
 int Level = 0;
 int Score = 0;
-int Life = 4;
+int Life = 3;
 float DamagedCoolTime = 0;
 float P_ShotCoolTime = 0;
 

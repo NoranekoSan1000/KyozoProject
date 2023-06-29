@@ -69,15 +69,15 @@ void EnemySpawn(int pattern)
 	if (pattern == 0) return;
 	else if (pattern == 1) 
 	{
-		spawn(100, 0, 2, 0, 5);
-		spawn(100, -90, 2, 0, 5);
-		spawn(100, -180, 2, 0, 5);
+		spawn(150, 0, 2, 0, 5);
+		spawn(150, -100, 2, 0, 5);
+		spawn(150, -200, 2, 0, 5);
 	}
 	else if (pattern == 2)
 	{
-		spawn(500, 0, 2, 0, 5);
-		spawn(500, -90, 2, 0, 5);
-		spawn(500, -180, 2, 0, 5);
+		spawn(450, 0, 2, 0, 5);
+		spawn(450, -100, 2, 0, 5);
+		spawn(450, -200, 2, 0, 5);
 	}
 }
 

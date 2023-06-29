@@ -56,17 +56,31 @@ void ViewStatus(void)
 
 	//テキスト
 	DrawRotaGraph(WINDOW_WIDTH - 160, 40, 0.8, 0, DifficultyText_img[SelectDifficulty], TRUE);
-	DrawRotaGraph(WINDOW_WIDTH - 240, 77, 0.8, 0, score_img, TRUE);
+	DrawRotaGraph(WINDOW_WIDTH - 240, 107, 0.8, 0, score_img, TRUE);
 	for (int i = 0; i < 6; i++) 
 	{
-		DrawRotaGraph(WINDOW_WIDTH - 160 + (25 * i), 80, 0.8, 0, NumberText_img[(Score / (int)pow(10, 5 - i)) % 10], TRUE);
+		DrawRotaGraph(WINDOW_WIDTH - 160 + (25 * i), 110, 0.8, 0, NumberText_img[(Score / (int)pow(10, 5 - i)) % 10], TRUE);
 	}
 
+	DrawRotaGraph(WINDOW_WIDTH - 240, 190, 0.8, 0, LifeText_img, TRUE);
+	for (int i = 0; i < Life; i++)
+	{
+		DrawRotaGraph(WINDOW_WIDTH - 170 + (32 * i), 190, 0.95, 0, Life_img, TRUE);
+	}
 	
-	DrawFormatString(WINDOW_WIDTH - 250, 110, GetColor(255, 255, 255), "Life : %d", Life);
-	DrawFormatString(WINDOW_WIDTH - 250, 150, GetColor(255, 255, 255), "ShotLevel : %d", Level);
-	DrawFormatString(WINDOW_WIDTH - 250, 180, GetColor(255, 255, 255), "Power : %d / %d", Power,NextPower[Level]);
-	DrawFormatString(WINDOW_WIDTH - 250, 300, GetColor(255, 255, 255), "sec %d ",NowStageMode);
+
+	DrawRotaGraph(WINDOW_WIDTH - 220, 270, 0.8, 0, LevelText_img, TRUE);
+	DrawRotaGraph(WINDOW_WIDTH - 120, 273, 0.8, 0, NumberText_img[Level], TRUE);
+
+	DrawRotaGraph(WINDOW_WIDTH - 220, 310, 0.8, 0, PowerText_img, TRUE);
+	for (int i = 0; i < 3; i++)
+	{
+		DrawRotaGraph(WINDOW_WIDTH - 230 + (25 * i), 350, 0.8, 0, NumberText_img[(Power / (int)pow(10, 2 - i)) % 10], TRUE);
+		DrawRotaGraph(WINDOW_WIDTH - 110 + (25 * i), 350, 0.8, 0, NumberText_img[(NextPower[Level] / (int)pow(10, 2 - i)) % 10], TRUE);
+	}
+	DrawRotaGraph(WINDOW_WIDTH - 140, 350, 0.8, 0, slash_img, TRUE);
+
+	DrawFormatString(WINDOW_WIDTH - 250, 400, GetColor(255, 255, 255), "sec %d ",NowStageMode);
 }
 
 int intu;

@@ -5,7 +5,13 @@ int DifficultyLv_img[4];
 int DifficultyText_img[4];
 
 int score_img;
+int Life_img;
+int LifeText_img;
+int LevelText_img;
+int PowerText_img;
+
 int NumberText_img[10];
+int slash_img;
 int backgroundFront_img;
 int backgroundBack_img;
 
@@ -28,6 +34,10 @@ void ImageInit(void)// ‰æ‘œ‚Ì‰Šú‰»
 	DifficultyText_img[Hard] = LoadGraph("image/hard_text.png");
 	DifficultyText_img[HellDiva] = LoadGraph("image/helldiva_text.png");
 
+	LifeText_img = LoadGraph("image/LifeText.png");
+	Life_img = LoadGraph("image/life.png");
+	LevelText_img = LoadGraph("image/LevelText.png");
+	PowerText_img = LoadGraph("image/PowerText.png");
 	score_img = LoadGraph("image/score.png");
 	for (int i = 0; i < 10; i++) 
 	{
@@ -35,6 +45,7 @@ void ImageInit(void)// ‰æ‘œ‚Ì‰Šú‰»
 		sprintf_s(fileName, "image/Number/%d.png", i);
 		NumberText_img[i] = LoadGraph(fileName);
 	}
+	slash_img = LoadGraph("image/Number/sl.png");
 
 	Title_img = LoadGraph("image/title.png");
 	backgroundFront_img = LoadGraph("image/background.png");
