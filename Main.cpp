@@ -143,6 +143,11 @@ void Update(void) //毎フレーム処理
 			ChangeSceneActive = true;
 			nextScene = Stage1_Scene;//シーン遷移用。この２つはセット
 		}
+		if (KeyState[KEY_INPUT_X] == TRUE)
+		{
+			ChangeSceneActive = true;
+			nextScene = Title_Scene;//シーン遷移用。この２つはセット
+		}
 	}
 	if (GameScene == Stage1_Scene)
 	{
