@@ -6,25 +6,26 @@
 using namespace std;
 
 //ìG
-bool Enemy_exist[ENEMY_AMOUNT];
-bool Enemy_visible[ENEMY_AMOUNT];
+bool Enemy_exist[ENEMY_AMOUNT];//ìGÇ™ë∂ç›Ç∑ÇÈÇ©
+bool Enemy_visible[ENEMY_AMOUNT];//ìGÇ™âÊñ ì‡Ç…Ç¢ÇÈÇ©
+int Enemy_Type[ENEMY_AMOUNT];//âÊëúóp
 int Enemy_X[ENEMY_AMOUNT];
 int Enemy_Y[ENEMY_AMOUNT];
 int Enemy_HitBoxSize[ENEMY_AMOUNT];
 int Enemy_MoveSpeed[ENEMY_AMOUNT];
-int MovePattern[ENEMY_AMOUNT];
+int MovePattern[ENEMY_AMOUNT];//à⁄ìÆÉpÉ^Å[Éì
 int Enemy_HP[ENEMY_AMOUNT];
 float Enemy_dist[ENEMY_AMOUNT];
-
 float E_ShotCoolTime[ENEMY_AMOUNT];
 
 int CloseEnemy = -1;
 float CloseDist = 1100;
 
-void EnemyGenerate(int num, int x, int y, int hitboxsize, int movespeed, int movepattern, int hp)
+void EnemyGenerate(int num, int type, int x, int y, int hitboxsize, int movespeed, int movepattern, int hp)
 {
 	Enemy_exist[num] = true;
 	Enemy_visible[num] = false;
+	Enemy_Type[num] = type;
 	Enemy_X[num] = x;
 	Enemy_Y[num] = y;
 	Enemy_HitBoxSize[num] = hitboxsize;
@@ -38,6 +39,7 @@ void EnemyDestroy(int num)
 {
 	Enemy_exist[num] = false;
 	Enemy_visible[num] = false;
+	Enemy_Type[num] = NULL;
 	Enemy_X[num] = NULL;
 	Enemy_Y[num] = NULL;
 	Enemy_HitBoxSize[num] = NULL;
@@ -51,33 +53,33 @@ void EnemyDestroy(int num)
 	CloseDist = 1100;
 }
 
-void spawn(int x,int y,int spd,int move,int hp)
+void spawn(int type,int x,int y,int spd,int move,int hp)
 {
 	for (int i = 0; i < ENEMY_AMOUNT; i++)
 	{
 		if (Enemy_exist[i] == false)
 		{
-			EnemyGenerate(i, x, y, 16, spd, move, hp);
-			EnemyGenerate(i, x, y, 16, spd, move, hp);
+			EnemyGenerate(i, type, x, y, 16, spd, move, hp);
+			EnemyGenerate(i, type, x, y, 16, spd, move, hp);
 			break;
 		}
 	}
 }
 
-void EnemySpawn(int pattern)
+void EnemySpawn(int spawnPattern)
 {
-	if (pattern == 0) return;
-	else if (pattern == 1) 
+	if (spawnPattern == 0) return;
+	else if (spawnPattern == 1) //è„Ç©ÇÁ3ëÃ
 	{
-		spawn(150, 0, 2, 0, 5);
-		spawn(150, -100, 2, 0, 5);
-		spawn(150, -200, 2, 0, 5);
+		spawn(0, 150, 0, 2, 0, 5);
+		spawn(0, 150, -100, 2, 0, 5);
+		spawn(1, 150, -200, 2, 0, 5);
 	}
-	else if (pattern == 2)
+	else if (spawnPattern == 2)
 	{
-		spawn(450, 0, 2, 0, 5);
-		spawn(450, -100, 2, 0, 5);
-		spawn(450, -200, 2, 0, 5);
+		spawn(0, 450, 0, 2, 0, 5);
+		spawn(0, 450, -100, 2, 0, 5);
+		spawn(1, 450, -200, 2, 0, 5);
 	}
 }
 
@@ -114,13 +116,17 @@ void EnemyAction(void)
 	for (int i = 0; i < ENEMY_AMOUNT; i++)
 	{
 		//ìGÉLÉÉÉââÊëúï\é¶
-		if (Enemy_exist[i] == true) DrawCircle(Enemy_X[i], Enemy_Y[i], Enemy_HitBoxSize[i], GetColor(255, 0, 0), 1);
+		if (Enemy_exist[i] == true) DrawRotaGraph(Enemy_X[i], Enemy_Y[i], 1.0, 0, Enemy_img[Enemy_Type[i]], TRUE); //âÊëúÇÃï`âÊ
 		else continue;
+
+		//DrawCircle(Enemy_X[i], Enemy_Y[i], Enemy_HitBoxSize[i], GetColor(255, 0, 0), 1);
+		
+		//à⁄ìÆ
+		EnemyMove(i); 
+
 		//âÊñ ì‡Ç…Ç¢ÇÈ
 		if (Enemy_X[i] <= FRAME_WIDTH && Enemy_X[i] >= 0 && Enemy_Y[i] <= FRAME_HEIGHT && Enemy_Y[i] >= 0) Enemy_visible[i] = true;
-
-		EnemyMove(i);
-
+		//
 		if (Enemy_visible[i])
 		{
 			if (E_ShotCoolTime[i] >= 0) E_ShotCoolTime[i]--;
