@@ -124,9 +124,9 @@ void EnemyAction(void)
 		//ˆÚ“®
 		EnemyMove(i); 
 
-		//‰æ–Ê“à‚É‚¢‚é
+		//‰æ–Ê“à‚Éˆê“x‚Å‚à“ü‚ê‚Îtrue
 		if (Enemy_X[i] <= FRAME_WIDTH && Enemy_X[i] >= 0 && Enemy_Y[i] <= FRAME_HEIGHT && Enemy_Y[i] >= 0) Enemy_visible[i] = true;
-		//
+		
 		if (Enemy_visible[i])
 		{
 			if (E_ShotCoolTime[i] >= 0) E_ShotCoolTime[i]--;

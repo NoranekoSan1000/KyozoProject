@@ -4,6 +4,8 @@
 #include "Enemy_Bullet.h"
 #include "Item.h"
 
+float StageTitleFadeTime = 0;
+
 bool FadeIn = false;
 bool FadeOut = false;
 int fadeALPHA = 256;
@@ -53,6 +55,7 @@ void ChangeScene(void)
 	if (fadeALPHA == 256) //ƒV[ƒ“‚ª•Ï‚í‚éuŠÔ
 	{
 		ObjectClear();
+		StageTitleFadeTime = 0;
 		GameScene = nextScene;
 		FadeIn = true;
 		ChangeSceneActive = false;

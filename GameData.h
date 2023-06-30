@@ -7,7 +7,7 @@
 #include "Image.h"
 #include "Audio.h"
 #include "SceneManager.h"
-#include <map>
+
 using namespace std;
 #define PI 3.14159265359
 
@@ -20,5 +20,7 @@ using namespace std;
 #define WINDOW_HEIGHT 800
 #define FRAME_WIDTH 600
 #define FRAME_HEIGHT 775
+
+extern float StageTitleFadeTime;
 
 enum Difficulty { Easy, Normal, Hard, HellDiva };

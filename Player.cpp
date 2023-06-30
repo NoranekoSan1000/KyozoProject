@@ -1,4 +1,5 @@
 #include "GameData.h"
+#include "Player_Bullet.h"
 #define PLAYER_SIZE_X 12
 #define PLAYER_SIZE_Y 24
 
@@ -15,6 +16,33 @@ int Score = 0;
 int Life = 3;
 float DamagedCoolTime = 0;
 float P_ShotCoolTime = 0;
+
+void PlayerShotAction(void)
+{
+	if (KeyState[KEY_INPUT_Z] > 0)
+	{
+		if (P_ShotCoolTime > 0) return;
+		if (Level >= 0)
+		{
+			PlayerShot(px, py - 8, 0);//ËŒ‚
+		}
+		if (Level >= 1 && Level < 3)//‘_‚¢Lv1
+		{
+			PlayerShot(px, py + 20, 7);//ËŒ‚
+		}
+		if (Level >= 2)
+		{
+			PlayerShot(px, py - 4, 1);//ËŒ‚
+			PlayerShot(px, py - 4, 2);//ËŒ‚
+		}
+		if (Level >= 3)//‘_‚¢Lv2
+		{
+			PlayerShot(px + 8, py + 8, 5);//ËŒ‚
+			PlayerShot(px - 8, py + 8, 6);//ËŒ‚
+		}
+		P_ShotCoolTime = 8;//ƒtƒŒ[ƒ€‚Åİ’è
+	}
+}
 
 void LevelUp(void)
 {

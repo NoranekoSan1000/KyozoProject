@@ -5,46 +5,19 @@
 #include "Player_Bullet.h"
 #include "Enemy_Bullet.h"
 
-int SpawnPattern[4][20] =
+int SpawnPattern[4][20] = //[stage][NowStageMode]
 {
 	{0,0,1,0,2,0,1,0,2,0,1,0,0,0,-1},//Stage1
-	{0,1,0,1,0,1,0,0,-1},
-	{0,1,0,1,0,1,0,0,-1},
-	{0,1,0,1,0,1,0,0,-1}
+	{0,0,1,0,2,0,1,0,2,0,1,0,0,0,-1},
+	{0,0,1,0,2,0,1,0,2,0,1,0,0,0,-1},
+	{0,0,1,0,2,0,1,0,2,0,1,0,0,0,-1},
 };
 
-double FrameCount = 0;
+
 int SelectDifficulty = 0;
 
 float StageModeUpdateTime = 120;
 int NowStageMode = 0;
-
-void PlayerShotAction()
-{
-	if (KeyState[KEY_INPUT_Z] > 0)
-	{
-		if (P_ShotCoolTime > 0) return;
-		if (Level >= 0)
-		{
-			PlayerShot(px, py - 8, 0);//射撃
-		}
-		if (Level >= 1 && Level < 3)//狙いLv1
-		{
-			PlayerShot(px, py + 20, 7);//射撃
-		}
-		if (Level >= 2)
-		{
-			PlayerShot(px, py - 4, 1);//射撃
-			PlayerShot(px, py - 4, 2);//射撃
-		}
-		if (Level >= 3)//狙いLv2
-		{
-			PlayerShot(px + 8, py + 8, 5);//射撃
-			PlayerShot(px - 8, py + 8, 6);//射撃
-		}
-		P_ShotCoolTime = 8;//フレームで設定
-	}
-}
 
 void ViewStatus(void)
 {
@@ -92,11 +65,18 @@ void ViewBackGround(void)//背景ループ
 	if (intu >= 800) intu = 0;
 }
 
+void viewStageTitle(int i)
+{
+	if (StageTitleFadeTime < 500) StageTitleFadeTime++;
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 450 - StageTitleFadeTime);
+	DrawRotaGraph(300, 250 + (StageTitleFadeTime / 8), 1, 0, StageTitle_img[i], TRUE);//画像表示
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
+}
+
 void GameProcess(void)
 {
-	ViewBackGround(); //Fade用黒背景
-
-	if (StageModeUpdateTime >= 0) StageModeUpdateTime--;
+	ViewBackGround(); //Fade用黒背景 ViewBackGroundが挿入されていないシーンではフェードは反映されない
 
 	if (P_ShotCoolTime >= 0) P_ShotCoolTime--;
 	if (DamagedCoolTime >= 0) DamagedCoolTime--;
@@ -117,9 +97,28 @@ void GameProcess(void)
 	ViewStatus();	
 }
 
+void StageUpdater(SceneManager Next)
+{
+	if (StageModeUpdateTime >= 0) StageModeUpdateTime--;
+	if (StageModeUpdateTime < 0)//120フレーム毎に実行
+	{
+		NowStageMode++;
+		if (SpawnPattern[0][NowStageMode] == -1)//ステージ終了
+		{
+			ChangeSceneActive = true;
+			nextScene = Next;
+			NowStageMode = 0;
+		}
+		else
+		{
+			EnemySpawn(SpawnPattern[0][NowStageMode]);//敵登場
+		}
+		StageModeUpdateTime = 120;
+	}
+}
+
 void Update(void) //毎フレーム処理
 {
-
 	ChangeScene();//fadeを用いたシーンチェンジ　ChangeSceneActive -> trueで実行
 
 	if (GameScene == Title_Scene)
@@ -139,7 +138,6 @@ void Update(void) //毎フレーム処理
 		else if (KeyState[KEY_INPUT_UP] == TRUE && SelectDifficulty == 0) SelectDifficulty = 3;
 		if (KeyState[KEY_INPUT_DOWN] == TRUE && SelectDifficulty < 3) SelectDifficulty++;
 		else if (KeyState[KEY_INPUT_DOWN] == TRUE && SelectDifficulty == 3) SelectDifficulty = 0;
-		
 		
 		for (int i = 0; i < 4; i++)
 		{
@@ -167,55 +165,29 @@ void Update(void) //毎フレーム処理
 	{
 		PlayBGM(BGM[1]);
 		GameProcess();
-		if (StageModeUpdateTime < 0)//120フレーム毎に実行
-		{
-			NowStageMode++;
-			if (SpawnPattern[0][NowStageMode] == -1)
-			{
-				ChangeSceneActive = true;
-				nextScene = Stage2_Scene;
-				NowStageMode = 0;
-			}
-			else
-			{
-				EnemySpawn(SpawnPattern[0][NowStageMode]);//敵登場
-			}
-			StageModeUpdateTime = 120;
-		}
-		
+		viewStageTitle(0);
+		StageUpdater(Stage2_Scene);//引数に次のステージ
 	}
 	if (GameScene == Stage2_Scene)
 	{
 		PlayBGM(BGM[3]);
 		GameProcess();
-		if (KeyState[KEY_INPUT_P] == TRUE)
-		{
-			ChangeSceneActive = true;
-			nextScene = Stage3_Scene;
-			NowStageMode = 0;
-		}
+		viewStageTitle(1);
+		StageUpdater(Stage3_Scene);//引数に次のステージ
 	}
 	if (GameScene == Stage3_Scene)
 	{
 		PlayBGM(BGM[5]);
 		GameProcess();
-		if (KeyState[KEY_INPUT_P] == TRUE)
-		{
-			ChangeSceneActive = true;
-			nextScene = Stage4_Scene;
-			NowStageMode = 0;
-		}
+		viewStageTitle(2);
+		StageUpdater(Stage4_Scene);
 	}
 	if (GameScene == Stage4_Scene)
 	{
 		PlayBGM(BGM[7]);
 		GameProcess();
-		if (KeyState[KEY_INPUT_P] == TRUE)
-		{
-			ChangeSceneActive = true;
-			nextScene = Title_Scene;
-			NowStageMode = 0;
-		}
+		viewStageTitle(3);
+		StageUpdater(Title_Scene);
 	}
 }
 
@@ -238,7 +210,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 	{
 		ClearDrawScreen();//裏画面消す
 		SetDrawScreen(DX_SCREEN_BACK);//描画先を裏画面に
-		KeyUpdate();//キー入力状態を更新する（自作関数）
+		KeyUpdate();//キー入力状態を更新する <- KeyManager.cpp
 		Update();//毎フレーム処理
 		ScreenFlip();//裏画面を表画面にコピー
 	}
