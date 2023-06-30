@@ -9,7 +9,7 @@
 #include "SceneManager.h"
 
 using namespace std;
-#define PI 3.14159265359
+#define PI 3.14159265f
 
 #define ENEMY_AMOUNT 20
 #define PLAYER_BULLET_AMOUNT 80

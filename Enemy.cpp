@@ -121,7 +121,7 @@ void EnemyAction(void)
 		//DrawCircle(Enemy_X[i], Enemy_Y[i], Enemy_HitBoxSize[i], GetColor(255, 0, 0), 1);
 		
 		//ˆÚ“®
-		EnemyMove(i); 
+		if (KeyState[KEY_INPUT_0] > 0)EnemyMove(i);
 
 		//‰æ–Ê“à‚Éˆê“x‚Å‚à“ü‚ê‚Îtrue
 		if (Enemy_X[i] <= FRAME_WIDTH && Enemy_X[i] >= 0 && Enemy_Y[i] <= FRAME_HEIGHT && Enemy_Y[i] >= 0) Enemy_visible[i] = true;

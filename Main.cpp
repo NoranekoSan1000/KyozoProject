@@ -54,6 +54,7 @@ void ViewStatus(void)
 	DrawRotaGraph(WINDOW_WIDTH - 140, 350, 0.8, 0, slash_img, TRUE);
 
 	DrawFormatString(WINDOW_WIDTH - 250, 400, GetColor(255, 255, 255), "sec %d ",NowStageMode);
+	DrawFormatString(WINDOW_WIDTH - 250, 500, GetColor(255, 255, 255), "angle : %lf ", (3 * PI / 2));
 }
 
 int intu;

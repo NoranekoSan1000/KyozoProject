@@ -3,13 +3,13 @@
 
 //プレイヤーの弾
 bool P_Bullet_exist[PLAYER_BULLET_AMOUNT];
-int P_Bullet_PosX[PLAYER_BULLET_AMOUNT];
-int P_Bullet_PosY[PLAYER_BULLET_AMOUNT];
+double P_Bullet_PosX[PLAYER_BULLET_AMOUNT];
+double P_Bullet_PosY[PLAYER_BULLET_AMOUNT];
 int P_Bullet_HitBoxSize[PLAYER_BULLET_AMOUNT];
 int P_Bullet_MovePattern[PLAYER_BULLET_AMOUNT];
-float P_Bullet_Angle[PLAYER_BULLET_AMOUNT];
+double P_Bullet_Angle[PLAYER_BULLET_AMOUNT];
 
-void PlayerBulletGenerate(int num, int x, int y, int hitboxsize, int pattern,float angle)
+void PlayerBulletGenerate(int num, double x, double y, int hitboxsize, int pattern, double angle)
 {
 	P_Bullet_exist[num] = true;
 	P_Bullet_PosX[num] = x;
@@ -29,16 +29,16 @@ void PlayerBulletDestroy(int num)
 	P_Bullet_Angle[num] = NULL;
 }
 
-float AngleCalc(int px, int py)
+double AngleCalc(int px, int py)
 {
-	float tmp;
-	tmp = (float)atan2((Enemy_Y[CloseEnemy] + 40 - py), (Enemy_X[CloseEnemy] - px));
+	double tmp;
+	tmp = atan2((Enemy_Y[CloseEnemy] + 40.0 - py), (Enemy_X[CloseEnemy] - px));
 	return tmp;
 }
 
 void PlayerShot(int px,int py,int type)
 {
-	float angle;
+	double angle;
 	for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++)
 	{
 		if (P_Bullet_exist[i] == false)//ショット設定格納場所の空きを確認
