@@ -4,15 +4,17 @@
 
 //敵の弾
 bool E_Bullet_exist[ENEMY_BULLET_AMOUNT];
+int E_Bullet_Type[ENEMY_AMOUNT];//画像用
 int E_Bullet_PosX[ENEMY_BULLET_AMOUNT];
 int E_Bullet_PosY[ENEMY_BULLET_AMOUNT];
 int E_Bullet_HitBoxSize[ENEMY_BULLET_AMOUNT];
 int E_Bullet_MovePattern[ENEMY_BULLET_AMOUNT];
 float E_Bullet_Angle[ENEMY_BULLET_AMOUNT];
 
-void EnemyBulletGenerate(int num, int x, int y, int hitboxsize, int pattern, float angle)
+void EnemyBulletGenerate(int num, int type, int x, int y, int hitboxsize, int pattern, float angle)
 {
 	E_Bullet_exist[num] = true;
+	E_Bullet_Type[num] = type;
 	E_Bullet_PosX[num] = x;
 	E_Bullet_PosY[num] = y;
 	E_Bullet_HitBoxSize[num] = hitboxsize;
@@ -23,6 +25,7 @@ void EnemyBulletGenerate(int num, int x, int y, int hitboxsize, int pattern, flo
 void EnemyBulletDestroy(int num)
 {
 	E_Bullet_exist[num] = false;
+	E_Bullet_Type[num] = NULL;
 	E_Bullet_PosX[num] = NULL;
 	E_Bullet_PosY[num] = NULL;
 	E_Bullet_HitBoxSize[num] = NULL;
@@ -37,20 +40,38 @@ float EnemyAngleCalc(int en_x, int en_y)
 	return tmp;
 }
 
-void EnemyShot(int en_x, int en_y, int size, int type)
+void EnemyBulletSpawn(int type, int en_x, int en_y, int size,int pattern,float angle)
 {
-
-	if (type == 0) return;//生成しない
-	float angle;
 	for (int i = 0; i < ENEMY_BULLET_AMOUNT; i++)
 	{
 		if (E_Bullet_exist[i] == false)//ショット設定格納場所の空きを確認
 		{
 			PlaySE(SE_PlayerShot); //効果音
-			angle = EnemyAngleCalc(en_x, en_y);
-			EnemyBulletGenerate(i, en_x, en_y, size, type, angle);
+			EnemyBulletGenerate(i, type, en_x, en_y, size, pattern, angle);
 			break;
 		}
+	}	
+}
+
+void EnemyShot(int type, int en_x, int en_y)
+{
+	float angle;
+	angle = EnemyAngleCalc(en_x, en_y);//自機狙い用
+	if (type == 0) return;//生成しない
+	else if (type == 1) //1発自機狙い
+	{
+		EnemyBulletSpawn(type, en_x, en_y, 4, 0, angle - 0.05);
+	}
+	else if (type == 2) // 直線下
+	{
+		EnemyBulletSpawn(type, en_x, en_y, 4, 0, -(3 * PI / 2));
+	}
+	else if (type == 3) // 爆発
+	{
+		EnemyBulletSpawn(type, en_x, en_y, 4, 0, -(3 * PI / 2));
+		EnemyBulletSpawn(type, en_x, en_y, 4, 0, -((3 * PI / 2)/2));
+		EnemyBulletSpawn(type, en_x, en_y, 4, 0, +(3 * PI / 2));		//値を表示して/計算する
+		EnemyBulletSpawn(type, en_x, en_y, 4, 0, +((3 * PI / 2) / 2));
 	}
 }
 
@@ -61,27 +82,12 @@ void EnemyBulletMove(int num)
 
 	switch (E_Bullet_MovePattern[num])
 	{
-	case 0:
+	case 0://真直ぐ
+		E_Bullet_PosX[num] += cos(E_Bullet_Angle[num]) * speed;
+		E_Bullet_PosY[num] += sin(E_Bullet_Angle[num]) * speed;
 		break;
-	case 1://右斜め小
-		E_Bullet_PosX[num] += cos(angle - 0.05) * speed;
-		E_Bullet_PosY[num] += sin(angle - 0.05) * speed;
-		break;
-	case 2://左斜め小
-		E_Bullet_PosX[num] += cos(angle - 0.10) * speed;
-		E_Bullet_PosY[num] += sin(angle - 0.10) * speed;
-		break;
-	case 3://右斜め中
-		E_Bullet_PosX[num] += cos(angle + 0.3) * speed;
-		E_Bullet_PosY[num] += sin(angle + 0.3) * speed;
-		break;
-	case 4://左斜め中
-		E_Bullet_PosX[num] += cos(angle - 0.25) * speed;
-		E_Bullet_PosY[num] += sin(angle - 0.25) * speed;
-		break;
-	case 5://近い敵狙い
-		E_Bullet_PosX[num] += cos(E_Bullet_Angle[num]- 0.05) * speed;
-		E_Bullet_PosY[num] += sin(E_Bullet_Angle[num]- 0.05) * speed;
+	case 1://ウェーブ（仮）
+
 		break;
 	default:
 		break;

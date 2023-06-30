@@ -60,7 +60,6 @@ void spawn(int type,int x,int y,int spd,int move,int hp)
 		if (Enemy_exist[i] == false)
 		{
 			EnemyGenerate(i, type, x, y, 16, spd, move, hp);
-			EnemyGenerate(i, type, x, y, 16, spd, move, hp);
 			break;
 		}
 	}
@@ -107,7 +106,7 @@ void CheckDistance(int num)
 void EnemyShotAction(int num)
 {
 	if (E_ShotCoolTime[num] > 0) return;
-	EnemyShot(Enemy_X[num], Enemy_Y[num], 4, 5);//ËŒ‚
+	EnemyShot(3, Enemy_X[num], Enemy_Y[num]);//ËŒ‚
 	E_ShotCoolTime[num] = 60;//ƒtƒŒ[ƒ€‚Åİ’è
 }
 

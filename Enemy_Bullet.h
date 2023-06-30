@@ -10,7 +10,7 @@ extern float E_Bullet_Angle[];
 void EnemyBulletGenerate(int num, int x, int y, int hitboxsize, int pattern, float angle);
 void EnemyBulletDestroy(int num);
 float EnemyAngleCalc(int en_x, int en_y);
-void EnemyShot(int en_x, int en_y, int size, int type);
+void EnemyShot(int en_x, int en_y, int type);
 void EnemyBulletMove(int num);
 void EnemyBulletHit(int num);
 void EnemyBulletAction(void);
