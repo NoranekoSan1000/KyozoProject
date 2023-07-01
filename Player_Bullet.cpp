@@ -71,16 +71,16 @@ void BulletMove(int num)
 		P_Bullet_PosY[num] += sin(angle + 0.15) * speed;
 		break;
 	case 2://ç∂éŒÇﬂè¨
-		P_Bullet_PosX[num] += cos(angle - 0.10) * speed;
-		P_Bullet_PosY[num] += sin(angle - 0.10) * speed;
+		P_Bullet_PosX[num] += cos(angle - 0.15) * speed;
+		P_Bullet_PosY[num] += sin(angle - 0.15) * speed;
 		break;
 	case 3://âEéŒÇﬂíÜ
 		P_Bullet_PosX[num] += cos(angle + 0.3) * speed;
 		P_Bullet_PosY[num] += sin(angle + 0.3) * speed;
 		break;
 	case 4://ç∂éŒÇﬂíÜ
-		P_Bullet_PosX[num] += cos(angle - 0.25) * speed;
-		P_Bullet_PosY[num] += sin(angle - 0.25) * speed;
+		P_Bullet_PosX[num] += cos(angle - 0.3) * speed;
+		P_Bullet_PosY[num] += sin(angle - 0.3) * speed;
 		break;
 	case 5://ãﬂÇ¢ìGë_Ç¢
 		P_Bullet_PosX[num] += cos(P_Bullet_Angle[num] + 0.05) * speed;

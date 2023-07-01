@@ -80,13 +80,13 @@ void EnemySpawn(int spawnPattern)
 	{
 		spawn(0, 150, 0);
 		spawn(0, 150, -100);
-		spawn(1, 150, -200);
+		spawn(1, 300, -200);
 	}
 	else if (spawnPattern == 2)
 	{
 		spawn(0, 450, 0);
 		spawn(0, 450, -100);
-		spawn(1, 450, -200);
+		spawn(1, 300, -200);
 	}
 }
 
@@ -145,7 +145,7 @@ void EnemyAction(void)
 			if (E_ShotCoolTime[i] >= 0) E_ShotCoolTime[i]--;
 			EnemyShotAction(i);
 
-			//敵とプレイヤーが接触
+			//敵とプレイヤーの距離
 			Enemy_dist[i] = sqrt(pow((double)Enemy_X[i] - px, 2) + pow((double)Enemy_Y[i] - py, 2));
 			CheckDistance(i);
 
@@ -157,16 +157,19 @@ void EnemyAction(void)
 			}
 
 			if (Enemy_dist[i] <= Enemy_HitBoxSize[i] + Player_HitBoxSize)
-			{
+			{		
 				//被弾判定
 				if (DamagedCoolTime <= 0)
 				{
-					px = InitialPosX;
-					py = InitialPosY;
-					Life -= 1;
-					DamagedCoolTime = 120;
+					if (Life > 0)
+					{
+						px = InitialPosX;
+						py = InitialPosY;
+						Life -= 1;
+						DamagedCoolTime = 120;
+						EnemyBulletClear();
+					}
 				}
-
 			}
 
 			//ダメージor死亡

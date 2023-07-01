@@ -53,6 +53,11 @@ void EnemyBulletSpawn(int type, int en_x, int en_y, int size,int pattern,double 
 	}	
 }
 
+void EnemyBulletClear(void)
+{
+	for (int i = 0; i < ENEMY_BULLET_AMOUNT; i++) EnemyBulletDestroy(i);
+}
+
 void EnemyShot(int type, int en_x, int en_y)
 {
 	double angle;
@@ -68,7 +73,7 @@ void EnemyShot(int type, int en_x, int en_y)
 	}
 	else if (type == 3) // ”š”­
 	{
-		for (int t = 0; t < 720; t += 10)
+		for (int t = 0; t < 720; t += 40)
 		{
 			EnemyBulletSpawn(type, en_x, en_y, 4, 0, PI / 360 * t);
 		}	
@@ -121,16 +126,16 @@ void EnemyBulletHit(int num)
 	double dis = sqrt(pow((double)px - E_Bullet_PosX[num], 2) + pow((double)py - E_Bullet_PosY[num], 2));
 	if (dis <= E_Bullet_HitBoxSize[num] + Player_HitBoxSize)//”í’e”»’è
 	{
-		EnemyBulletDestroy(num);
-		if (Life > 0)
+		//”í’e”»’è
+		if (DamagedCoolTime <= 0)
 		{
-			//”í’e”»’è
-			if (DamagedCoolTime <= 0)
+			if (Life > 0)
 			{
 				px = InitialPosX;
 				py = InitialPosY;
 				Life -= 1;
 				DamagedCoolTime = 120;
+				EnemyBulletClear();
 			}
 		}
 	}
@@ -162,7 +167,3 @@ void EnemyBulletAction(void)
 	}
 }
 
-void EnemyBulletClear(void)
-{
-	for (int i = 0; i < ENEMY_BULLET_AMOUNT; i++) EnemyBulletDestroy(i);
-}
