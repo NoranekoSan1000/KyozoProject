@@ -7,10 +7,17 @@ using namespace std;
 
 struct Enemy
 {
-	int hp;
-	int movepattern;
+	int hp;//‘Ì—Í
+	int movepattern;//ˆÚ“®ƒpƒ^[ƒ“
+	int shotpattern;//ËŒ‚ƒpƒ^[ƒ“
+	int shotcapacity;//’e”
+	int shotarc;//’e‚ÌL‚ª‚èiŠgU’e‚Ì‚İj
 };
-Enemy enemy[2] = { { 4,0 }, { 5,1 } };
+Enemy enemy[2] = 
+{ 
+	{ 4,0,3,5,NULL },
+	{ 5,1,6,6,90 } 
+};
 
 //“G
 bool Enemy_exist[ENEMY_AMOUNT];//“G‚ª‘¶İ‚·‚é‚©
@@ -85,7 +92,7 @@ void EnemySpawn(int spawnPattern)
 	{
 		spawn(0, 450, 0);
 		spawn(0, 450, -100);
-		spawn(1, 300, -200);
+		spawn(1, 300, -300);
 	}
 }
 
@@ -119,7 +126,7 @@ void CheckDistance(int num)
 void EnemyShotAction(int num)
 {
 	if (E_ShotCoolTime[num] > 0) return;
-	EnemyShot(4, Enemy_X[num], Enemy_Y[num],10,0);//ËŒ‚
+	EnemyShot(enemy[Enemy_Type[num]].shotpattern, Enemy_X[num], Enemy_Y[num], enemy[Enemy_Type[num]].shotcapacity, enemy[Enemy_Type[num]].shotarc);//ËŒ‚
 	E_ShotCoolTime[num] = 60;//ƒtƒŒ[ƒ€‚Åİ’è
 }
 

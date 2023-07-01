@@ -87,14 +87,14 @@ void EnemyShot(int type, int en_x, int en_y, int capacity,int arc)
 	}
 	else if (type == 5) // ŽU’e
 	{
-		for (int t = -90; t < 90; t += (180/ capacity))
+		for (int t = -arc; t < arc; t += (arc * 2 / capacity))
 		{
 			EnemyBulletSpawn(type, en_x, en_y, 4, 0, -(3 * PI / 2) + PI / 360 * t);
 		}
 	}
 	else if (type == 6) // Ž©‹@‘_‚¢ŽU’e
 	{
-		for (int t = -90; t < 90; t += (180 / capacity))
+		for (int t = -arc; t < arc; t += (arc * 2 / capacity))
 		{
 			EnemyBulletSpawn(type, en_x, en_y, 4, 0, angle + PI / 360 * t);
 		}
