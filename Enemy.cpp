@@ -8,10 +8,9 @@ using namespace std;
 struct Enemy
 {
 	int hp;
-	int speed;
 	int movepattern;
 };
-Enemy enemy[2] = { { 5,2,0 }, { 6,2,1 } };
+Enemy enemy[2] = { { 4,0 }, { 5,1 } };
 
 //敵
 bool Enemy_exist[ENEMY_AMOUNT];//敵が存在するか
@@ -80,7 +79,7 @@ void EnemySpawn(int spawnPattern)
 	{
 		spawn(0, 150, 0);
 		spawn(0, 150, -100);
-		spawn(1, 300, -200);
+		spawn(1, 300, -300);
 	}
 	else if (spawnPattern == 2)
 	{
@@ -98,8 +97,8 @@ void EnemyMove(int num)
 		case 0://直進
 			Enemy_Y[num] += 2;
 			break;
-		case 1://直進
-			if(Enemy_MoveTime[num] < 60) Enemy_Y[num] += 6;
+		case 1://高速in一時停止後直進
+			if(Enemy_MoveTime[num] < 60) Enemy_Y[num] += 5;
 			else if (Enemy_MoveTime[num] >= 60 && Enemy_MoveTime[num] < 180) Enemy_Y[num] += 0;
 			else if (Enemy_MoveTime[num] >= 180) Enemy_Y[num] += 2;
 			break;
@@ -120,7 +119,7 @@ void CheckDistance(int num)
 void EnemyShotAction(int num)
 {
 	if (E_ShotCoolTime[num] > 0) return;
-	EnemyShot(3, Enemy_X[num], Enemy_Y[num]);//射撃
+	EnemyShot(4, Enemy_X[num], Enemy_Y[num],10,0);//射撃
 	E_ShotCoolTime[num] = 60;//フレームで設定
 }
 
@@ -172,7 +171,7 @@ void EnemyAction(void)
 				}
 			}
 
-			//ダメージor死亡
+			//ダメージ
 			for (int j = 0; j < PLAYER_BULLET_AMOUNT; j++)
 			{
 				//敵との座標チェック
@@ -180,19 +179,20 @@ void EnemyAction(void)
 				if (dis <= Enemy_HitBoxSize[i] + P_Bullet_HitBoxSize[j])//被弾判定
 				{
 					PlayerBulletDestroy(j);
-					if (Enemy_HP[i] > 0)
+					if (Enemy_HP[i] >= 1)
 					{
 						Score += 1;
 						Enemy_HP[i] -= 1;
 					}
-					else//死亡時
-					{
-						Score += 10;
-						ItemSpawn(Enemy_X[i], Enemy_Y[i]);//アイテム生成
-						EnemyDestroy(i);
-					}
 					break;
 				}
+			}
+
+			if(Enemy_HP[i] <= 0)//死亡時
+			{
+				Score += 10;
+				ItemSpawn(Enemy_X[i], Enemy_Y[i]);//アイテム生成
+				EnemyDestroy(i);
 			}
 		}
 	}

@@ -58,7 +58,7 @@ void EnemyBulletClear(void)
 	for (int i = 0; i < ENEMY_BULLET_AMOUNT; i++) EnemyBulletDestroy(i);
 }
 
-void EnemyShot(int type, int en_x, int en_y)
+void EnemyShot(int type, int en_x, int en_y, int capacity,int arc)
 {
 	double angle;
 	angle = EnemyAngleCalc(en_x, en_y);//Ž©‹@‘_‚¢—p
@@ -73,28 +73,28 @@ void EnemyShot(int type, int en_x, int en_y)
 	}
 	else if (type == 3) // ”š”­
 	{
-		for (int t = 0; t < 720; t += 40)
+		for (int t = 0; t < 720; t += (720 / capacity))
 		{
 			EnemyBulletSpawn(type, en_x, en_y, 4, 0, PI / 360 * t);
 		}	
 	}
-	else if (type == 3) // Ž©‹@‘_‚¢”š”­
+	else if (type == 4) // Ž©‹@‘_‚¢”š”­
 	{
-		for (int t = -360; t < 360; t += 10)
+		for (int t = -360; t < 360; t += (720 / capacity))
 		{
 			EnemyBulletSpawn(type, en_x, en_y, 4, 0, angle + PI / 360 * t);
 		}
 	}
-	else if (type == 4) // ŽU’e
+	else if (type == 5) // ŽU’e
 	{
-		for (int t = -90; t < 90; t += 10)
+		for (int t = -90; t < 90; t += (180/ capacity))
 		{
 			EnemyBulletSpawn(type, en_x, en_y, 4, 0, -(3 * PI / 2) + PI / 360 * t);
 		}
 	}
-	else if (type == 5) // Ž©‹@‘_‚¢ŽU’e
+	else if (type == 6) // Ž©‹@‘_‚¢ŽU’e
 	{
-		for (int t = -90; t < 90; t += 10)
+		for (int t = -90; t < 90; t += (180 / capacity))
 		{
 			EnemyBulletSpawn(type, en_x, en_y, 4, 0, angle + PI / 360 * t);
 		}

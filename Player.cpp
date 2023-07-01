@@ -6,12 +6,12 @@
 //プレイヤー
 int InitialPosX = 325;
 int InitialPosY = 675;
-int Player_HitBoxSize = 4;
+int Player_HitBoxSize = 2;
 int px = InitialPosX;
 int py = InitialPosY;
-int Power = 100;
+int Power = 0;
 int NextPower[3] = { 10, 40, 100 };//LevelUpに必要なPower
-int Level = 3;
+int Level = 0;
 int Score = 0;
 int Life = 3;
 float DamagedCoolTime = 0;
