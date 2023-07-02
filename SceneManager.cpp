@@ -3,6 +3,7 @@
 #include "Player_Bullet.h"
 #include "Enemy_Bullet.h"
 #include "Item.h"
+#include "Player.h"
 
 float StageTitleFadeTime = 0;
 
@@ -56,6 +57,8 @@ void ChangeScene(void)
 	{
 		ObjectClear();
 		StageTitleFadeTime = 0;
+		px = InitialPosX;
+		py = InitialPosY;
 		GameScene = nextScene;
 		FadeIn = true;
 		ChangeSceneActive = false;
