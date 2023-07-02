@@ -12,11 +12,12 @@ struct Enemy
 	int shotpattern;//ËŒ‚ƒpƒ^[ƒ“
 	int shotcapacity;//’e”
 	int shotarc;//’e‚ÌL‚ª‚èiŠgU’e‚Ì‚İj
+	int shotdesign;//’e‚ÌƒfƒUƒCƒ“
 };
 Enemy enemy[2] = 
 { 
-	{ 4,0,3,5,NULL },
-	{ 5,1,6,6,180 } 
+	{ 4,0,3,5,NULL,0 },
+	{ 5,1,6,6,180,5 } 
 };
 
 //“G
@@ -126,7 +127,8 @@ void CheckDistance(int num)
 void EnemyShotAction(int num)
 {
 	if (E_ShotCoolTime[num] > 0) return;
-	EnemyShot(enemy[Enemy_Type[num]].shotpattern, Enemy_X[num], Enemy_Y[num], enemy[Enemy_Type[num]].shotcapacity, enemy[Enemy_Type[num]].shotarc);//ËŒ‚
+	EnemyShot(enemy[Enemy_Type[num]].shotdesign, enemy[Enemy_Type[num]].shotpattern, Enemy_X[num], Enemy_Y[num], 
+		enemy[Enemy_Type[num]].shotcapacity, enemy[Enemy_Type[num]].shotarc);//ËŒ‚
 	E_ShotCoolTime[num] = 60;//ƒtƒŒ[ƒ€‚Åİ’è
 }
 

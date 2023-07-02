@@ -1,20 +1,19 @@
 #include "GameData.h"
 #include "Player.h"
 
-
 //“G‚Ì’e
 bool E_Bullet_exist[ENEMY_BULLET_AMOUNT];
-int E_Bullet_Type[ENEMY_BULLET_AMOUNT];//‰æ‘œ—p
+int E_Bullet_Design[ENEMY_BULLET_AMOUNT];
 double E_Bullet_PosX[ENEMY_BULLET_AMOUNT];
 double E_Bullet_PosY[ENEMY_BULLET_AMOUNT];
 int E_Bullet_HitBoxSize[ENEMY_BULLET_AMOUNT];
 int E_Bullet_MovePattern[ENEMY_BULLET_AMOUNT];
 double E_Bullet_Angle[ENEMY_BULLET_AMOUNT];
 
-void EnemyBulletGenerate(int num, int type, int x, int y, int hitboxsize, int pattern, double angle)
+void EnemyBulletGenerate(int num, int design, int x, int y, int hitboxsize, int pattern, double angle)
 {
 	E_Bullet_exist[num] = true;
-	E_Bullet_Type[num] = type;
+	E_Bullet_Design[num] = design;
 	E_Bullet_PosX[num] = x;
 	E_Bullet_PosY[num] = y;
 	E_Bullet_HitBoxSize[num] = hitboxsize;
@@ -25,7 +24,7 @@ void EnemyBulletGenerate(int num, int type, int x, int y, int hitboxsize, int pa
 void EnemyBulletDestroy(int num)
 {
 	E_Bullet_exist[num] = false;
-	E_Bullet_Type[num] = NULL;
+	E_Bullet_Design[num] = NULL;
 	E_Bullet_PosX[num] = NULL;
 	E_Bullet_PosY[num] = NULL;
 	E_Bullet_HitBoxSize[num] = NULL;
@@ -40,14 +39,14 @@ double  EnemyAngleCalc(int en_x, int en_y)
 	return tmp;
 }
 
-void EnemyBulletSpawn(int type, int en_x, int en_y, int size,int pattern,double angle)
+void EnemyBulletSpawn(int design, int en_x, int en_y, int size,int pattern,double angle)
 {
 	for (int i = 0; i < ENEMY_BULLET_AMOUNT; i++)
 	{
 		if (E_Bullet_exist[i] == false)//ƒVƒ‡ƒbƒgÝ’èŠi”[êŠ‚Ì‹ó‚«‚ðŠm”F
 		{
 			PlaySE(SE_PlayerShot); //Œø‰Ê‰¹
-			EnemyBulletGenerate(i, type, en_x, en_y, size, pattern, angle);
+			EnemyBulletGenerate(i, design, en_x, en_y, size, pattern, angle);
 			break;
 		}
 	}	
@@ -58,45 +57,45 @@ void EnemyBulletClear(void)
 	for (int i = 0; i < ENEMY_BULLET_AMOUNT; i++) EnemyBulletDestroy(i);
 }
 
-void EnemyShot(int type, int en_x, int en_y, int capacity,int arc)
+void EnemyShot(int design, int type, int en_x, int en_y, int capacity,int arc)
 {
 	double angle;
 	angle = EnemyAngleCalc(en_x, en_y);//Ž©‹@‘_‚¢—p
 	if (type == 0) return;//¶¬‚µ‚È‚¢
 	else if (type == 1) //1”­Ž©‹@‘_‚¢
 	{
-		EnemyBulletSpawn(type, en_x, en_y, 4, 0, angle - 0.05);
+		EnemyBulletSpawn(design, en_x, en_y, 4, 0, angle - 0.05);
 	}
 	else if (type == 2) // ’¼ü‰º
 	{
-		EnemyBulletSpawn(type, en_x, en_y, 4, 0, -(3 * PI / 2));
+		EnemyBulletSpawn(design, en_x, en_y, 4, 0, -(3 * PI / 2));
 	}
 	else if (type == 3) // ”š”­
 	{
 		for (int t = 0; t < 720; t += (720 / capacity))
 		{
-			EnemyBulletSpawn(type, en_x, en_y, 4, 0, PI / 360 * t);
+			EnemyBulletSpawn(design, en_x, en_y, 4, 0, PI / 360 * t);
 		}	
 	}
 	else if (type == 4) // Ž©‹@‘_‚¢”š”­
 	{
 		for (int t = -360; t < 360; t += (720 / capacity))
 		{
-			EnemyBulletSpawn(type, en_x, en_y, 4, 0, angle + PI / 360 * t);
+			EnemyBulletSpawn(design, en_x, en_y, 4, 0, angle + PI / 360 * t);
 		}
 	}
 	else if (type == 5) // ŽU’e
 	{
 		for (int t = -arc; t < arc; t += (arc * 2 / capacity))
 		{
-			EnemyBulletSpawn(type, en_x, en_y, 4, 0, -(3 * PI / 2) + PI / 360 * t);
+			EnemyBulletSpawn(design, en_x, en_y, 4, 0, -(3 * PI / 2) + PI / 360 * t);
 		}
 	}
 	else if (type == 6) // Ž©‹@‘_‚¢ŽU’e
 	{
 		for (int t = -arc; t < arc; t += (arc * 2 / capacity))
 		{
-			EnemyBulletSpawn(type, en_x, en_y, 4, 0, angle + PI / 360 * t);
+			EnemyBulletSpawn(design, en_x, en_y, 4, 0, angle + PI / 360 * t);
 		}
 	}
 }
@@ -152,7 +151,7 @@ void EnemyBulletAction(void)
 		if (E_Bullet_exist[i] == true) DrawCircle((int)E_Bullet_PosX[i], (int)E_Bullet_PosY[i], E_Bullet_HitBoxSize[i], GetColor(100, 100, 255), 1);
 		else continue;
 
-		DrawRotaGraph((int)E_Bullet_PosX[i], (int)E_Bullet_PosY[i], 1.0, 0, EnemyShot_img[0], TRUE);//‰æ‘œ
+		DrawRotaGraph((int)E_Bullet_PosX[i], (int)E_Bullet_PosY[i], 1.0, 0, EnemyShot_img[E_Bullet_Design[i]], TRUE);//‰æ‘œ
 
 		EnemyBulletMove(i);
 		EnemyBulletHit(i);
