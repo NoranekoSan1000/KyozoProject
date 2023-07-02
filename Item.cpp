@@ -6,7 +6,7 @@ bool Item_exist[ITEM_AMOUNT];
 int Item_X[ITEM_AMOUNT];
 int Item_Y[ITEM_AMOUNT];
 int Item_HitBoxSize[ITEM_AMOUNT];
-bool CollectTime = false;
+bool CollectTime[ITEM_AMOUNT];
 
 void ItemGenerate(int num, int x, int y, int hitboxsize)
 {
@@ -14,6 +14,7 @@ void ItemGenerate(int num, int x, int y, int hitboxsize)
 	Item_X[num] = x;
 	Item_Y[num] = y;
 	Item_HitBoxSize[num] = hitboxsize;
+	CollectTime[num] = false;
 }
 
 void ItemDestroy(int num)
@@ -22,6 +23,7 @@ void ItemDestroy(int num)
 	Item_X[num] = NULL;
 	Item_Y[num] = NULL;
 	Item_HitBoxSize[num] = NULL;
+	CollectTime[num] = false;
 }
 
 void ItemSpawn(int en_x,int en_y)
@@ -38,26 +40,25 @@ void ItemSpawn(int en_x,int en_y)
 
 void ItemMove(int num)
 {
-	if (!CollectTime) Item_Y[num] += 2;
+	if (!CollectTime[num]) Item_Y[num] += 2;
 	else
 	{
-		if (px < Item_X[num]) Item_X[num] -= 4;
-		else Item_X[num] += 4;
-		if (py < Item_Y[num]) Item_Y[num] -= 10;
-		else Item_Y[num] += 10;
+		if (px < Item_X[num] - 8) Item_X[num] -= 8;
+		else if(px > Item_X[num] + 8) Item_X[num] += 8;
+		else Item_X[num] += 0;
+		if (py < Item_Y[num] - 10 ) Item_Y[num] -= 10;
+		else if (py > Item_Y[num] +10) Item_Y[num] += 10;
+		else Item_Y[num] += 0;
 	}
 }
 
-void CollectItem(void) 
+void CollectItem(int num) 
 {
-	if (py <= 150) CollectTime = true;
-	else CollectTime = false;
+	if (py <= 150) CollectTime[num] = true;
 }
 
 void ItemAction(void)
 {
-	CollectItem();//プレイヤーが画面上部へ行った時
-
 	for (int i = 0; i < ITEM_AMOUNT; i++)
 	{
 		//画像表示
@@ -65,7 +66,7 @@ void ItemAction(void)
 		else continue;
 
 		
-
+		CollectItem(i);//プレイヤーが画面上部へ行った時
 		ItemMove(i);
 
 		//敵とプレイヤーが接触

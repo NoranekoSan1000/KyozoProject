@@ -23,7 +23,7 @@ int backgroundBack_img;
 int power_img;
 int PlayerShot01_img;
 int PlayerShot02_img;
-int EnemyShot01_img;
+int EnemyShot_img[1];
 int Enemy_img[2];
 int player_img;
 
@@ -67,7 +67,13 @@ void ImageInit(void)// ‰æ‘œ‚Ì‰Šú‰»
 	power_img = LoadGraph("image/power.png");
 	PlayerShot01_img = LoadGraph("image/PlayerShot.png");
 	PlayerShot02_img = LoadGraph("image/PlayerShot2.png");
-	EnemyShot01_img = LoadGraph("image/EnemyShot01.png");
+	for (int i = 0; i < 5; i++)
+	{
+		char fileName[30]; // “K“–‚È’·‚³‚Ì•¶š—ñ
+		sprintf_s(fileName, "image/EnemyShot/%d.png", i);
+		EnemyShot_img[i] = LoadGraph(fileName);
+	}
+	
 
 	for (int i = 0; i < 2; i++)
 	{

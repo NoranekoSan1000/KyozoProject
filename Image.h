@@ -20,7 +20,7 @@ extern int backgroundBack_img;
 extern int power_img;
 extern int PlayerShot01_img;
 extern int PlayerShot02_img;
-extern int EnemyShot01_img;
+extern int EnemyShot_img[];
 extern int Enemy_img[];
 extern int player_img;
 
