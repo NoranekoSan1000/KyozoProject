@@ -152,7 +152,7 @@ void EnemyBulletAction(void)
 		if (E_Bullet_exist[i] == true) DrawCircle((int)E_Bullet_PosX[i], (int)E_Bullet_PosY[i], E_Bullet_HitBoxSize[i], GetColor(100, 100, 255), 1);
 		else continue;
 
-		DrawRotaGraph((int)E_Bullet_PosX[i], (int)E_Bullet_PosY[i], 1.0, 0, EnemyShot_img[7], TRUE);//‰æ‘œ
+		DrawRotaGraph((int)E_Bullet_PosX[i], (int)E_Bullet_PosY[i], 1.0, 0, EnemyShot_img[0], TRUE);//‰æ‘œ
 
 		EnemyBulletMove(i);
 		EnemyBulletHit(i);
