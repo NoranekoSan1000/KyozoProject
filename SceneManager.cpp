@@ -1,6 +1,11 @@
 #include "GameData.h"
 #include "Enemy.h"
 #include "Player_Bullet.h"
+#include "Enemy_Bullet.h"
+#include "Item.h"
+#include "Player.h"
+
+float StageTitleFadeTime = 0;
 
 bool FadeIn = false;
 bool FadeOut = false;
@@ -39,7 +44,9 @@ void ViewFadeWindow(void)
 void ObjectClear(void)
 {
 	PlayerBulletClear();
+	EnemyBulletClear();
 	EnemyClear();
+	ItemClear();
 }
 
 void ChangeScene(void)
@@ -49,6 +56,9 @@ void ChangeScene(void)
 	if (fadeALPHA == 256) //ÉVÅ[ÉìÇ™ïœÇÌÇÈèuä‘
 	{
 		ObjectClear();
+		StageTitleFadeTime = 0;
+		px = InitialPosX;
+		py = InitialPosY;
 		GameScene = nextScene;
 		FadeIn = true;
 		ChangeSceneActive = false;

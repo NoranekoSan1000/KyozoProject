@@ -1,20 +1,65 @@
 #include "GameData.h"
+#include "Player_Bullet.h"
 #define PLAYER_SIZE_X 12
 #define PLAYER_SIZE_Y 24
 
 //プレイヤー
 int InitialPosX = 325;
 int InitialPosY = 675;
-int Player_HitBoxSize = 4;
+int Player_HitBoxSize = 2;
 int px = InitialPosX;
 int py = InitialPosY;
 int Power = 0;
-int NextPower[3] = { 20, 60, 120 };//LevelUpに必要なPower
+int NextPower[3] = { 10, 40, 100 };//LevelUpに必要なPower
 int Level = 0;
 int Score = 0;
-int Life = 4;
+int Life = 3;
 float DamagedCoolTime = 0;
 float P_ShotCoolTime = 0;
+
+void PlayerShotAction(void)
+{
+	if (KeyState[KEY_INPUT_Z] > 0)
+	{
+		if (P_ShotCoolTime > 0) return;
+		if (Level >= 0)
+		{
+			PlayerShot(px, py - 8, 0);//射撃
+		}
+		if (Level >= 1 && Level < 3)//狙いLv1
+		{
+			PlayerShot(px, py + 20, 7);//射撃
+		}
+		if (Level >= 2)
+		{
+			PlayerShot(px, py - 4, 1);//射撃
+			PlayerShot(px, py - 4, 2);//射撃
+		}
+		if (Level >= 3)//狙いLv2
+		{
+			PlayerShot(px + 8, py + 8, 5);//射撃
+			PlayerShot(px - 8, py + 8, 6);//射撃
+		}
+		P_ShotCoolTime = 8;//フレームで設定
+	}
+}
+
+void LevelUp(void)
+{
+	if (Power < NextPower[0])
+	{
+		Level = 0;
+	}
+	else if (Power >= NextPower[0] && Power < NextPower[1])
+	{
+		Level = 1;
+	}
+	else if (Power >= NextPower[1] && Power < NextPower[2])
+	{
+		Level = 2;
+	}
+	else Level = 3;
+}
 
 void PlayerMove(void)
 {

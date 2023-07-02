@@ -3,13 +3,13 @@
 
 //ÉvÉåÉCÉÑÅ[ÇÃíe
 bool P_Bullet_exist[PLAYER_BULLET_AMOUNT];
-int P_Bullet_PosX[PLAYER_BULLET_AMOUNT];
-int P_Bullet_PosY[PLAYER_BULLET_AMOUNT];
+double P_Bullet_PosX[PLAYER_BULLET_AMOUNT];
+double P_Bullet_PosY[PLAYER_BULLET_AMOUNT];
 int P_Bullet_HitBoxSize[PLAYER_BULLET_AMOUNT];
 int P_Bullet_MovePattern[PLAYER_BULLET_AMOUNT];
-float P_Bullet_Angle[PLAYER_BULLET_AMOUNT];
+double P_Bullet_Angle[PLAYER_BULLET_AMOUNT];
 
-void PlayerBulletGenerate(int num, int x, int y, int hitboxsize, int pattern,float angle)
+void PlayerBulletGenerate(int num, double x, double y, int hitboxsize, int pattern, double angle)
 {
 	P_Bullet_exist[num] = true;
 	P_Bullet_PosX[num] = x;
@@ -29,16 +29,16 @@ void PlayerBulletDestroy(int num)
 	P_Bullet_Angle[num] = NULL;
 }
 
-float AngleCalc(int px, int py)
+double AngleCalc(int px, int py)
 {
-	float tmp;
-	tmp = (float)atan2((Enemy_Y[CloseEnemy] + 40 - py), (Enemy_X[CloseEnemy] - px));
+	double tmp;
+	tmp = atan2((Enemy_Y[CloseEnemy] + 40.0 - py), (Enemy_X[CloseEnemy] - px));
 	return tmp;
 }
 
 void PlayerShot(int px,int py,int type)
 {
-	float angle;
+	double angle;
 	for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++)
 	{
 		if (P_Bullet_exist[i] == false)//ÉVÉáÉbÉgê›íËäiî[èÍèäÇÃãÛÇ´ÇämîF
@@ -71,16 +71,16 @@ void BulletMove(int num)
 		P_Bullet_PosY[num] += sin(angle + 0.15) * speed;
 		break;
 	case 2://ç∂éŒÇﬂè¨
-		P_Bullet_PosX[num] += cos(angle - 0.10) * speed;
-		P_Bullet_PosY[num] += sin(angle - 0.10) * speed;
+		P_Bullet_PosX[num] += cos(angle - 0.15) * speed;
+		P_Bullet_PosY[num] += sin(angle - 0.15) * speed;
 		break;
 	case 3://âEéŒÇﬂíÜ
 		P_Bullet_PosX[num] += cos(angle + 0.3) * speed;
 		P_Bullet_PosY[num] += sin(angle + 0.3) * speed;
 		break;
 	case 4://ç∂éŒÇﬂíÜ
-		P_Bullet_PosX[num] += cos(angle - 0.25) * speed;
-		P_Bullet_PosY[num] += sin(angle - 0.25) * speed;
+		P_Bullet_PosX[num] += cos(angle - 0.3) * speed;
+		P_Bullet_PosY[num] += sin(angle - 0.3) * speed;
 		break;
 	case 5://ãﬂÇ¢ìGë_Ç¢
 		P_Bullet_PosX[num] += cos(P_Bullet_Angle[num] + 0.05) * speed;

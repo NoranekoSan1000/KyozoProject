@@ -1,38 +1,23 @@
 #include "GameData.h"
-#include "Enemy_Bullet.h"
+#include "Item.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "Player_Bullet.h"
+#include "Enemy_Bullet.h"
 
-double FrameCount = 0;
+int SpawnPattern[4][20] = //[stage][NowStageMode]
+{
+	{0,0,1,0,2,0,1,0,2,0,1,0,0,0,-1},//Stage1
+	{0,0,1,0,2,0,1,0,2,0,1,0,0,0,-1},
+	{0,0,1,0,2,0,1,0,2,0,1,0,0,0,-1},
+	{0,0,1,0,2,0,1,0,2,0,1,0,0,0,-1},
+};
+
+
 int SelectDifficulty = 0;
 
-void PlayerShotAction()
-{
-	if (KeyState[KEY_INPUT_Z] > 0)
-	{
-		if (P_ShotCoolTime > 0) return;
-		if (Level >= 0)
-		{
-			PlayerShot(px, py - 8, 0);//射撃
-		}
-		if (Level >= 1 && Level < 3)//狙いLv1
-		{
-			PlayerShot(px, py + 20, 7);//射撃
-		}
-		if (Level >= 2)
-		{
-			PlayerShot(px, py - 4, 1);//射撃
-			PlayerShot(px, py - 4, 2);//射撃
-		}
-		if (Level >= 3)//狙いLv2
-		{
-			PlayerShot(px + 8, py + 8, 5);//射撃
-			PlayerShot(px - 8, py + 8, 6);//射撃
-		}
-		P_ShotCoolTime = 8;//フレームで設定
-	}
-}
+float StageModeUpdateTime = 120;
+int NowStageMode = 0;
 
 void ViewStatus(void)
 {
@@ -44,17 +29,32 @@ void ViewStatus(void)
 
 	//テキスト
 	DrawRotaGraph(WINDOW_WIDTH - 160, 40, 0.8, 0, DifficultyText_img[SelectDifficulty], TRUE);
-	DrawRotaGraph(WINDOW_WIDTH - 240, 77, 0.8, 0, score_img, TRUE);
+	DrawRotaGraph(WINDOW_WIDTH - 240, 107, 0.8, 0, score_img, TRUE);
 	for (int i = 0; i < 6; i++) 
 	{
-		DrawRotaGraph(WINDOW_WIDTH - 160 + (25 * i), 80, 0.8, 0, NumberText_img[(Score / (int)pow(10, 5 - i)) % 10], TRUE);
+		DrawRotaGraph(WINDOW_WIDTH - 160 + (25 * i), 110, 0.8, 0, NumberText_img[(Score / (int)pow(10, 5 - i)) % 10], TRUE);
 	}
 
+	DrawRotaGraph(WINDOW_WIDTH - 240, 190, 0.8, 0, LifeText_img, TRUE);
+	for (int i = 0; i < Life; i++)
+	{
+		DrawRotaGraph(WINDOW_WIDTH - 170 + (32 * i), 190, 0.95, 0, Life_img, TRUE);
+	}
 	
-	DrawFormatString(WINDOW_WIDTH - 250, 110, GetColor(255, 255, 255), "Life : %d", Life);
-	DrawFormatString(WINDOW_WIDTH - 250, 150, GetColor(255, 255, 255), "ShotLevel : %d", Level);
-	DrawFormatString(WINDOW_WIDTH - 250, 180, GetColor(255, 255, 255), "Power : %d", Power);
-	DrawFormatString(WINDOW_WIDTH - 250, 300, GetColor(255, 255, 255), "sec %.2lf", FrameCount++ / 60);
+
+	DrawRotaGraph(WINDOW_WIDTH - 220, 270, 0.8, 0, LevelText_img, TRUE);
+	DrawRotaGraph(WINDOW_WIDTH - 120, 273, 0.8, 0, NumberText_img[Level], TRUE);
+
+	DrawRotaGraph(WINDOW_WIDTH - 220, 310, 0.8, 0, PowerText_img, TRUE);
+	for (int i = 0; i < 3; i++)
+	{
+		DrawRotaGraph(WINDOW_WIDTH - 230 + (25 * i), 350, 0.8, 0, NumberText_img[(Power / (int)pow(10, 2 - i)) % 10], TRUE);
+		DrawRotaGraph(WINDOW_WIDTH - 110 + (25 * i), 350, 0.8, 0, NumberText_img[(NextPower[Level] / (int)pow(10, 2 - i)) % 10], TRUE);
+	}
+	DrawRotaGraph(WINDOW_WIDTH - 140, 350, 0.8, 0, slash_img, TRUE);
+
+	DrawFormatString(WINDOW_WIDTH - 250, 400, GetColor(255, 255, 255), "sec %d ",NowStageMode);
+	DrawFormatString(WINDOW_WIDTH - 250, 500, GetColor(255, 255, 255), "angle : %lf ", (3 * PI / 2));
 }
 
 int intu;
@@ -66,14 +66,24 @@ void ViewBackGround(void)//背景ループ
 	if (intu >= 800) intu = 0;
 }
 
+void viewStageTitle(int i)
+{
+	if (StageTitleFadeTime < 500) StageTitleFadeTime++;
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 450 - StageTitleFadeTime);
+	DrawRotaGraph(300, 250 + (StageTitleFadeTime / 8), 1, 0, StageTitle_img[i], TRUE);//画像表示
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
+}
+
 void GameProcess(void)
 {
-	ViewBackGround(); //Fade用黒背景
+	ViewBackGround(); //Fade用黒背景 ViewBackGroundが挿入されていないシーンではフェードは反映されない
 
 	if (P_ShotCoolTime >= 0) P_ShotCoolTime--;
 	if (DamagedCoolTime >= 0) DamagedCoolTime--;
 
-	if (KeyState[KEY_INPUT_A] == TRUE) EnemySpawn();
+	ItemAction();
+
 	EnemyAction();
 
 	EnemyBulletAction();//敵の弾の処理
@@ -81,10 +91,31 @@ void GameProcess(void)
 	PlayerShotAction();
 	PlayerBulletAction(); //レイヤーの弾の処理
 
+	LevelUp();
 	ViewPlayer();//プレイヤー表示
 
 	ViewFadeWindow();
 	ViewStatus();	
+}
+
+void StageUpdater(SceneManager Next)
+{
+	if (StageModeUpdateTime >= 0) StageModeUpdateTime--;
+	if (StageModeUpdateTime < 0)//120フレーム毎に実行
+	{
+		NowStageMode++;
+		if (SpawnPattern[0][NowStageMode] == -1)//ステージ終了
+		{
+			ChangeSceneActive = true;
+			nextScene = Next;
+			NowStageMode = 0;
+		}
+		else
+		{
+			EnemySpawn(SpawnPattern[0][NowStageMode]);//敵登場
+		}
+		StageModeUpdateTime = 120;
+	}
 }
 
 void Update(void) //毎フレーム処理
@@ -109,7 +140,6 @@ void Update(void) //毎フレーム処理
 		if (KeyState[KEY_INPUT_DOWN] == TRUE && SelectDifficulty < 3) SelectDifficulty++;
 		else if (KeyState[KEY_INPUT_DOWN] == TRUE && SelectDifficulty == 3) SelectDifficulty = 0;
 		
-		
 		for (int i = 0; i < 4; i++)
 		{
 			if(SelectDifficulty == i) DrawRotaGraph(450, 140 + (i * 170), 1, 0, DifficultyLv_img[i], TRUE);//画像表示
@@ -126,46 +156,39 @@ void Update(void) //毎フレーム処理
 			ChangeSceneActive = true;
 			nextScene = Stage1_Scene;//シーン遷移用。この２つはセット
 		}
+		if (KeyState[KEY_INPUT_X] == TRUE)
+		{
+			ChangeSceneActive = true;
+			nextScene = Title_Scene;//シーン遷移用。この２つはセット
+		}
 	}
 	if (GameScene == Stage1_Scene)
 	{
 		PlayBGM(BGM[1]);
 		GameProcess();
-		if (KeyState[KEY_INPUT_P] == TRUE)
-		{	
-			ChangeSceneActive = true;
-			nextScene = Stage2_Scene;
-		}
+		viewStageTitle(0);
+		StageUpdater(Stage2_Scene);//引数に次のステージ
 	}
 	if (GameScene == Stage2_Scene)
 	{
 		PlayBGM(BGM[3]);
 		GameProcess();
-		if (KeyState[KEY_INPUT_P] == TRUE)
-		{
-			ChangeSceneActive = true;
-			nextScene = Stage3_Scene;
-		}
+		viewStageTitle(1);
+		StageUpdater(Stage3_Scene);//引数に次のステージ
 	}
 	if (GameScene == Stage3_Scene)
 	{
 		PlayBGM(BGM[5]);
 		GameProcess();
-		if (KeyState[KEY_INPUT_P] == TRUE)
-		{
-			ChangeSceneActive = true;
-			nextScene = Stage4_Scene;
-		}
+		viewStageTitle(2);
+		StageUpdater(Stage4_Scene);
 	}
 	if (GameScene == Stage4_Scene)
 	{
 		PlayBGM(BGM[7]);
 		GameProcess();
-		if (KeyState[KEY_INPUT_P] == TRUE)
-		{
-			ChangeSceneActive = true;
-			nextScene = Title_Scene;
-		}
+		viewStageTitle(3);
+		StageUpdater(Title_Scene);
 	}
 }
 
@@ -188,7 +211,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 	{
 		ClearDrawScreen();//裏画面消す
 		SetDrawScreen(DX_SCREEN_BACK);//描画先を裏画面に
-		KeyUpdate();//キー入力状態を更新する（自作関数）
+		KeyUpdate();//キー入力状態を更新する <- KeyManager.cpp
 		Update();//毎フレーム処理
 		ScreenFlip();//裏画面を表画面にコピー
 	}

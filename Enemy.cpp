@@ -2,42 +2,63 @@
 #include "Player.h"
 #include "Player_Bullet.h"
 #include "Enemy_Bullet.h"
+#include "Item.h"
 using namespace std;
 
+struct Enemy
+{
+	int hp;//体力
+	int movepattern;//移動パターン
+	int shotpattern;//射撃パターン
+	int shotcapacity;//弾数
+	int shotarc;//弾の広がり（拡散弾のみ）
+	int shotdesign;//弾のデザイン
+};
+Enemy enemy[2] = 
+{ 
+	{ 4,0,3,5,NULL,0 },
+	{ 5,1,6,6,180,5 } 
+};
+
 //敵
-bool Enemy_exist[ENEMY_AMOUNT];
+bool Enemy_exist[ENEMY_AMOUNT];//敵が存在するか
+bool Enemy_visible[ENEMY_AMOUNT];//敵が画面内にいるか
+int Enemy_Type[ENEMY_AMOUNT];//画像用
 int Enemy_X[ENEMY_AMOUNT];
 int Enemy_Y[ENEMY_AMOUNT];
 int Enemy_HitBoxSize[ENEMY_AMOUNT];
-int Enemy_MoveSpeed[ENEMY_AMOUNT];
-int MovePattern[ENEMY_AMOUNT];
+int Enemy_MoveTime[ENEMY_AMOUNT];
+int MovePattern[ENEMY_AMOUNT];//移動パターン
 int Enemy_HP[ENEMY_AMOUNT];
 float Enemy_dist[ENEMY_AMOUNT];
-
 float E_ShotCoolTime[ENEMY_AMOUNT];
 
 int CloseEnemy = -1;
 float CloseDist = 1100;
 
-void EnemyGenerate(int num, int x, int y, int hitboxsize, int movespeed, int movepattern, int hp, int ct)
+void EnemyGenerate(int num, int type, int x, int y, int hitboxsize, int movetime, int movepattern, int hp)
 {
 	Enemy_exist[num] = true;
+	Enemy_visible[num] = false;
+	Enemy_Type[num] = type;
 	Enemy_X[num] = x;
 	Enemy_Y[num] = y;
 	Enemy_HitBoxSize[num] = hitboxsize;
-	Enemy_MoveSpeed[num] = movespeed;
+	Enemy_MoveTime[num] = movetime;
 	MovePattern[num] = movepattern;
 	Enemy_HP[num] = hp;
-	E_ShotCoolTime[num] = ct;
+	E_ShotCoolTime[num] = 0;
 }
 
 void EnemyDestroy(int num)
 {
 	Enemy_exist[num] = false;
+	Enemy_visible[num] = false;
+	Enemy_Type[num] = NULL;
 	Enemy_X[num] = NULL;
 	Enemy_Y[num] = NULL;
 	Enemy_HitBoxSize[num] = NULL;
-	Enemy_MoveSpeed[num] = NULL;
+	Enemy_MoveTime[num] = NULL;
 	MovePattern[num] = NULL;
 	Enemy_HP[num] = NULL;
 	Enemy_dist[num] = NULL;
@@ -47,24 +68,47 @@ void EnemyDestroy(int num)
 	CloseDist = 1100;
 }
 
-void EnemySpawn(void)
+void spawn(int type,int x,int y)
 {
 	for (int i = 0; i < ENEMY_AMOUNT; i++)
 	{
 		if (Enemy_exist[i] == false)
 		{
-			EnemyGenerate(i, px, py - 900, 12, 2, 0, 5, 0);
+			EnemyGenerate(i, type, x, y, 16, 2, enemy[type].movepattern, enemy[type].hp);
 			break;
 		}
 	}
 }
 
+void EnemySpawn(int spawnPattern)
+{
+	if (spawnPattern == 0) return;
+	else if (spawnPattern == 1) //上から3体
+	{
+		spawn(0, 150, 0);
+		spawn(0, 150, -100);
+		spawn(1, 300, -300);
+	}
+	else if (spawnPattern == 2)
+	{
+		spawn(0, 450, 0);
+		spawn(0, 450, -100);
+		spawn(1, 300, -300);
+	}
+}
+
 void EnemyMove(int num)
 {
+	Enemy_MoveTime[num]++;
 	switch (MovePattern[num])
 	{
 		case 0://直進
-			Enemy_Y[num] += Enemy_MoveSpeed[num];
+			Enemy_Y[num] += 2;
+			break;
+		case 1://高速in一時停止後直進
+			if(Enemy_MoveTime[num] < 60) Enemy_Y[num] += 5;
+			else if (Enemy_MoveTime[num] >= 60 && Enemy_MoveTime[num] < 180) Enemy_Y[num] += 0;
+			else if (Enemy_MoveTime[num] >= 180) Enemy_Y[num] += 2;
 			break;
 		default:
 			break;
@@ -83,7 +127,8 @@ void CheckDistance(int num)
 void EnemyShotAction(int num)
 {
 	if (E_ShotCoolTime[num] > 0) return;
-	EnemyShot(Enemy_X[num], Enemy_Y[num], 4, 5);//射撃
+	EnemyShot(enemy[Enemy_Type[num]].shotdesign, enemy[Enemy_Type[num]].shotpattern, Enemy_X[num], Enemy_Y[num], 
+		enemy[Enemy_Type[num]].shotcapacity, enemy[Enemy_Type[num]].shotarc);//射撃
 	E_ShotCoolTime[num] = 60;//フレームで設定
 }
 
@@ -92,57 +137,71 @@ void EnemyAction(void)
 	for (int i = 0; i < ENEMY_AMOUNT; i++)
 	{
 		//敵キャラ画像表示
-		if (Enemy_exist[i] == true) DrawCircle(Enemy_X[i], Enemy_Y[i], Enemy_HitBoxSize[i], GetColor(255, 0, 0), 1);
+		if (Enemy_exist[i] == true) DrawRotaGraph(Enemy_X[i], Enemy_Y[i], 1.0, 0, Enemy_img[Enemy_Type[i]], TRUE); //画像の描画
 		else continue;
 
-		EnemyMove(i); 
+		//DrawCircle(Enemy_X[i], Enemy_Y[i], Enemy_HitBoxSize[i], GetColor(255, 0, 0), 1);
+		
+		//移動
+		EnemyMove(i);
 
-		if (E_ShotCoolTime[i] >= 0) E_ShotCoolTime[i]--;
-		EnemyShotAction(i);
-
-		//敵とプレイヤーが接触
-		Enemy_dist[i] = sqrt(pow((double)Enemy_X[i] - px, 2) + pow((double)Enemy_Y[i] - py, 2));
-		CheckDistance(i);
-
-		//画面外で消滅
-		if (/*E_Bullet_PosY[i] < -20 || */Enemy_Y[i] > FRAME_HEIGHT || 0 > Enemy_X[i] || Enemy_X[i] > FRAME_WIDTH)
+		//画面内に一度でも入ればtrue
+		if (Enemy_X[i] <= FRAME_WIDTH && Enemy_X[i] >= 0 && Enemy_Y[i] <= FRAME_HEIGHT && Enemy_Y[i] >= 0) Enemy_visible[i] = true;
+		
+		if (Enemy_visible[i])
 		{
-			EnemyDestroy(i);
-			continue;
-		}
+			if (E_ShotCoolTime[i] >= 0) E_ShotCoolTime[i]--;
+			EnemyShotAction(i);
 
-		if (Enemy_dist[i] <= Enemy_HitBoxSize[i] + Player_HitBoxSize)
-		{
-			//被弾判定
-			if (DamagedCoolTime <= 0)
+			//敵とプレイヤーの距離
+			Enemy_dist[i] = sqrt(pow((double)Enemy_X[i] - px, 2) + pow((double)Enemy_Y[i] - py, 2));
+			CheckDistance(i);
+
+			//画面外で消滅
+			if (Enemy_visible[i] && (Enemy_Y[i] > FRAME_HEIGHT || -20 > Enemy_X[i] || Enemy_X[i] > FRAME_WIDTH + 20))
 			{
-				px = InitialPosX;
-				py = InitialPosY;
-				Life -= 1;
-				DamagedCoolTime = 120;
+				EnemyDestroy(i);
+				continue;
 			}
 
-		}
+			if (Enemy_dist[i] <= Enemy_HitBoxSize[i] + Player_HitBoxSize)
+			{		
+				//被弾判定
+				if (DamagedCoolTime <= 0)
+				{
+					if (Life > 0)
+					{
+						px = InitialPosX;
+						py = InitialPosY;
+						Life -= 1;
+						DamagedCoolTime = 120;
+						EnemyBulletClear();
+					}
+				}
+			}
 
-		//ダメージor死亡
-		for (int j = 0; j < PLAYER_BULLET_AMOUNT; j++)
-		{
-			//敵との座標チェック
-			float dis = sqrt(pow((double)Enemy_X[i] - P_Bullet_PosX[j], 2) + pow((double)Enemy_Y[i] - P_Bullet_PosY[j], 2));
-			if (dis <= Enemy_HitBoxSize[i] + P_Bullet_HitBoxSize[j])//被弾判定
+			//ダメージ
+			for (int j = 0; j < PLAYER_BULLET_AMOUNT; j++)
 			{
-				PlayerBulletDestroy(j);
-				if (Enemy_HP[i] > 0)
+				//敵との座標チェック
+				float dis = sqrt(pow((double)Enemy_X[i] - P_Bullet_PosX[j], 2) + pow((double)Enemy_Y[i] - P_Bullet_PosY[j], 2));
+				if (dis <= Enemy_HitBoxSize[i] + P_Bullet_HitBoxSize[j])//被弾判定
 				{
-					Score += 1;
-					Enemy_HP[i] -= 1;
+					PlayerBulletDestroy(j);
+					if (Enemy_HP[i] >= 1)
+					{
+						Score += 1;
+						Enemy_HP[i] -= 1;
+					}
+					break;
 				}
-				else
-				{
-					Score += 100;
-					EnemyDestroy(i);
-				}
-				break;
+			}
+
+			if(Enemy_HP[i] <= 0)//死亡時
+			{
+				Score += 10;
+				ItemSpawn(Enemy_X[i], Enemy_Y[i]);//アイテム生成
+				EnemyDestroy(i);
 			}
 		}
 	}

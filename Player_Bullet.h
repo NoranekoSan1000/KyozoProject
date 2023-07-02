@@ -2,8 +2,8 @@
 
 //ÉvÉåÉCÉÑÅ[ÇÃíe
 extern bool P_Bullet_exist[];
-extern int P_Bullet_PosX[];
-extern int P_Bullet_PosY[];
+extern double P_Bullet_PosX[];
+extern double P_Bullet_PosY[];
 extern int P_Bullet_HitBoxSize[];
 extern int P_Bullet_MovePattern[];
 extern float P_Bullet_Angle[];

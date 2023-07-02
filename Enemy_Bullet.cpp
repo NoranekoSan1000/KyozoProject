@@ -1,18 +1,19 @@
 #include "GameData.h"
 #include "Player.h"
 
-
 //ìGÇÃíe
 bool E_Bullet_exist[ENEMY_BULLET_AMOUNT];
-int E_Bullet_PosX[ENEMY_BULLET_AMOUNT];
-int E_Bullet_PosY[ENEMY_BULLET_AMOUNT];
+int E_Bullet_Design[ENEMY_BULLET_AMOUNT];
+double E_Bullet_PosX[ENEMY_BULLET_AMOUNT];
+double E_Bullet_PosY[ENEMY_BULLET_AMOUNT];
 int E_Bullet_HitBoxSize[ENEMY_BULLET_AMOUNT];
 int E_Bullet_MovePattern[ENEMY_BULLET_AMOUNT];
-float E_Bullet_Angle[ENEMY_BULLET_AMOUNT];
+double E_Bullet_Angle[ENEMY_BULLET_AMOUNT];
 
-void EnemyBulletGenerate(int num, int x, int y, int hitboxsize, int pattern, float angle)
+void EnemyBulletGenerate(int num, int design, int x, int y, int hitboxsize, int pattern, double angle)
 {
 	E_Bullet_exist[num] = true;
+	E_Bullet_Design[num] = design;
 	E_Bullet_PosX[num] = x;
 	E_Bullet_PosY[num] = y;
 	E_Bullet_HitBoxSize[num] = hitboxsize;
@@ -23,6 +24,7 @@ void EnemyBulletGenerate(int num, int x, int y, int hitboxsize, int pattern, flo
 void EnemyBulletDestroy(int num)
 {
 	E_Bullet_exist[num] = false;
+	E_Bullet_Design[num] = NULL;
 	E_Bullet_PosX[num] = NULL;
 	E_Bullet_PosY[num] = NULL;
 	E_Bullet_HitBoxSize[num] = NULL;
@@ -30,26 +32,70 @@ void EnemyBulletDestroy(int num)
 	E_Bullet_Angle[num] = NULL;
 }
 
-float EnemyAngleCalc(int en_x, int en_y)
+double  EnemyAngleCalc(int en_x, int en_y)
 {
-	float tmp;
-	tmp = (float)atan2((py - en_y), (px - en_x));
+	double tmp;
+	tmp = (double)atan2((py - en_y), (px - en_x));
 	return tmp;
 }
 
-void EnemyShot(int en_x, int en_y, int size, int type)
+void EnemyBulletSpawn(int design, int en_x, int en_y, int size,int pattern,double angle)
 {
-
-	if (type == 0) return;//ê∂ê¨ÇµÇ»Ç¢
-	float angle;
 	for (int i = 0; i < ENEMY_BULLET_AMOUNT; i++)
 	{
 		if (E_Bullet_exist[i] == false)//ÉVÉáÉbÉgê›íËäiî[èÍèäÇÃãÛÇ´ÇämîF
 		{
 			PlaySE(SE_PlayerShot); //å¯â âπ
-			angle = EnemyAngleCalc(en_x, en_y);
-			EnemyBulletGenerate(i, en_x, en_y, size, type, angle);
+			EnemyBulletGenerate(i, design, en_x, en_y, size, pattern, angle);
 			break;
+		}
+	}	
+}
+
+void EnemyBulletClear(void)
+{
+	for (int i = 0; i < ENEMY_BULLET_AMOUNT; i++) EnemyBulletDestroy(i);
+}
+
+void EnemyShot(int design, int type, int en_x, int en_y, int capacity,int arc)
+{
+	double angle;
+	angle = EnemyAngleCalc(en_x, en_y);//é©ã@ë_Ç¢óp
+	if (type == 0) return;//ê∂ê¨ÇµÇ»Ç¢
+	else if (type == 1) //1î≠é©ã@ë_Ç¢
+	{
+		EnemyBulletSpawn(design, en_x, en_y, 4, 0, angle - 0.05);
+	}
+	else if (type == 2) // íºê¸â∫
+	{
+		EnemyBulletSpawn(design, en_x, en_y, 4, 0, -(3 * PI / 2));
+	}
+	else if (type == 3) // îöî≠
+	{
+		for (int t = 0; t < 720; t += (720 / capacity))
+		{
+			EnemyBulletSpawn(design, en_x, en_y, 4, 0, PI / 360 * t);
+		}	
+	}
+	else if (type == 4) // é©ã@ë_Ç¢îöî≠
+	{
+		for (int t = -360; t < 360; t += (720 / capacity))
+		{
+			EnemyBulletSpawn(design, en_x, en_y, 4, 0, angle + PI / 360 * t);
+		}
+	}
+	else if (type == 5) // éUíe
+	{
+		for (int t = -arc; t < arc; t += (arc * 2 / capacity))
+		{
+			EnemyBulletSpawn(design, en_x, en_y, 4, 0, -(3 * PI / 2) + PI / 360 * t);
+		}
+	}
+	else if (type == 6) // é©ã@ë_Ç¢éUíe
+	{
+		for (int t = -arc; t < arc; t += (arc * 2 / capacity))
+		{
+			EnemyBulletSpawn(design, en_x, en_y, 4, 0, angle + PI / 360 * t);
 		}
 	}
 }
@@ -57,31 +103,16 @@ void EnemyShot(int en_x, int en_y, int size, int type)
 void EnemyBulletMove(int num)
 {
 	float angle = (PI / 2);//â∫ï˚
-	float speed = 8;
+	float speed = 6;
 
 	switch (E_Bullet_MovePattern[num])
 	{
-	case 0:
+	case 0://ê^íºÇÆ
+		E_Bullet_PosX[num] += cos(E_Bullet_Angle[num]) * speed;
+		E_Bullet_PosY[num] += sin(E_Bullet_Angle[num]) * speed;
 		break;
-	case 1://âEéŒÇﬂè¨
-		E_Bullet_PosX[num] += cos(angle - 0.05) * speed;
-		E_Bullet_PosY[num] += sin(angle - 0.05) * speed;
-		break;
-	case 2://ç∂éŒÇﬂè¨
-		E_Bullet_PosX[num] += cos(angle - 0.10) * speed;
-		E_Bullet_PosY[num] += sin(angle - 0.10) * speed;
-		break;
-	case 3://âEéŒÇﬂíÜ
-		E_Bullet_PosX[num] += cos(angle + 0.3) * speed;
-		E_Bullet_PosY[num] += sin(angle + 0.3) * speed;
-		break;
-	case 4://ç∂éŒÇﬂíÜ
-		E_Bullet_PosX[num] += cos(angle - 0.25) * speed;
-		E_Bullet_PosY[num] += sin(angle - 0.25) * speed;
-		break;
-	case 5://ãﬂÇ¢ìGë_Ç¢
-		E_Bullet_PosX[num] += cos(E_Bullet_Angle[num]- 0.05) * speed;
-		E_Bullet_PosY[num] += sin(E_Bullet_Angle[num]- 0.05) * speed;
+	case 1://ÉEÉFÅ[ÉuÅiâºÅj
+
 		break;
 	default:
 		break;
@@ -91,19 +122,19 @@ void EnemyBulletMove(int num)
 void EnemyBulletHit(int num)
 {
 	//íeÇ∆ÉvÉåÉCÉÑÅ[Ç™ê⁄êG
-	float dis = sqrt(pow((double)px - E_Bullet_PosX[num], 2) + pow((double)py - E_Bullet_PosY[num], 2));
+	double dis = sqrt(pow((double)px - E_Bullet_PosX[num], 2) + pow((double)py - E_Bullet_PosY[num], 2));
 	if (dis <= E_Bullet_HitBoxSize[num] + Player_HitBoxSize)//îÌíeîªíË
 	{
-		EnemyBulletDestroy(num);
-		if (Life > 0)
+		//îÌíeîªíË
+		if (DamagedCoolTime <= 0)
 		{
-			//îÌíeîªíË
-			if (DamagedCoolTime <= 0)
+			if (Life > 0)
 			{
 				px = InitialPosX;
 				py = InitialPosY;
 				Life -= 1;
 				DamagedCoolTime = 120;
+				EnemyBulletClear();
 			}
 		}
 	}
@@ -117,10 +148,10 @@ void EnemyBulletAction(void)
 	for (int i = 0; i < ENEMY_BULLET_AMOUNT; i++)
 	{
 
-		if (E_Bullet_exist[i] == true) DrawCircle(E_Bullet_PosX[i], E_Bullet_PosY[i], E_Bullet_HitBoxSize[i], GetColor(100, 100, 255), 1);
+		if (E_Bullet_exist[i] == true) DrawCircle((int)E_Bullet_PosX[i], (int)E_Bullet_PosY[i], E_Bullet_HitBoxSize[i], GetColor(100, 100, 255), 1);
 		else continue;
 
-		DrawRotaGraph(E_Bullet_PosX[i], E_Bullet_PosY[i], 1.0, 0, PlayerShot01_img, TRUE);//âÊëú
+		DrawRotaGraph((int)E_Bullet_PosX[i], (int)E_Bullet_PosY[i], 1.0, 0, EnemyShot_img[E_Bullet_Design[i]], TRUE);//âÊëú
 
 		EnemyBulletMove(i);
 		EnemyBulletHit(i);
@@ -135,7 +166,3 @@ void EnemyBulletAction(void)
 	}
 }
 
-void EnemyBulletClear(void)
-{
-	for (int i = 0; i < ENEMY_BULLET_AMOUNT; i++) EnemyBulletDestroy(i);
-}
