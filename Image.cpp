@@ -67,7 +67,7 @@ void ImageInit(void)// ‰æ‘œ‚Ì‰Šú‰»
 	power_img = LoadGraph("image/power.png");
 	PlayerShot01_img = LoadGraph("image/PlayerShot.png");
 	PlayerShot02_img = LoadGraph("image/PlayerShot2.png");
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 15; i++)
 	{
 		char fileName[30]; // “K“–‚È’·‚³‚Ì•¶š—ñ
 		sprintf_s(fileName, "image/EnemyShot/%d.png", i);
