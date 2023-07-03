@@ -9,14 +9,12 @@ struct Enemy
 {
 	int hp;//体力
 	int movepattern;//移動パターン
-	EnemyShotPattern shotpattern[10];//射撃パターン
-	int shotcapacity;//弾数
-	int shotarc;//弾の広がり（拡散弾のみ）
+	int firstshottime;
 };
 Enemy enemy[2] = 
 { 
-	{ 4,0,{Explosion,ShotWait,Diffusion,ShotEnd},5,180},
-	{ 5,1,{AimingDiffusion,ShotWait,AimingOneShot,ShotEnd},5,180} 
+	{ 4, 0, 60},
+	{ 5, 1, 120} 
 };
 
 //敵
@@ -36,7 +34,7 @@ int E_AttackMode[ENEMY_AMOUNT];//射撃パターンの遷移
 int CloseEnemy = -1;
 float CloseDist = 1100;
 
-void EnemyGenerate(int num, int type, int x, int y, int hitboxsize, int movetime, int movepattern, int hp)
+void EnemyGenerate(int num, int type, int x, int y, int hitboxsize)
 {
 	Enemy_exist[num] = true;
 	Enemy_visible[num] = false;
@@ -44,10 +42,10 @@ void EnemyGenerate(int num, int type, int x, int y, int hitboxsize, int movetime
 	Enemy_X[num] = x;
 	Enemy_Y[num] = y;
 	Enemy_HitBoxSize[num] = hitboxsize;
-	Enemy_MoveTime[num] = movetime;
-	MovePattern[num] = movepattern;
-	Enemy_HP[num] = hp;
-	E_ShotCoolTime[num] = 30;
+	Enemy_MoveTime[num] = 0;
+	MovePattern[num] = enemy[Enemy_Type[num]].movepattern;
+	Enemy_HP[num] = enemy[Enemy_Type[num]].hp;
+	E_ShotCoolTime[num] = enemy[Enemy_Type[num]].firstshottime;
 	E_AttackMode[num] = 0;
 }
 
@@ -76,7 +74,7 @@ void spawn(int type,int x,int y)
 	{
 		if (Enemy_exist[i] == false)
 		{
-			EnemyGenerate(i, type, x, y, 16, 2, enemy[type].movepattern, enemy[type].hp);
+			EnemyGenerate(i, type, x, y, 16);
 			break;
 		}
 	}
@@ -108,8 +106,8 @@ void EnemyMove(int num)
 			Enemy_Y[num] += 2;
 			break;
 		case 1://高速in一時停止後直進
-			if(Enemy_MoveTime[num] < 60) Enemy_Y[num] += 4;
-			else if (Enemy_MoveTime[num] >= 60 && Enemy_MoveTime[num] < 240) Enemy_Y[num] += 0;
+			if(Enemy_MoveTime[num] < 80) Enemy_Y[num] += 6;
+			else if (Enemy_MoveTime[num] >= 80 && Enemy_MoveTime[num] < 240) Enemy_Y[num] += 0;
 			else if (Enemy_MoveTime[num] >= 240) Enemy_Y[num] += 2;
 			break;
 		default:
@@ -129,10 +127,44 @@ void CheckDistance(int num)
 void EnemyShotAction(int num)
 {
 	if (E_ShotCoolTime[num] > 0) return;
-	if (enemy[Enemy_Type[num]].shotpattern[E_AttackMode[num]] == ShotEnd) return;
-	EnemyShot(0, enemy[Enemy_Type[num]].shotpattern[E_AttackMode[num]], Enemy_X[num], Enemy_Y[num], enemy[Enemy_Type[num]].shotcapacity, enemy[Enemy_Type[num]].shotarc);//射撃
-	E_AttackMode[num] ++;
-	E_ShotCoolTime[num] = 60;//フレームで設定
+	int x = Enemy_X[num];
+	int y = Enemy_Y[num];
+
+	if (Enemy_Type[num] == 0) 
+	{
+		if (E_AttackMode[num] == 0)
+		{
+			EnemyShot(0, Explosion, x, y, 4, 5, NULL);//射撃	
+			E_ShotCoolTime[num] = 30;//次のショットまでの時間
+		}
+		if (E_AttackMode[num] == 1)
+		{
+			EnemyShot(1, Diffusion, x, y, 4, 5, 90);//射撃	
+		}
+		E_AttackMode[num] ++;
+		return;
+	}
+	if (Enemy_Type[num] == 1)
+	{
+		if (E_AttackMode[num] == 0)
+		{
+			EnemyShot(7, Explosion, x, y, 6, 10, NULL);//射撃	
+			E_ShotCoolTime[num] = 5;//次のショットまでの時間
+		}
+		if (E_AttackMode[num] == 1)
+		{
+			EnemyShot(8, Explosion, x, y, 6, 10, NULL);//射撃	
+			E_ShotCoolTime[num] = 5;//次のショットまでの時間
+		}
+		if (E_AttackMode[num] == 2)
+		{
+			EnemyShot(9, Explosion, x, y, 6, 10, NULL);//射撃	
+		}
+		E_AttackMode[num] ++;
+		return;
+	}
+	
+	
 }
 
 void EnemyAction(void)

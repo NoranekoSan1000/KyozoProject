@@ -60,7 +60,7 @@ void ViewStatus(void)
 int intu;
 void ViewBackGround(void)//”wŒiƒ‹[ƒv
 {
-	intu += 2;
+	intu += 1;
 	DrawRotaGraph(300, 0 + intu, 1, 0, backgroundBack_img, TRUE);
 	DrawRotaGraph(300, 0 + intu, 1, 0, backgroundFront_img, TRUE);
 	if (intu >= 800) intu = 0;
