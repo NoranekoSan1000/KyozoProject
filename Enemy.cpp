@@ -9,15 +9,14 @@ struct Enemy
 {
 	int hp;//体力
 	int movepattern;//移動パターン
-	int shotpattern;//射撃パターン
+	EnemyShotPattern shotpattern[10];//射撃パターン
 	int shotcapacity;//弾数
 	int shotarc;//弾の広がり（拡散弾のみ）
-	int shotdesign;//弾のデザイン
 };
 Enemy enemy[2] = 
 { 
-	{ 4,0,3,5,NULL,0 },
-	{ 5,1,6,6,180,5 } 
+	{ 4,0,{Explosion,ShotWait,Diffusion,ShotEnd},5,180},
+	{ 5,1,{AimingDiffusion,ShotWait,AimingOneShot,ShotEnd},5,180} 
 };
 
 //敵
@@ -32,6 +31,7 @@ int MovePattern[ENEMY_AMOUNT];//移動パターン
 int Enemy_HP[ENEMY_AMOUNT];
 float Enemy_dist[ENEMY_AMOUNT];
 float E_ShotCoolTime[ENEMY_AMOUNT];
+int E_AttackMode[ENEMY_AMOUNT];//射撃パターンの遷移
 
 int CloseEnemy = -1;
 float CloseDist = 1100;
@@ -47,7 +47,8 @@ void EnemyGenerate(int num, int type, int x, int y, int hitboxsize, int movetime
 	Enemy_MoveTime[num] = movetime;
 	MovePattern[num] = movepattern;
 	Enemy_HP[num] = hp;
-	E_ShotCoolTime[num] = 0;
+	E_ShotCoolTime[num] = 30;
+	E_AttackMode[num] = 0;
 }
 
 void EnemyDestroy(int num)
@@ -63,6 +64,7 @@ void EnemyDestroy(int num)
 	Enemy_HP[num] = NULL;
 	Enemy_dist[num] = NULL;
 	E_ShotCoolTime[num] = NULL;
+	E_AttackMode[num] = NULL;
 
 	CloseEnemy = -1;//近いキャラをリセット
 	CloseDist = 1100;
@@ -106,9 +108,9 @@ void EnemyMove(int num)
 			Enemy_Y[num] += 2;
 			break;
 		case 1://高速in一時停止後直進
-			if(Enemy_MoveTime[num] < 60) Enemy_Y[num] += 5;
-			else if (Enemy_MoveTime[num] >= 60 && Enemy_MoveTime[num] < 180) Enemy_Y[num] += 0;
-			else if (Enemy_MoveTime[num] >= 180) Enemy_Y[num] += 2;
+			if(Enemy_MoveTime[num] < 60) Enemy_Y[num] += 4;
+			else if (Enemy_MoveTime[num] >= 60 && Enemy_MoveTime[num] < 240) Enemy_Y[num] += 0;
+			else if (Enemy_MoveTime[num] >= 240) Enemy_Y[num] += 2;
 			break;
 		default:
 			break;
@@ -127,8 +129,9 @@ void CheckDistance(int num)
 void EnemyShotAction(int num)
 {
 	if (E_ShotCoolTime[num] > 0) return;
-	EnemyShot(enemy[Enemy_Type[num]].shotdesign, enemy[Enemy_Type[num]].shotpattern, Enemy_X[num], Enemy_Y[num], 
-		enemy[Enemy_Type[num]].shotcapacity, enemy[Enemy_Type[num]].shotarc);//射撃
+	if (enemy[Enemy_Type[num]].shotpattern[E_AttackMode[num]] == ShotEnd) return;
+	EnemyShot(0, enemy[Enemy_Type[num]].shotpattern[E_AttackMode[num]], Enemy_X[num], Enemy_Y[num], enemy[Enemy_Type[num]].shotcapacity, enemy[Enemy_Type[num]].shotarc);//射撃
+	E_AttackMode[num] ++;
 	E_ShotCoolTime[num] = 60;//フレームで設定
 }
 
