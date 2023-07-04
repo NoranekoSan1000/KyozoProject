@@ -88,6 +88,7 @@ void GameProcess(void)
 
 	EnemyBulletAction();//“G‚Ì’e‚Ìˆ—
 
+	PlayerUseBomb();
 	PlayerShotAction();
 	PlayerBulletAction(); //ƒŒƒCƒ„[‚Ì’e‚Ìˆ—
 

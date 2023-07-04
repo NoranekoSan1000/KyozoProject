@@ -24,4 +24,6 @@ extern int EnemyShot_img[];
 extern int Enemy_img[];
 extern int player_img[];
 
+extern int Bomb_img[];
+
 void ImageInit(void);

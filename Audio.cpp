@@ -1,6 +1,7 @@
 #include <DxLib.h>
 int BGM[9];
 int SE_PlayerShot;
+int SE_Bomb;
 
 int NowPlayBGM;
 
@@ -19,6 +20,7 @@ void AudioInit(void)
 	BGM[7] = LoadSoundMem("audio/07_ResonanceAtTwilight.mp3");
 	BGM[8] = LoadSoundMem("audio/08_EndofTheStory.mp3");
 	SE_PlayerShot = LoadSoundMem("audio/SE_PlayerShot.mp3");
+	SE_Bomb = LoadSoundMem("audio/SE_BOON.mp3");
 }
 
 

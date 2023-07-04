@@ -27,6 +27,8 @@ int EnemyShot_img[15];
 int Enemy_img[2];
 int player_img[3];
 
+int Bomb_img[3];
+
 void ImageInit(void)// ‰æ‘œ‚Ì‰Šú‰»
 {
 	Title_img = LoadGraph("image/title.png");
@@ -85,4 +87,7 @@ void ImageInit(void)// ‰æ‘œ‚Ì‰Šú‰»
 	player_img[1] = LoadGraph("image/Player/1.png");
 	player_img[2] = LoadGraph("image/Player/2.png");
 
+	Bomb_img[0] = LoadGraph("image/Bomb1.png");
+	Bomb_img[1] = LoadGraph("image/Bomb2.png");
+	Bomb_img[2] = LoadGraph("image/Bomb3.png");
 }

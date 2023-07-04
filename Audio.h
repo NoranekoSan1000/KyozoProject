@@ -1,6 +1,7 @@
 #pragma once
 extern int BGM[];
 extern int SE_PlayerShot;
+extern int SE_Bomb;
 
 extern int NowPlayBGM;
 

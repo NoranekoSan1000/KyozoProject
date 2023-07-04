@@ -1,5 +1,6 @@
 #include "GameData.h"
 #include "Player_Bullet.h"
+#include "Enemy_Bullet.h"
 #define PLAYER_SIZE_X 12
 #define PLAYER_SIZE_Y 24
 
@@ -14,10 +15,38 @@ int NextPower[3] = { 10, 40, 100 };//LevelUpに必要なPower
 int Level = 0;
 int Score = 0;
 int Life = 3;
+int Bomb = 2;
+float BombTime = 0;
 float DamagedCoolTime = 0;
 float P_ShotCoolTime = 0;
 
 int animation = 0;
+
+void PlayerUseBomb(void)
+{
+	if (KeyState[KEY_INPUT_X] == TRUE && BombTime <= 0)
+	{
+		
+		BombTime = 180;
+		PlaySE(SE_Bomb);
+	}
+
+	if(BombTime > 60) EnemyBulletClear();
+
+	if (BombTime > 0)
+	{
+		BombTime--;
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
+		DrawRotaGraph(px, py, 0.6 + (BombTime / 180) * 3.5, BombTime / 60 + 450, Bomb_img[0], TRUE); //プレイヤー画像の描画
+		DrawRotaGraph(px, py, 0.5 + (BombTime / 180) * 3, BombTime / 50 + 360, Bomb_img[1], TRUE); //プレイヤー画像の描画
+		DrawRotaGraph(px, py, 0.4 + (BombTime / 180) * 2.5, BombTime / 40 + 270, Bomb_img[2], TRUE); //プレイヤー画像の描画
+		DrawRotaGraph(px, py, 0.3 + (BombTime / 180) * 2, BombTime / 30 + 180, Bomb_img[0], TRUE); //プレイヤー画像の描画
+		DrawRotaGraph(px, py, 0.2 + (BombTime / 180) * 1.5, BombTime / 20 + 90, Bomb_img[1], TRUE); //プレイヤー画像の描画
+		DrawRotaGraph(px, py, 0.1 + (BombTime / 180), BombTime / 10 , Bomb_img[2], TRUE); //プレイヤー画像の描画
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
+	}
+	
+}
 
 void PlayerShotAction(void)
 {
