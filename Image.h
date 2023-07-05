@@ -6,6 +6,7 @@ extern int DifficultyText_img[];
 
 extern int score_img;
 extern int Life_img;
+extern int Bomb_img;
 extern int LifeText_img;
 extern int LevelText_img;
 extern int PowerText_img;
@@ -24,6 +25,6 @@ extern int EnemyShot_img[];
 extern int Enemy_img[];
 extern int player_img[];
 
-extern int Bomb_img[];
+extern int BombEff_img[];
 
 void ImageInit(void);

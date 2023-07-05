@@ -10,6 +10,7 @@ extern int NextPower[];
 extern int Level;
 extern int Score;
 extern int Life;
+extern int Bomb;
 extern float DamagedCoolTime;
 extern float P_ShotCoolTime;
 

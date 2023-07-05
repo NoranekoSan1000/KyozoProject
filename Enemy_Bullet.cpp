@@ -133,6 +133,7 @@ void EnemyBulletHit(int num)
 				px = InitialPosX;
 				py = InitialPosY;
 				Life -= 1;
+				Bomb = 2;
 				DamagedCoolTime = 120;
 				EnemyBulletClear();
 			}

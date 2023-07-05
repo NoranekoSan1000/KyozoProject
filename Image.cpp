@@ -8,6 +8,7 @@ int DifficultyText_img[4];
 //StatusViewer
 int score_img;
 int Life_img;
+int Bomb_img;
 int LifeText_img;
 int LevelText_img;
 int PowerText_img;
@@ -27,7 +28,7 @@ int EnemyShot_img[15];
 int Enemy_img[2];
 int player_img[3];
 
-int Bomb_img[3];
+int BombEff_img[3];
 
 void ImageInit(void)// ‰æ‘œ‚Ì‰Šú‰»
 {
@@ -44,6 +45,7 @@ void ImageInit(void)// ‰æ‘œ‚Ì‰Šú‰»
 
 	LifeText_img = LoadGraph("image/LifeText.png");
 	Life_img = LoadGraph("image/life.png");
+	Bomb_img = LoadGraph("image/bomb.png");
 	LevelText_img = LoadGraph("image/LevelText.png");
 	PowerText_img = LoadGraph("image/PowerText.png");
 	score_img = LoadGraph("image/score.png");
@@ -87,7 +89,7 @@ void ImageInit(void)// ‰æ‘œ‚Ì‰Šú‰»
 	player_img[1] = LoadGraph("image/Player/1.png");
 	player_img[2] = LoadGraph("image/Player/2.png");
 
-	Bomb_img[0] = LoadGraph("image/Bomb1.png");
-	Bomb_img[1] = LoadGraph("image/Bomb2.png");
-	Bomb_img[2] = LoadGraph("image/Bomb3.png");
+	BombEff_img[0] = LoadGraph("image/Bomb1.png");
+	BombEff_img[1] = LoadGraph("image/Bomb2.png");
+	BombEff_img[2] = LoadGraph("image/Bomb3.png");
 }

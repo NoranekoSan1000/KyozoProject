@@ -209,6 +209,7 @@ void EnemyAction(void)
 						px = InitialPosX;
 						py = InitialPosY;
 						Life -= 1;
+						Bomb = 2;
 						DamagedCoolTime = 120;
 						EnemyBulletClear();
 					}

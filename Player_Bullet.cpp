@@ -36,6 +36,22 @@ double AngleCalc(int px, int py)
 	return tmp;
 }
 
+void PlayerBomb(int x, int y)
+{
+	for (int t = 0; t <= 720; t += (720 / 10))
+	{
+		for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++)
+		{
+			if (P_Bullet_exist[i] == false)//ショット設定格納場所の空きを確認
+			{
+				PlayerBulletGenerate(i, x, y, 8, 9, PI / 360 * t);
+				break;
+			}
+		}
+		
+	}
+}
+
 void PlayerShot(int px,int py,int type)
 {
 	double angle;
@@ -97,6 +113,10 @@ void BulletMove(int num)
 	case 8://直進
 		P_Bullet_PosX[num] += cos(angle) * speed;
 		P_Bullet_PosY[num] += sin(angle) * speed;
+		break;
+	case 9://bomb
+		P_Bullet_PosX[num] += cos(P_Bullet_Angle[num]) * speed;
+		P_Bullet_PosY[num] += sin(P_Bullet_Angle[num]) * speed;
 		break;
 	default:
 		break;

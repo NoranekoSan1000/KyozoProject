@@ -24,11 +24,12 @@ int animation = 0;
 
 void PlayerUseBomb(void)
 {
-	if (KeyState[KEY_INPUT_X] == TRUE && BombTime <= 0)
+	if (KeyState[KEY_INPUT_X] == TRUE && BombTime <= 0 && Bomb > 0)
 	{
-		
+		PlayerBomb(px, py);
 		BombTime = 180;
 		PlaySE(SE_Bomb);
+		Bomb--;
 	}
 
 	if(BombTime > 60) EnemyBulletClear();
@@ -37,12 +38,12 @@ void PlayerUseBomb(void)
 	{
 		BombTime--;
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
-		DrawRotaGraph(px, py, 0.6 + (BombTime / 180) * 3.5, BombTime / 60 + 450, Bomb_img[0], TRUE); //プレイヤー画像の描画
-		DrawRotaGraph(px, py, 0.5 + (BombTime / 180) * 3, BombTime / 50 + 360, Bomb_img[1], TRUE); //プレイヤー画像の描画
-		DrawRotaGraph(px, py, 0.4 + (BombTime / 180) * 2.5, BombTime / 40 + 270, Bomb_img[2], TRUE); //プレイヤー画像の描画
-		DrawRotaGraph(px, py, 0.3 + (BombTime / 180) * 2, BombTime / 30 + 180, Bomb_img[0], TRUE); //プレイヤー画像の描画
-		DrawRotaGraph(px, py, 0.2 + (BombTime / 180) * 1.5, BombTime / 20 + 90, Bomb_img[1], TRUE); //プレイヤー画像の描画
-		DrawRotaGraph(px, py, 0.1 + (BombTime / 180), BombTime / 10 , Bomb_img[2], TRUE); //プレイヤー画像の描画
+		DrawRotaGraph(px, py, 0.6 + (BombTime / 180) * 3.5, BombTime / 60 + 450, BombEff_img[0], TRUE); //プレイヤー画像の描画
+		DrawRotaGraph(px, py, 0.5 + (BombTime / 180) * 3, BombTime / 50 + 360, BombEff_img[1], TRUE); //プレイヤー画像の描画
+		DrawRotaGraph(px, py, 0.4 + (BombTime / 180) * 2.5, BombTime / 40 + 270, BombEff_img[2], TRUE); //プレイヤー画像の描画
+		DrawRotaGraph(px, py, 0.3 + (BombTime / 180) * 2, BombTime / 30 + 180, BombEff_img[0], TRUE); //プレイヤー画像の描画
+		DrawRotaGraph(px, py, 0.2 + (BombTime / 180) * 1.5, BombTime / 20 + 90, BombEff_img[1], TRUE); //プレイヤー画像の描画
+		DrawRotaGraph(px, py, 0.1 + (BombTime / 180), BombTime / 10 , BombEff_img[2], TRUE); //プレイヤー画像の描画
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
 	}
 	
