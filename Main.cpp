@@ -5,12 +5,12 @@
 #include "Player_Bullet.h"
 #include "Enemy_Bullet.h"
 
-int SpawnPattern[4][20] = //[stage][NowStageMode]
+int SpawnPattern[4][50] = //[stage][NowStageMode]
 {
-	{0,0,1,0,2,0,1,0,2,0,1,0,0,0,-1},//Stage1
-	{0,0,1,0,2,0,1,0,2,0,1,0,0,0,-1},
-	{0,0,1,0,2,0,1,0,2,0,1,0,0,0,-1},
-	{0,0,1,0,2,0,1,0,2,0,1,0,0,0,-1},
+	{0,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,0,-1},//Stage1
+	{0,0,0,1,0,2,0,1,0,2,0,1,0,0,0,-1},
+	{0,0,0,1,0,2,0,1,0,2,0,1,0,0,0,-1},
+	{0,0,0,1,0,2,0,1,0,2,0,1,0,0,0,-1},
 };
 
 
@@ -130,11 +130,25 @@ void StageUpdater(SceneManager Next)
 			nextScene = Next;
 			NowStageMode = 0;
 		}
-		else
+		else if (SpawnPattern[0][NowStageMode] == 0)//ãxåe
+		{
+			StageModeUpdateTime = 60;
+		}
+		else if (SpawnPattern[0][NowStageMode] == 1)
 		{
 			EnemySpawn(SpawnPattern[0][NowStageMode]);//ìGìoèÍ
+			StageModeUpdateTime = 40;
 		}
-		StageModeUpdateTime = 120;
+		else if (SpawnPattern[0][NowStageMode] == 2)
+		{
+			EnemySpawn(SpawnPattern[0][NowStageMode]);//ìGìoèÍ
+			StageModeUpdateTime = 40;
+		}
+		else if (SpawnPattern[0][NowStageMode] == 3)
+		{
+			EnemySpawn(SpawnPattern[0][NowStageMode]);//ìGìoèÍ
+			StageModeUpdateTime = 30;
+		}
 	}
 }
 

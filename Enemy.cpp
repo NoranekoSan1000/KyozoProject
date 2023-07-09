@@ -14,7 +14,7 @@ struct Enemy
 Enemy enemy[2] = 
 { 
 	{ 4, 0, 60},
-	{ 5, 1, 120} 
+	{ 5, 1, 90} 
 };
 
 //“G
@@ -86,13 +86,13 @@ void EnemySpawn(int spawnPattern)
 	else if (spawnPattern == 1) //ã‚©‚ç3‘Ì
 	{
 		spawn(0, 150, 0);
-		spawn(0, 150, -100);
-		spawn(1, 300, -300);
 	}
-	else if (spawnPattern == 2)
+	else if (spawnPattern == 2) //ã‚©‚ç3‘Ì
 	{
 		spawn(0, 450, 0);
-		spawn(0, 450, -100);
+	}
+	else if (spawnPattern == 3)
+	{
 		spawn(1, 300, -300);
 	}
 }
@@ -109,6 +109,15 @@ void EnemyMove(int num)
 			if(Enemy_MoveTime[num] < 80) Enemy_Y[num] += 6;
 			else if (Enemy_MoveTime[num] >= 80 && Enemy_MoveTime[num] < 240) Enemy_Y[num] += 0;
 			else if (Enemy_MoveTime[num] >= 240) Enemy_Y[num] += 2;
+			break;
+		case 2://‚‘¬inˆê’â~Œã¶‰º
+			if (Enemy_MoveTime[num] < 50) Enemy_Y[num] += 5;
+			else if (Enemy_MoveTime[num] >= 50 && Enemy_MoveTime[num] < 120) Enemy_Y[num] += 0;
+			else if (Enemy_MoveTime[num] >= 120)
+			{
+				Enemy_X[num] -= 1;
+				Enemy_Y[num] += 2;
+			}
 			break;
 		default:
 			break;
