@@ -202,7 +202,7 @@ void EnemyAction(void)
 			if (Enemy_dist[i] <= Enemy_HitBoxSize[i] + Player_HitBoxSize)
 			{		
 				//”í’e”»’è
-				if (DamagedCoolTime <= 0)
+				if (DamagedCoolTime <= 0 && BombTime <= 0)
 				{
 					if (Life > 0)
 					{

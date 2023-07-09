@@ -40,12 +40,11 @@ void ViewStatus(void)
 	{
 		DrawRotaGraph(WINDOW_WIDTH - 170 + (32 * i), 190, 0.95, 0, Life_img, TRUE);
 	}
-	DrawRotaGraph(WINDOW_WIDTH - 240, 240, 0.7, 0, LifeText_img, TRUE);
+	DrawRotaGraph(WINDOW_WIDTH - 240, 240, 0.7, 0, BombText_img, TRUE);
 	for (int i = 0; i < Bomb; i++)
 	{
 		DrawRotaGraph(WINDOW_WIDTH - 170 + (32 * i), 240, 0.95, 0, Bomb_img, TRUE);
 	}
-	
 
 	DrawRotaGraph(WINDOW_WIDTH - 220, 310, 0.8, 0, LevelText_img, TRUE);
 	DrawRotaGraph(WINDOW_WIDTH - 120, 313, 0.8, 0, NumberText_img[Level], TRUE);
@@ -65,8 +64,24 @@ int intu;
 void ViewBackGround(void)//背景ループ
 {
 	intu += 1;
-	DrawRotaGraph(300, 0 + intu, 1, 0, backgroundBack_img, TRUE);
-	DrawRotaGraph(300, 0 + intu, 1, 0, backgroundFront_img, TRUE);
+	if (GameScene == Stage1_Scene)
+	{
+	DrawRotaGraph(300, 0 + intu, 1, 0, background_img[0], TRUE);//手前
+	}
+	else if (GameScene == Stage2_Scene)
+	{
+		DrawRotaGraph(300, 0 + intu, 1, 0, background_img[1], TRUE);//奥
+		DrawRotaGraph(300, 0 + intu, 1, 0, background_img[2], TRUE);//手前
+	}
+	else if (GameScene == Stage3_Scene)
+	{
+		DrawRotaGraph(300, 0 + intu, 1, 0, background_img[3], TRUE);//手前
+	}
+	else if (GameScene == Stage4_Scene)
+	{
+		DrawRotaGraph(300, 0 + intu, 1, 0, background_img[4], TRUE);//手前
+	}
+	
 	if (intu >= 800) intu = 0;
 }
 

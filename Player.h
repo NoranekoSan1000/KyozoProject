@@ -11,6 +11,7 @@ extern int Level;
 extern int Score;
 extern int Life;
 extern int Bomb;
+extern float BombTime;
 extern float DamagedCoolTime;
 extern float P_ShotCoolTime;
 

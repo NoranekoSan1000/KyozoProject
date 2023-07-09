@@ -126,7 +126,7 @@ void EnemyBulletHit(int num)
 	if (dis <= E_Bullet_HitBoxSize[num] + Player_HitBoxSize)//”í’e”»’è
 	{
 		//”í’e”»’è
-		if (DamagedCoolTime <= 0)
+		if (DamagedCoolTime <= 0 && BombTime <= 0)
 		{
 			if (Life > 0)
 			{
