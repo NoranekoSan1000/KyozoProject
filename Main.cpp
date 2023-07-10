@@ -4,15 +4,15 @@
 #include "Enemy.h"
 #include "Player_Bullet.h"
 #include "Enemy_Bullet.h"
+#include <string>
 
-int SpawnPattern[4][50] = //[stage][NowStageMode]
+string SpawnPattern[4][50] = //[stage][NowStageMode]
 {
-	{0,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,0,-1},//Stage1
+	{"W180",1,1,1,"W60",3,"W120",2,2,2,0,3,"W120",1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,"W180","F"},//Stage1
 	{0,0,0,1,0,2,0,1,0,2,0,1,0,0,0,-1},
 	{0,0,0,1,0,2,0,1,0,2,0,1,0,0,0,-1},
 	{0,0,0,1,0,2,0,1,0,2,0,1,0,0,0,-1},
 };
-
 
 int SelectDifficulty = 0;
 
@@ -120,19 +120,26 @@ void GameProcess(void)
 
 void StageUpdater(SceneManager Next)
 {
+	string spw = SpawnPattern[0][NowStageMode];
+
 	if (StageModeUpdateTime >= 0) StageModeUpdateTime--;
 	if (StageModeUpdateTime < 0)//120フレーム毎に実行
 	{
 		NowStageMode++;
-		if (SpawnPattern[0][NowStageMode] == -1)//ステージ終了
+		if (spw[0] == 'F')//ステージ終了
 		{
 			ChangeSceneActive = true;
 			nextScene = Next;
 			NowStageMode = 0;
 		}
-		else if (SpawnPattern[0][NowStageMode] == 0)//休憩
+		else if (spw[0] == 'W')//wait
 		{
-			StageModeUpdateTime = 60;
+			float tmp;
+			if (spw[2] == '\0') tmp = (float)spw[1];
+			else if (spw[3] == '\0') tmp = (float)spw[1] * 10 + (float)spw[2];
+			else if (spw[4] == '\0') tmp = (float)spw[1] * 100 + (float)spw[2] * 10 + (float)spw[3];
+
+			StageModeUpdateTime = tmp;
 		}
 		else if (SpawnPattern[0][NowStageMode] == 1)
 		{
