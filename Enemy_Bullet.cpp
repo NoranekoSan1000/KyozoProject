@@ -57,45 +57,45 @@ void EnemyBulletClear(void)
 	for (int i = 0; i < ENEMY_BULLET_AMOUNT; i++) EnemyBulletDestroy(i);
 }
 
-void EnemyShot(int design, int type, int en_x, int en_y, int capacity,int arc)
+void EnemyShot(int design, EnemyShotPattern type, int en_x, int en_y, int size, int capacity,int arc)
 {
 	double angle;
 	angle = EnemyAngleCalc(en_x, en_y);//Ž©‹@‘_‚¢—p
-	if (type == 0) return;//¶¬‚µ‚È‚¢
-	else if (type == 1) //1”­Ž©‹@‘_‚¢
+	if (type == ShotWait) return;//¶¬‚µ‚È‚¢
+	else if (type == OneShot) //1”­Ž©‹@‘_‚¢
 	{
-		EnemyBulletSpawn(design, en_x, en_y, 4, 0, angle - 0.05);
+		EnemyBulletSpawn(design, en_x, en_y, size, 0, -(3 * PI / 2));
 	}
-	else if (type == 2) // ’¼ü‰º
+	else if (type == AimingOneShot) // ’¼ü‰º
 	{
-		EnemyBulletSpawn(design, en_x, en_y, 4, 0, -(3 * PI / 2));
+		EnemyBulletSpawn(design, en_x, en_y, size, 0, angle - 0.05);
 	}
-	else if (type == 3) // ”š”­
+	else if (type == Explosion) // ”š”­
 	{
 		for (int t = 0; t < 720; t += (720 / capacity))
 		{
-			EnemyBulletSpawn(design, en_x, en_y, 4, 0, PI / 360 * t);
+			EnemyBulletSpawn(design, en_x, en_y, size, 0, PI / 360 * t);
 		}	
 	}
-	else if (type == 4) // Ž©‹@‘_‚¢”š”­
+	else if (type == AimingExplosion) // Ž©‹@‘_‚¢”š”­
 	{
 		for (int t = -360; t < 360; t += (720 / capacity))
 		{
-			EnemyBulletSpawn(design, en_x, en_y, 4, 0, angle + PI / 360 * t);
+			EnemyBulletSpawn(design, en_x, en_y, size, 0, angle + PI / 360 * t);
 		}
 	}
-	else if (type == 5) // ŽU’e
+	else if (type == Diffusion) // ŽU’e
 	{
 		for (int t = -arc; t < arc; t += (arc * 2 / capacity))
 		{
-			EnemyBulletSpawn(design, en_x, en_y, 4, 0, -(3 * PI / 2) + PI / 360 * t);
+			EnemyBulletSpawn(design, en_x, en_y, size, 0, -(3 * PI / 2) + PI / 360 * t);
 		}
 	}
-	else if (type == 6) // Ž©‹@‘_‚¢ŽU’e
+	else if (type == AimingDiffusion) // Ž©‹@‘_‚¢ŽU’e		Œ©‰h‚¦‚ªˆ«‚¢‚Ì‚ÅŠï”„§I
 	{
 		for (int t = -arc; t < arc; t += (arc * 2 / capacity))
 		{
-			EnemyBulletSpawn(design, en_x, en_y, 4, 0, angle + PI / 360 * t);
+			EnemyBulletSpawn(design, en_x, en_y, size, 0, angle + PI / 360 * t);
 		}
 	}
 }
@@ -126,13 +126,14 @@ void EnemyBulletHit(int num)
 	if (dis <= E_Bullet_HitBoxSize[num] + Player_HitBoxSize)//”í’e”»’è
 	{
 		//”í’e”»’è
-		if (DamagedCoolTime <= 0)
+		if (DamagedCoolTime <= 0 && BombTime <= 0)
 		{
 			if (Life > 0)
 			{
 				px = InitialPosX;
 				py = InitialPosY;
 				Life -= 1;
+				Bomb = 2;
 				DamagedCoolTime = 120;
 				EnemyBulletClear();
 			}

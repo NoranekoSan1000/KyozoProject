@@ -1,5 +1,6 @@
 #include "GameData.h"
 #include "Player_Bullet.h"
+#include "Enemy_Bullet.h"
 #define PLAYER_SIZE_X 12
 #define PLAYER_SIZE_Y 24
 
@@ -14,8 +15,39 @@ int NextPower[3] = { 10, 40, 100 };//LevelUpに必要なPower
 int Level = 0;
 int Score = 0;
 int Life = 3;
+int Bomb = 2;
+float BombTime = 0;
 float DamagedCoolTime = 0;
 float P_ShotCoolTime = 0;
+
+int animation = 0;
+
+void PlayerUseBomb(void)
+{
+	if (KeyState[KEY_INPUT_X] == TRUE && BombTime <= 0 && Bomb > 0)
+	{
+		PlayerBomb(px, py);
+		BombTime = 180;
+		PlaySE(SE_Bomb);
+		Bomb--;
+	}
+
+	if(BombTime > 60) EnemyBulletClear();
+
+	if (BombTime > 0)
+	{
+		BombTime--;
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
+		DrawRotaGraph(px, py, 0.6 + (BombTime / 180) * 3.5, BombTime / 60 + 450, BombEff_img[0], TRUE); //プレイヤー画像の描画
+		DrawRotaGraph(px, py, 0.5 + (BombTime / 180) * 3, BombTime / 50 + 360, BombEff_img[1], TRUE); //プレイヤー画像の描画
+		DrawRotaGraph(px, py, 0.4 + (BombTime / 180) * 2.5, BombTime / 40 + 270, BombEff_img[2], TRUE); //プレイヤー画像の描画
+		DrawRotaGraph(px, py, 0.3 + (BombTime / 180) * 2, BombTime / 30 + 180, BombEff_img[0], TRUE); //プレイヤー画像の描画
+		DrawRotaGraph(px, py, 0.2 + (BombTime / 180) * 1.5, BombTime / 20 + 90, BombEff_img[1], TRUE); //プレイヤー画像の描画
+		DrawRotaGraph(px, py, 0.1 + (BombTime / 180), BombTime / 10 , BombEff_img[2], TRUE); //プレイヤー画像の描画
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
+	}
+	
+}
 
 void PlayerShotAction(void)
 {
@@ -68,12 +100,15 @@ void PlayerMove(void)
 	if (KeyState[KEY_INPUT_LSHIFT] > 0) MOVE_SPEED = 2;
 	else MOVE_SPEED = 5;
 
+	animation = 0;
 	if (KeyState[KEY_INPUT_RIGHT] > 0 && px < FRAME_WIDTH - PLAYER_SIZE_X) //継続入力
 	{
+		animation = 1;
 		px += (int)MOVE_SPEED;
 	}
 	if (KeyState[KEY_INPUT_LEFT] > 0 && px > 25 + PLAYER_SIZE_X) //継続入力
 	{
+		animation = 2;
 		px -= (int)MOVE_SPEED;
 	}
 	if (KeyState[KEY_INPUT_DOWN] > 0 && py < FRAME_HEIGHT - PLAYER_SIZE_Y) //継続入力
@@ -93,6 +128,6 @@ void ViewPlayer(void)
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
 	DrawCircle(px, py, DamagedCoolTime, GetColor(100, 100, 255)); // 被弾クールタイム中
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
-	DrawRotaGraph(px, py, 1.0, 0, player_img, TRUE); //プレイヤー画像の描画
+	DrawRotaGraph(px, py, 1.0, 0, player_img[animation], TRUE); //プレイヤー画像の描画
 	DrawCircle(px, py, Player_HitBoxSize, GetColor(255, 255, 80)); // プレイヤーの当たり判定表示
 }

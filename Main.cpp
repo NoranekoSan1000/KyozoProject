@@ -1,18 +1,18 @@
-#include "GameData.h"
+Ôªø#include "GameData.h"
 #include "Item.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "Player_Bullet.h"
 #include "Enemy_Bullet.h"
+#include <string>
 
-int SpawnPattern[4][20] = //[stage][NowStageMode]
+int SpawnPattern[4][50] = //[stage][NowStageMode]
 {
-	{0,0,1,0,2,0,1,0,2,0,1,0,0,0,-1},//Stage1
-	{0,0,1,0,2,0,1,0,2,0,1,0,0,0,-1},
-	{0,0,1,0,2,0,1,0,2,0,1,0,0,0,-1},
-	{0,0,1,0,2,0,1,0,2,0,1,0,0,0,-1},
+	{0,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,0,-1},//Stage1
+	{0,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,0,-1},
+	{0,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,0,-1},
+	{0,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,0,-1},
 };
-
 
 int SelectDifficulty = 0;
 
@@ -21,13 +21,13 @@ int NowStageMode = 0;
 
 void ViewStatus(void)
 {
-	//òg
+	//Êû†
 	DrawBox(0, 0, 25, WINDOW_HEIGHT, GetColor(0, 0, 0), 1);
 	DrawBox(0, 0, WINDOW_WIDTH, 25, GetColor(0, 0, 0), 1);
 	DrawBox(0, WINDOW_HEIGHT-25, WINDOW_WIDTH, WINDOW_HEIGHT, GetColor(0, 0, 0), 1);
 	DrawRotaGraph(750, 400, 1, 0, gameFrame_img, TRUE);
 
-	//ÉeÉLÉXÉg
+	//„ÉÜ„Ç≠„Çπ„Éà
 	DrawRotaGraph(WINDOW_WIDTH - 160, 40, 0.8, 0, DifficultyText_img[SelectDifficulty], TRUE);
 	DrawRotaGraph(WINDOW_WIDTH - 240, 107, 0.8, 0, score_img, TRUE);
 	for (int i = 0; i < 6; i++) 
@@ -35,34 +35,53 @@ void ViewStatus(void)
 		DrawRotaGraph(WINDOW_WIDTH - 160 + (25 * i), 110, 0.8, 0, NumberText_img[(Score / (int)pow(10, 5 - i)) % 10], TRUE);
 	}
 
-	DrawRotaGraph(WINDOW_WIDTH - 240, 190, 0.8, 0, LifeText_img, TRUE);
+	DrawRotaGraph(WINDOW_WIDTH - 240, 190, 0.7, 0, LifeText_img, TRUE);
 	for (int i = 0; i < Life; i++)
 	{
 		DrawRotaGraph(WINDOW_WIDTH - 170 + (32 * i), 190, 0.95, 0, Life_img, TRUE);
 	}
-	
+	DrawRotaGraph(WINDOW_WIDTH - 240, 240, 0.7, 0, BombText_img, TRUE);
+	for (int i = 0; i < Bomb; i++)
+	{
+		DrawRotaGraph(WINDOW_WIDTH - 170 + (32 * i), 240, 0.95, 0, Bomb_img, TRUE);
+	}
 
-	DrawRotaGraph(WINDOW_WIDTH - 220, 270, 0.8, 0, LevelText_img, TRUE);
-	DrawRotaGraph(WINDOW_WIDTH - 120, 273, 0.8, 0, NumberText_img[Level], TRUE);
+	DrawRotaGraph(WINDOW_WIDTH - 220, 310, 0.8, 0, LevelText_img, TRUE);
+	DrawRotaGraph(WINDOW_WIDTH - 120, 313, 0.8, 0, NumberText_img[Level], TRUE);
 
-	DrawRotaGraph(WINDOW_WIDTH - 220, 310, 0.8, 0, PowerText_img, TRUE);
+	DrawRotaGraph(WINDOW_WIDTH - 220, 350, 0.8, 0, PowerText_img, TRUE);
 	for (int i = 0; i < 3; i++)
 	{
-		DrawRotaGraph(WINDOW_WIDTH - 230 + (25 * i), 350, 0.8, 0, NumberText_img[(Power / (int)pow(10, 2 - i)) % 10], TRUE);
-		DrawRotaGraph(WINDOW_WIDTH - 110 + (25 * i), 350, 0.8, 0, NumberText_img[(NextPower[Level] / (int)pow(10, 2 - i)) % 10], TRUE);
+		DrawRotaGraph(WINDOW_WIDTH - 230 + (25 * i), 390, 0.8, 0, NumberText_img[(Power / (int)pow(10, 2 - i)) % 10], TRUE);
+		DrawRotaGraph(WINDOW_WIDTH - 110 + (25 * i), 390, 0.8, 0, NumberText_img[(NextPower[Level] / (int)pow(10, 2 - i)) % 10], TRUE);
 	}
-	DrawRotaGraph(WINDOW_WIDTH - 140, 350, 0.8, 0, slash_img, TRUE);
+	DrawRotaGraph(WINDOW_WIDTH - 140, 390, 0.8, 0, slash_img, TRUE);
 
 	DrawFormatString(WINDOW_WIDTH - 250, 400, GetColor(255, 255, 255), "sec %d ",NowStageMode);
-	DrawFormatString(WINDOW_WIDTH - 250, 500, GetColor(255, 255, 255), "angle : %lf ", (3 * PI / 2));
 }
 
 int intu;
-void ViewBackGround(void)//îwåiÉãÅ[Év
+void ViewBackGround(void)//ËÉåÊôØ„É´„Éº„Éó
 {
-	intu += 2;
-	DrawRotaGraph(300, 0 + intu, 1, 0, backgroundBack_img, TRUE);
-	DrawRotaGraph(300, 0 + intu, 1, 0, backgroundFront_img, TRUE);
+	intu += 1;
+	if (GameScene == Stage1_Scene)
+	{
+	DrawRotaGraph(300, 0 + intu, 1, 0, background_img[0], TRUE);//ÊâãÂâç
+	}
+	else if (GameScene == Stage2_Scene)
+	{
+		DrawRotaGraph(300, 0 + intu, 1, 0, background_img[1], TRUE);//Â••
+		DrawRotaGraph(300, 0 + intu, 1, 0, background_img[2], TRUE);//ÊâãÂâç
+	}
+	else if (GameScene == Stage3_Scene)
+	{
+		DrawRotaGraph(300, 0 + intu, 1, 0, background_img[3], TRUE);//ÊâãÂâç
+	}
+	else if (GameScene == Stage4_Scene)
+	{
+		DrawRotaGraph(300, 0 + intu, 1, 0, background_img[4], TRUE);//ÊâãÂâç
+	}
+	
 	if (intu >= 800) intu = 0;
 }
 
@@ -71,13 +90,13 @@ void viewStageTitle(int i)
 	if (StageTitleFadeTime < 500) StageTitleFadeTime++;
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 450 - StageTitleFadeTime);
-	DrawRotaGraph(300, 250 + (StageTitleFadeTime / 8), 1, 0, StageTitle_img[i], TRUE);//âÊëúï\é¶
+	DrawRotaGraph(300, 250 + (StageTitleFadeTime / 8), 1, 0, StageTitle_img[i], TRUE);//ÁîªÂÉèË°®Á§∫
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
 }
 
 void GameProcess(void)
 {
-	ViewBackGround(); //Fadeópçïîwåi ViewBackGroundÇ™ë}ì¸Ç≥ÇÍÇƒÇ¢Ç»Ç¢ÉVÅ[ÉìÇ≈ÇÕÉtÉFÅ[ÉhÇÕîΩâfÇ≥ÇÍÇ»Ç¢
+	ViewBackGround(); //FadeÁî®ÈªíËÉåÊôØ ViewBackGround„ÅåÊåøÂÖ•„Åï„Çå„Å¶„ÅÑ„Å™„ÅÑ„Ç∑„Éº„É≥„Åß„ÅØ„Éï„Çß„Éº„Éâ„ÅØÂèçÊò†„Åï„Çå„Å™„ÅÑ
 
 	if (P_ShotCoolTime >= 0) P_ShotCoolTime--;
 	if (DamagedCoolTime >= 0) DamagedCoolTime--;
@@ -86,13 +105,14 @@ void GameProcess(void)
 
 	EnemyAction();
 
-	EnemyBulletAction();//ìGÇÃíeÇÃèàóù
+	EnemyBulletAction();//Êïµ„ÅÆÂºæ„ÅÆÂá¶ÁêÜ
 
+	PlayerUseBomb();
 	PlayerShotAction();
-	PlayerBulletAction(); //ÉåÉCÉÑÅ[ÇÃíeÇÃèàóù
+	PlayerBulletAction(); //„É¨„Ç§„É§„Éº„ÅÆÂºæ„ÅÆÂá¶ÁêÜ
 
 	LevelUp();
-	ViewPlayer();//ÉvÉåÉCÉÑÅ[ï\é¶
+	ViewPlayer();//„Éó„É¨„Ç§„É§„ÉºË°®Á§∫
 
 	ViewFadeWindow();
 	ViewStatus();	
@@ -100,27 +120,43 @@ void GameProcess(void)
 
 void StageUpdater(SceneManager Next)
 {
+	int spw = SpawnPattern[0][NowStageMode];
+
 	if (StageModeUpdateTime >= 0) StageModeUpdateTime--;
-	if (StageModeUpdateTime < 0)//120ÉtÉåÅ[ÉÄñàÇ…é¿çs
-	{
+	if (StageModeUpdateTime < 0)//120„Éï„É¨„Éº„É†ÊØé„Å´ÂÆüË°å
+	{	
 		NowStageMode++;
-		if (SpawnPattern[0][NowStageMode] == -1)//ÉXÉeÅ[ÉWèIóπ
+		if (spw == -1)//„Çπ„ÉÜ„Éº„Ç∏ÁµÇ‰∫Ü
 		{
 			ChangeSceneActive = true;
 			nextScene = Next;
 			NowStageMode = 0;
 		}
-		else
+		else if (spw == 0)//ÔøΩxÔøΩe
 		{
-			EnemySpawn(SpawnPattern[0][NowStageMode]);//ìGìoèÍ
+			StageModeUpdateTime = 60;
 		}
-		StageModeUpdateTime = 120;
+		else if (spw == 1)
+		{
+			EnemySpawn(spw);//ÔøΩGÔøΩoÔøΩÔøΩ
+			StageModeUpdateTime = 40;
+		}
+		else if (spw == 2)
+		{
+			EnemySpawn(spw);//ÔøΩGÔøΩoÔøΩÔøΩ
+			StageModeUpdateTime = 40;
+		}
+		else if (spw == 3)
+		{
+			EnemySpawn(spw);//ÔøΩGÔøΩoÔøΩÔøΩ
+			StageModeUpdateTime = 30;
+		}
 	}
 }
 
-void Update(void) //ñàÉtÉåÅ[ÉÄèàóù
+void Update(void) //ÊØé„Éï„É¨„Éº„É†Âá¶ÁêÜ
 {
-	ChangeScene();//fadeÇópÇ¢ÇΩÉVÅ[ÉìÉ`ÉFÉìÉWÅ@ChangeSceneActive -> trueÇ≈é¿çs
+	ChangeScene();//fade„ÇíÁî®„ÅÑ„Åü„Ç∑„Éº„É≥„ÉÅ„Çß„É≥„Ç∏„ÄÄChangeSceneActive -> true„ÅßÂÆüË°å
 
 	if (GameScene == Title_Scene)
 	{
@@ -129,7 +165,7 @@ void Update(void) //ñàÉtÉåÅ[ÉÄèàóù
 		if (KeyState[KEY_INPUT_Z] == TRUE)
 		{		
 			ChangeSceneActive = true;
-			nextScene = DifficultyLvSelect_Scene;//ÉVÅ[ÉìëJà⁄ópÅBÇ±ÇÃÇQÇ¬ÇÕÉZÉbÉg
+			nextScene = DifficultyLvSelect_Scene;//„Ç∑„Éº„É≥ÈÅ∑ÁßªÁî®„ÄÇ„Åì„ÅÆÔºí„Å§„ÅØ„Çª„ÉÉ„Éà
 		}
 	}
 	if (GameScene == DifficultyLvSelect_Scene)
@@ -142,11 +178,11 @@ void Update(void) //ñàÉtÉåÅ[ÉÄèàóù
 		
 		for (int i = 0; i < 4; i++)
 		{
-			if(SelectDifficulty == i) DrawRotaGraph(450, 140 + (i * 170), 1, 0, DifficultyLv_img[i], TRUE);//âÊëúï\é¶
+			if(SelectDifficulty == i) DrawRotaGraph(450, 140 + (i * 170), 1, 0, DifficultyLv_img[i], TRUE);//ÁîªÂÉèË°®Á§∫
 			else 
 			{
 				SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
-				DrawRotaGraph(450, 140 + (i * 170), 1, 0, DifficultyLv_img[i], TRUE);//âÊëúï\é¶
+				DrawRotaGraph(450, 140 + (i * 170), 1, 0, DifficultyLv_img[i], TRUE);//ÁîªÂÉèË°®Á§∫
 				SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
 			}
 			
@@ -154,12 +190,12 @@ void Update(void) //ñàÉtÉåÅ[ÉÄèàóù
 		if (KeyState[KEY_INPUT_Z] == TRUE)
 		{
 			ChangeSceneActive = true;
-			nextScene = Stage1_Scene;//ÉVÅ[ÉìëJà⁄ópÅBÇ±ÇÃÇQÇ¬ÇÕÉZÉbÉg
+			nextScene = Stage1_Scene;//„Ç∑„Éº„É≥ÈÅ∑ÁßªÁî®„ÄÇ„Åì„ÅÆÔºí„Å§„ÅØ„Çª„ÉÉ„Éà
 		}
 		if (KeyState[KEY_INPUT_X] == TRUE)
 		{
 			ChangeSceneActive = true;
-			nextScene = Title_Scene;//ÉVÅ[ÉìëJà⁄ópÅBÇ±ÇÃÇQÇ¬ÇÕÉZÉbÉg
+			nextScene = Title_Scene;//„Ç∑„Éº„É≥ÈÅ∑ÁßªÁî®„ÄÇ„Åì„ÅÆÔºí„Å§„ÅØ„Çª„ÉÉ„Éà
 		}
 	}
 	if (GameScene == Stage1_Scene)
@@ -167,14 +203,14 @@ void Update(void) //ñàÉtÉåÅ[ÉÄèàóù
 		PlayBGM(BGM[1]);
 		GameProcess();
 		viewStageTitle(0);
-		StageUpdater(Stage2_Scene);//à¯êîÇ…éüÇÃÉXÉeÅ[ÉW
+		StageUpdater(Stage2_Scene);//ÂºïÊï∞„Å´Ê¨°„ÅÆ„Çπ„ÉÜ„Éº„Ç∏
 	}
 	if (GameScene == Stage2_Scene)
 	{
 		PlayBGM(BGM[3]);
 		GameProcess();
 		viewStageTitle(1);
-		StageUpdater(Stage3_Scene);//à¯êîÇ…éüÇÃÉXÉeÅ[ÉW
+		StageUpdater(Stage3_Scene);//ÂºïÊï∞„Å´Ê¨°„ÅÆ„Çπ„ÉÜ„Éº„Ç∏
 	}
 	if (GameScene == Stage3_Scene)
 	{
@@ -192,30 +228,30 @@ void Update(void) //ñàÉtÉåÅ[ÉÄèàóù
 	}
 }
 
-// ÉvÉçÉOÉâÉÄÇÕ WinMain Ç©ÇÁénÇ‹ÇÈ
+// „Éó„É≠„Ç∞„É©„É†„ÅØ WinMain „Åã„ÇâÂßã„Åæ„Çã
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
 {
-	ChangeWindowMode(TRUE);//îÒëSâÊñ Ç…ÉZÉbÉg
-	SetGraphMode(WINDOW_WIDTH, WINDOW_HEIGHT, 32);//âÊñ ÉTÉCÉYéwíË
-	SetOutApplicationLogValidFlag(FALSE);//Log.txtÇê∂ê¨ÇµÇ»Ç¢ÇÊÇ§Ç…ê›íË
-	SetMainWindowText("ãæëúÇÃâÃïP - Reflection of Diva -");
+	ChangeWindowMode(TRUE);//ÈùûÂÖ®ÁîªÈù¢„Å´„Çª„ÉÉ„Éà
+	SetGraphMode(WINDOW_WIDTH, WINDOW_HEIGHT, 32);//ÁîªÈù¢„Çµ„Ç§„Ç∫ÊåáÂÆö
+	SetOutApplicationLogValidFlag(FALSE);//Log.txt„ÇíÁîüÊàê„Åó„Å™„ÅÑ„Çà„ÅÜ„Å´Ë®≠ÂÆö
+	SetMainWindowText("Èè°ÂÉè„ÅÆÊ≠åÂß´ - Reflection of Diva -");
 	SetBackgroundColor(100, 100, 100);
 
-	if (DxLib_Init() == -1) { return -1; }		// ÇcÇwÉâÉCÉuÉâÉäèâä˙âªèàóù  ÉGÉâÅ[Ç™ãNÇ´ÇΩÇÁíºÇøÇ…èIóπ
+	if (DxLib_Init() == -1) { return -1; }		// Ôº§Ôº∏„É©„Ç§„Éñ„É©„É™ÂàùÊúüÂåñÂá¶ÁêÜ  „Ç®„É©„Éº„ÅåËµ∑„Åç„Åü„ÇâÁõ¥„Å°„Å´ÁµÇ‰∫Ü
 
-	ImageInit(); //âÊëúÇÃì«Ç›çûÇ› <- Image.cpp
-	AudioInit(); //âπê∫ÇÃì«Ç›çûÇ› <- Audio.cpp
+	ImageInit(); //ÁîªÂÉè„ÅÆË™≠„ÅøËæº„Åø <- Image.cpp
+	AudioInit(); //Èü≥Â£∞„ÅÆË™≠„ÅøËæº„Åø <- Audio.cpp
 	PlayBGM(BGM[0]);
 
 	while (ProcessMessage() == 0)
 	{
-		ClearDrawScreen();//ó†âÊñ è¡Ç∑
-		SetDrawScreen(DX_SCREEN_BACK);//ï`âÊêÊÇó†âÊñ Ç…
-		KeyUpdate();//ÉLÅ[ì¸óÕèÛë‘ÇçXêVÇ∑ÇÈ <- KeyManager.cpp
-		Update();//ñàÉtÉåÅ[ÉÄèàóù
-		ScreenFlip();//ó†âÊñ Çï\âÊñ Ç…ÉRÉsÅ[
+		ClearDrawScreen();//Ë£èÁîªÈù¢Ê∂à„Åô
+		SetDrawScreen(DX_SCREEN_BACK);//ÊèèÁîªÂÖà„ÇíË£èÁîªÈù¢„Å´
+		KeyUpdate();//„Ç≠„ÉºÂÖ•ÂäõÁä∂ÊÖã„ÇíÊõ¥Êñ∞„Åô„Çã <- KeyManager.cpp
+		Update();//ÊØé„Éï„É¨„Éº„É†Âá¶ÁêÜ
+		ScreenFlip();//Ë£èÁîªÈù¢„ÇíË°®ÁîªÈù¢„Å´„Ç≥„Éî„Éº
 	}
 
-	DxLib_End();			// ÇcÇwÉâÉCÉuÉâÉäégópÇÃèIóπèàóù
-	return 0;				// É\ÉtÉgÇÃèIóπ 
+	DxLib_End();			// Ôº§Ôº∏„É©„Ç§„Éñ„É©„É™‰ΩøÁî®„ÅÆÁµÇ‰∫ÜÂá¶ÁêÜ
+	return 0;				// „ÇΩ„Éï„Éà„ÅÆÁµÇ‰∫Ü 
 }

@@ -9,15 +9,12 @@ struct Enemy
 {
 	int hp;//体力
 	int movepattern;//移動パターン
-	int shotpattern;//射撃パターン
-	int shotcapacity;//弾数
-	int shotarc;//弾の広がり（拡散弾のみ）
-	int shotdesign;//弾のデザイン
+	int firstshottime;
 };
 Enemy enemy[2] = 
 { 
-	{ 4,0,3,5,NULL,0 },
-	{ 5,1,6,6,180,5 } 
+	{ 4, 0, 60},
+	{ 5, 1, 90} 
 };
 
 //敵
@@ -32,11 +29,12 @@ int MovePattern[ENEMY_AMOUNT];//移動パターン
 int Enemy_HP[ENEMY_AMOUNT];
 float Enemy_dist[ENEMY_AMOUNT];
 float E_ShotCoolTime[ENEMY_AMOUNT];
+int E_AttackMode[ENEMY_AMOUNT];//射撃パターンの遷移
 
 int CloseEnemy = -1;
 float CloseDist = 1100;
 
-void EnemyGenerate(int num, int type, int x, int y, int hitboxsize, int movetime, int movepattern, int hp)
+void EnemyGenerate(int num, int type, int x, int y, int hitboxsize)
 {
 	Enemy_exist[num] = true;
 	Enemy_visible[num] = false;
@@ -44,10 +42,11 @@ void EnemyGenerate(int num, int type, int x, int y, int hitboxsize, int movetime
 	Enemy_X[num] = x;
 	Enemy_Y[num] = y;
 	Enemy_HitBoxSize[num] = hitboxsize;
-	Enemy_MoveTime[num] = movetime;
-	MovePattern[num] = movepattern;
-	Enemy_HP[num] = hp;
-	E_ShotCoolTime[num] = 0;
+	Enemy_MoveTime[num] = 0;
+	MovePattern[num] = enemy[Enemy_Type[num]].movepattern;
+	Enemy_HP[num] = enemy[Enemy_Type[num]].hp;
+	E_ShotCoolTime[num] = enemy[Enemy_Type[num]].firstshottime;
+	E_AttackMode[num] = 0;
 }
 
 void EnemyDestroy(int num)
@@ -63,6 +62,7 @@ void EnemyDestroy(int num)
 	Enemy_HP[num] = NULL;
 	Enemy_dist[num] = NULL;
 	E_ShotCoolTime[num] = NULL;
+	E_AttackMode[num] = NULL;
 
 	CloseEnemy = -1;//近いキャラをリセット
 	CloseDist = 1100;
@@ -74,7 +74,7 @@ void spawn(int type,int x,int y)
 	{
 		if (Enemy_exist[i] == false)
 		{
-			EnemyGenerate(i, type, x, y, 16, 2, enemy[type].movepattern, enemy[type].hp);
+			EnemyGenerate(i, type, x, y, 16);
 			break;
 		}
 	}
@@ -86,13 +86,13 @@ void EnemySpawn(int spawnPattern)
 	else if (spawnPattern == 1) //上から3体
 	{
 		spawn(0, 150, 0);
-		spawn(0, 150, -100);
-		spawn(1, 300, -300);
 	}
-	else if (spawnPattern == 2)
+	else if (spawnPattern == 2) //上から3体
 	{
 		spawn(0, 450, 0);
-		spawn(0, 450, -100);
+	}
+	else if (spawnPattern == 3)
+	{
 		spawn(1, 300, -300);
 	}
 }
@@ -106,9 +106,18 @@ void EnemyMove(int num)
 			Enemy_Y[num] += 2;
 			break;
 		case 1://高速in一時停止後直進
-			if(Enemy_MoveTime[num] < 60) Enemy_Y[num] += 5;
-			else if (Enemy_MoveTime[num] >= 60 && Enemy_MoveTime[num] < 180) Enemy_Y[num] += 0;
-			else if (Enemy_MoveTime[num] >= 180) Enemy_Y[num] += 2;
+			if(Enemy_MoveTime[num] < 80) Enemy_Y[num] += 6;
+			else if (Enemy_MoveTime[num] >= 80 && Enemy_MoveTime[num] < 240) Enemy_Y[num] += 0;
+			else if (Enemy_MoveTime[num] >= 240) Enemy_Y[num] += 2;
+			break;
+		case 2://高速in一時停止後左下
+			if (Enemy_MoveTime[num] < 50) Enemy_Y[num] += 5;
+			else if (Enemy_MoveTime[num] >= 50 && Enemy_MoveTime[num] < 120) Enemy_Y[num] += 0;
+			else if (Enemy_MoveTime[num] >= 120)
+			{
+				Enemy_X[num] -= 1;
+				Enemy_Y[num] += 2;
+			}
 			break;
 		default:
 			break;
@@ -127,9 +136,44 @@ void CheckDistance(int num)
 void EnemyShotAction(int num)
 {
 	if (E_ShotCoolTime[num] > 0) return;
-	EnemyShot(enemy[Enemy_Type[num]].shotdesign, enemy[Enemy_Type[num]].shotpattern, Enemy_X[num], Enemy_Y[num], 
-		enemy[Enemy_Type[num]].shotcapacity, enemy[Enemy_Type[num]].shotarc);//射撃
-	E_ShotCoolTime[num] = 60;//フレームで設定
+	int x = Enemy_X[num];
+	int y = Enemy_Y[num];
+
+	if (Enemy_Type[num] == 0) 
+	{
+		if (E_AttackMode[num] == 0)
+		{
+			EnemyShot(0, Explosion, x, y, 4, 5, NULL);//射撃	
+			E_ShotCoolTime[num] = 30;//次のショットまでの時間
+		}
+		if (E_AttackMode[num] == 1)
+		{
+			EnemyShot(1, Diffusion, x, y, 4, 5, 90);//射撃	
+		}
+		E_AttackMode[num] ++;
+		return;
+	}
+	if (Enemy_Type[num] == 1)
+	{
+		if (E_AttackMode[num] == 0)
+		{
+			EnemyShot(7, Explosion, x, y, 6, 10, NULL);//射撃	
+			E_ShotCoolTime[num] = 5;//次のショットまでの時間
+		}
+		if (E_AttackMode[num] == 1)
+		{
+			EnemyShot(8, Explosion, x, y, 6, 10, NULL);//射撃	
+			E_ShotCoolTime[num] = 5;//次のショットまでの時間
+		}
+		if (E_AttackMode[num] == 2)
+		{
+			EnemyShot(9, Explosion, x, y, 6, 10, NULL);//射撃	
+		}
+		E_AttackMode[num] ++;
+		return;
+	}
+	
+	
 }
 
 void EnemyAction(void)
@@ -167,13 +211,14 @@ void EnemyAction(void)
 			if (Enemy_dist[i] <= Enemy_HitBoxSize[i] + Player_HitBoxSize)
 			{		
 				//被弾判定
-				if (DamagedCoolTime <= 0)
+				if (DamagedCoolTime <= 0 && BombTime <= 0)
 				{
 					if (Life > 0)
 					{
 						px = InitialPosX;
 						py = InitialPosY;
 						Life -= 1;
+						Bomb = 2;
 						DamagedCoolTime = 120;
 						EnemyBulletClear();
 					}

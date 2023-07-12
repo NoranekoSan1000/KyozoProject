@@ -24,3 +24,15 @@ using namespace std;
 extern float StageTitleFadeTime;
 
 enum Difficulty { Easy, Normal, Hard, HellDiva };
+
+enum EnemyShotPattern
+{
+	ShotWait,
+	OneShot,
+	AimingOneShot,
+	Explosion,
+	AimingExplosion,
+	Diffusion,
+	AimingDiffusion,
+	ShotEnd,
+};
