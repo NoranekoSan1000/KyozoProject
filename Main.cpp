@@ -141,14 +141,14 @@ void StageUpdater(SceneManager Next)
 	{	
 		switch (NowStageMode)
 		{
-			//spawn(敵タイプ,出現数,出現間隔,X座標,Y座標)
+			//spawn(敵タイプ,出現数,出現間隔,移動パターン,X座標,Y座標)
 			case -1: wait(180); break;
 			case 0: wait(180); break;
-			case 1: spawn(0, 3, 40, 0, 100); break;
+			case 1: spawn(0, 3, 40, MOVE_A, 100, 0); break;
 			case 2: wait(180); break;
-			case 3: spawn(0, 3, 40, 450, 0); break;
+			case 3: spawn(0, 3, 40, MOVE_A, 450, 0); break;
 			case 4: wait(60); break;
-			case 5: spawn(1, 1, 40, 300, 0); break;
+			case 5: spawn(1, 1, 40, MOVE_B, 300, 0); break;
 			case 6: wait(240); break;
 			case 7: end(Next); break;
 			default: break;
