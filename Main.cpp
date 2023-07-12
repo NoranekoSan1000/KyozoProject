@@ -6,14 +6,6 @@
 #include "Enemy_Bullet.h"
 #include <string>
 
-int SpawnPattern[4][50] = //[stage][NowStageMode]
-{
-	{0,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,0,-1},//Stage1
-	{0,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,0,-1},
-	{0,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,0,-1},
-	{0,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,0,-1},
-};
-
 int SelectDifficulty = 0;
 
 float StageModeUpdateTime = 120;
@@ -118,39 +110,69 @@ void GameProcess(void)
 	ViewStatus();	
 }
 
+int amount = 0;
+void wait(int time)
+{
+	StageModeUpdateTime = time;
+	NowStageMode++;
+}
+void end(SceneManager Next)
+{
+	ChangeSceneActive = true;
+	nextScene = Next;
+	NowStageMode = 0;
+}
+void  formation_A(int enemy, int interval) //上部左側から出現
+{
+	if (amount == 0) amount = 3;
+	else
+	{
+		EnemySpawn(enemy, 150, 0);
+		amount--;
+		if (amount == 0) NowStageMode++;
+		else StageModeUpdateTime = interval;
+	}
+}
+void  formation_B(int enemy, int interval) //上部右側から出現
+{
+	if (amount == 0) amount = 3;
+	else
+	{
+		EnemySpawn(enemy, 450, 0);
+		amount--;
+		if (amount == 0) NowStageMode++;
+		else StageModeUpdateTime = interval;
+	}
+}
+void  formation_C(int enemy, int interval) //上部中央から出現
+{
+	if (amount == 0) amount = 1;
+	else
+	{
+		EnemySpawn(enemy, 300, 0);
+		amount--;
+		if (amount == 0) NowStageMode++;
+		else StageModeUpdateTime = interval;
+	}
+}
+
 void StageUpdater(SceneManager Next)
 {
-	int spw = SpawnPattern[0][NowStageMode];
-
 	if (StageModeUpdateTime >= 0) StageModeUpdateTime--;
 	if (StageModeUpdateTime < 0)//120フレーム毎に実行
 	{	
-		NowStageMode++;
-		if (spw == -1)//ステージ終了
+		switch (NowStageMode)
 		{
-			ChangeSceneActive = true;
-			nextScene = Next;
-			NowStageMode = 0;
-		}
-		else if (spw == 0)//�x�e
-		{
-			StageModeUpdateTime = 60;
-		}
-		else if (spw == 1)
-		{
-			EnemySpawn(spw);//�G�o��
-			StageModeUpdateTime = 40;
-		}
-		else if (spw == 2)
-		{
-			EnemySpawn(spw);//�G�o��
-			StageModeUpdateTime = 40;
-		}
-		else if (spw == 3)
-		{
-			EnemySpawn(spw);//�G�o��
-			StageModeUpdateTime = 30;
-		}
+			case 0: wait(180); break;
+			case 1: formation_A(0, 40); break;
+			case 2: wait(180); break;
+			case 3: formation_B(0, 40); break;
+			case 4: wait(60); break;
+			case 5: formation_C(1, 40); break;
+			case 6: wait(240); break;
+			case 7: end(Next); break;
+			default: break;
+		};
 	}
 }
 

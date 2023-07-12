@@ -80,21 +80,9 @@ void spawn(int type,int x,int y)
 	}
 }
 
-void EnemySpawn(int spawnPattern)
+void EnemySpawn(int type,int posX,int posY)
 {
-	if (spawnPattern == 0) return;
-	else if (spawnPattern == 1) //ã‚©‚ç3‘Ì
-	{
-		spawn(0, 150, 0);
-	}
-	else if (spawnPattern == 2) //ã‚©‚ç3‘Ì
-	{
-		spawn(0, 450, 0);
-	}
-	else if (spawnPattern == 3)
-	{
-		spawn(1, 300, -300);
-	}
+	spawn(type, posX, posY);
 }
 
 void EnemyMove(int num)
@@ -106,9 +94,9 @@ void EnemyMove(int num)
 			Enemy_Y[num] += 2;
 			break;
 		case 1://‚‘¬inˆê’â~Œã’¼i
-			if(Enemy_MoveTime[num] < 80) Enemy_Y[num] += 6;
-			else if (Enemy_MoveTime[num] >= 80 && Enemy_MoveTime[num] < 240) Enemy_Y[num] += 0;
-			else if (Enemy_MoveTime[num] >= 240) Enemy_Y[num] += 2;
+			if(Enemy_MoveTime[num] < 30) Enemy_Y[num] += 6;
+			else if (Enemy_MoveTime[num] >= 30 && Enemy_MoveTime[num] < 190) Enemy_Y[num] += 0;
+			else if (Enemy_MoveTime[num] >= 190) Enemy_Y[num] += 2;
 			break;
 		case 2://‚‘¬inˆê’â~Œã¶‰º
 			if (Enemy_MoveTime[num] < 50) Enemy_Y[num] += 5;
