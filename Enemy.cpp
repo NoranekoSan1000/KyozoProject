@@ -8,12 +8,10 @@ using namespace std;
 struct Enemy
 {
 	int hp;//‘Ì—Í
-	int firstshottime;
 };
 Enemy enemy[2] = 
 { 
-	{ 4, 0},
-	{ 5, 0}
+	{ 4},{ 5}
 };
 
 //“G
@@ -46,7 +44,7 @@ void EnemyGenerate(int num, int type ,int move ,int x, int y, int hitboxsize)
 	MovePattern[num] = move;
 	NowMoveMode[num] = 0;
 	Enemy_HP[num] = enemy[Enemy_Type[num]].hp;
-	E_ShotCoolTime[num] = enemy[Enemy_Type[num]].firstshottime;
+	E_ShotCoolTime[num] = 0;
 	E_AttackMode[num] = 0;
 }
 
