@@ -26,6 +26,7 @@ int Enemy_Y[ENEMY_AMOUNT];
 int Enemy_HitBoxSize[ENEMY_AMOUNT];
 int Enemy_MoveTime[ENEMY_AMOUNT];
 int MovePattern[ENEMY_AMOUNT];//移動パターン
+int NowMoveMode[ENEMY_AMOUNT];
 int Enemy_HP[ENEMY_AMOUNT];
 float Enemy_dist[ENEMY_AMOUNT];
 float E_ShotCoolTime[ENEMY_AMOUNT];
@@ -44,6 +45,7 @@ void EnemyGenerate(int num, int type, int x, int y, int hitboxsize)
 	Enemy_HitBoxSize[num] = hitboxsize;
 	Enemy_MoveTime[num] = 0;
 	MovePattern[num] = enemy[Enemy_Type[num]].movepattern;
+	NowMoveMode[num] = 0;
 	Enemy_HP[num] = enemy[Enemy_Type[num]].hp;
 	E_ShotCoolTime[num] = enemy[Enemy_Type[num]].firstshottime;
 	E_AttackMode[num] = 0;
@@ -59,6 +61,7 @@ void EnemyDestroy(int num)
 	Enemy_HitBoxSize[num] = NULL;
 	Enemy_MoveTime[num] = NULL;
 	MovePattern[num] = NULL;
+	NowMoveMode[num] = NULL;
 	Enemy_HP[num] = NULL;
 	Enemy_dist[num] = NULL;
 	E_ShotCoolTime[num] = NULL;
@@ -85,26 +88,48 @@ void EnemySpawn(int type,int posX,int posY)
 	spawn(type, posX, posY);
 }
 
+
+void move(int num, int spdX, int spdY, int time)
+{
+	if(Enemy_MoveTime[num] <= 0) Enemy_MoveTime[num] = time;
+	else
+	{
+		Enemy_X[num] += spdX;
+		Enemy_Y[num] += spdY;
+		Enemy_MoveTime[num]--;
+		if (Enemy_MoveTime[num] <= 0) NowMoveMode[num]++;
+	}
+	
+}
+
 void EnemyMove(int num)
 {
-	Enemy_MoveTime[num]++;
+	
 	switch (MovePattern[num])
 	{
 		case 0://直進
-			Enemy_Y[num] += 2;
+			switch (NowMoveMode[num])
+			{
+				case 0: move(num, 0, 2, 9999); break;
+				default: break;
+			}
 			break;
 		case 1://高速in一時停止後直進
-			if(Enemy_MoveTime[num] < 30) Enemy_Y[num] += 6;
-			else if (Enemy_MoveTime[num] >= 30 && Enemy_MoveTime[num] < 190) Enemy_Y[num] += 0;
-			else if (Enemy_MoveTime[num] >= 190) Enemy_Y[num] += 2;
+			switch (NowMoveMode[num])
+			{
+				case 0: move(num, 0, 6, 30); break;
+				case 1: move(num, 0, 0, 160); break;
+				case 2: move(num, 0, 2, 9999); break;
+				default: break;
+			}
 			break;
 		case 2://高速in一時停止後左下
-			if (Enemy_MoveTime[num] < 50) Enemy_Y[num] += 5;
-			else if (Enemy_MoveTime[num] >= 50 && Enemy_MoveTime[num] < 120) Enemy_Y[num] += 0;
-			else if (Enemy_MoveTime[num] >= 120)
+			switch (NowMoveMode[num])
 			{
-				Enemy_X[num] -= 1;
-				Enemy_Y[num] += 2;
+				case 0: move(num, 0, 5, 50); break;
+				case 1: move(num, 0, 0, 70); break;
+				case 2: move(num, -1, 2, 9999); break;
+				default: break;
 			}
 			break;
 		default:

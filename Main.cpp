@@ -82,7 +82,7 @@ void viewStageTitle(int i)
 	if (StageTitleFadeTime < 500) StageTitleFadeTime++;
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 450 - StageTitleFadeTime);
-	DrawRotaGraph(300, 250 + (StageTitleFadeTime / 8), 1, 0, StageTitle_img[i], TRUE);//画像表示
+	DrawRotaGraph(300, 250 + (StageTitleFadeTime / 8), 1, 0, Enemy_img[i], TRUE);//画像表示
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
 }
 
