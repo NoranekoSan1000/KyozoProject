@@ -13,7 +13,7 @@ struct Enemy
 };
 Enemy enemy[2] = 
 { 
-	{ 4, 0, 60},
+	{ 4, 4, 60},
 	{ 5, 1, 90} 
 };
 
@@ -117,7 +117,7 @@ void EnemyMove(int num)
 		case 1://‚‘¬inˆê’â~Œã’¼i
 			switch (NowMoveMode[num])
 			{
-				case 0: move(num, 0, 6, 30); break;
+				case 0: move(num, 0, 5, 30); break;
 				case 1: move(num, 0, 0, 160); break;
 				case 2: move(num, 0, 2, 9999); break;
 				default: break;
@@ -126,9 +126,27 @@ void EnemyMove(int num)
 		case 2://‚‘¬inˆê’â~Œã¶‰º
 			switch (NowMoveMode[num])
 			{
-				case 0: move(num, 0, 5, 50); break;
+				case 0: move(num, 0, 5, 30); break;
 				case 1: move(num, 0, 0, 70); break;
 				case 2: move(num, -1, 2, 9999); break;
+				default: break;
+			}
+			break;
+		case 3://‚‘¬inˆê’â~Œã‰E‰º
+			switch (NowMoveMode[num])
+			{
+				case 0: move(num, 0, 5, 30); break;
+				case 1: move(num, 0, 0, 70); break;
+				case 2: move(num, 1, 2, 9999); break;
+				default: break;
+			}
+			break;
+		case 4://‰E ‚©‚ç ‰º
+			switch (NowMoveMode[num])
+			{
+				case 0: move(num, 3, 0, 180); break;
+				case 1: move(num, 0, 0, 20); break;
+				case 2: move(num, 0, 2, 9999); break;
 				default: break;
 			}
 			break;
