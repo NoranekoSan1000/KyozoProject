@@ -226,6 +226,13 @@ void Update(void) //毎フレーム処理
 		PlayBGM(BGM[7]);
 		GameProcess();
 		viewStageTitle(3);
+		StageUpdater(Stage5_Scene);
+	}
+	if (GameScene == Stage5_Scene)
+	{
+		PlayBGM(BGM[8]);
+		GameProcess();
+		viewStageTitle(4);
 		StageUpdater(Title_Scene);
 	}
 }

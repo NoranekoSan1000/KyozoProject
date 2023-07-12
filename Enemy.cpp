@@ -12,8 +12,8 @@ struct Enemy
 };
 Enemy enemy[2] = 
 { 
-	{ 4, 60},
-	{ 5, 90}
+	{ 4, 0},
+	{ 5, 0}
 };
 
 //敵
@@ -157,8 +157,6 @@ void CheckDistance(int num)
 	CloseDist = Enemy_dist[CloseEnemy];
 }
 
-int amount = 0;
-
 void wait(int num,int time)
 {
 	E_ShotCoolTime[num] = time;
@@ -166,14 +164,9 @@ void wait(int num,int time)
 }
 void shot(int num, int design, EnemyShotPattern type, int size, int capacity, int arc, int interval)
 {
-	if (amount == 0) amount == 3;
-	else
-	{
-		EnemyShot(design, Explosion, Enemy_X[num], Enemy_Y[num], size, capacity, arc);//射撃	
-		amount--;
-		if (amount == 0) E_AttackMode[num]++;
-		else E_ShotCoolTime[num] = interval;
-	}
+	EnemyShot(design, type, Enemy_X[num], Enemy_Y[num], size, capacity, arc);//射撃	
+	E_AttackMode[num]++;
+	E_ShotCoolTime[num] = interval;
 }
 
 void EnemyShotAction(int num)
@@ -185,28 +178,19 @@ void EnemyShotAction(int num)
 		{
 			switch (E_AttackMode[num])
 			{
-				case 0: wait(num, 30); break;
-				case 1: shot(num, 0, Diffusion, 4, 5, NULL, 30); break;
+				case 0: wait(num, 60); break;
+				case 1: shot(num, 0, AimingDiffusion, 4, 5, 10, 30); break;
 			}
 		}
 		if (Enemy_Type[num] == 1)
 		{
-			if (E_AttackMode[num] == 0)
+			switch (E_AttackMode[num])
 			{
-				EnemyShot(7, Explosion, x, y, 6, 10, NULL);//射撃	
-				E_ShotCoolTime[num] = 5;//次のショットまでの時間
+				case 0: wait(num, 90); break;
+				case 1: shot(num, 7, Explosion, 6, 10, NULL, 10); break;
+				case 2: shot(num, 8, Explosion, 6, 10, NULL, 10); break;
+				case 3: shot(num, 9, Explosion, 6, 10, NULL, 5); break;
 			}
-			if (E_AttackMode[num] == 1)
-			{
-				EnemyShot(8, Explosion, x, y, 6, 10, NULL);//射撃	
-				E_ShotCoolTime[num] = 5;//次のショットまでの時間
-			}
-			if (E_AttackMode[num] == 2)
-			{
-				EnemyShot(9, Explosion, x, y, 6, 10, NULL);//射撃	
-			}
-			E_AttackMode[num] ++;
-			return;
 		}
 	}
 	
