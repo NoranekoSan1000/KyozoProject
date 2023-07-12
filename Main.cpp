@@ -120,9 +120,9 @@ void end(SceneManager Next)
 {
 	ChangeSceneActive = true;
 	nextScene = Next;
-	NowStageMode = 0;
+	NowStageMode = -1;
 }
-void  formation(int enemy,int amt, int interval,int posX, int posY) //上部左側から出現
+void  spawn(int enemy,int amt, int interval,int posX, int posY)
 {
 	if (amount == 0) amount = amt;
 	else
@@ -141,13 +141,14 @@ void StageUpdater(SceneManager Next)
 	{	
 		switch (NowStageMode)
 		{
-			//(敵タイプ,出現数,出現間隔,X座標,Y座標)
+			//spawn(敵タイプ,出現数,出現間隔,X座標,Y座標)
+			case -1: wait(180); break;
 			case 0: wait(180); break;
-			case 1: formation(0, 3, 40, 150, 0); break;
+			case 1: spawn(0, 3, 40, 150, 0); break;
 			case 2: wait(180); break;
-			case 3: formation(0, 3, 40, 450, 0); break;
+			case 3: spawn(0, 3, 40, 450, 0); break;
 			case 4: wait(60); break;
-			case 5: formation(1, 1, 40, 300, 0); break;
+			case 5: spawn(1, 1, 40, 300, 0); break;
 			case 6: wait(240); break;
 			case 7: end(Next); break;
 			default: break;
