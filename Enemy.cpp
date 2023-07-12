@@ -8,13 +8,12 @@ using namespace std;
 struct Enemy
 {
 	int hp;//‘Ì—Í
-	int movepattern;//ˆÚ“®ƒpƒ^[ƒ“
 	int firstshottime;
 };
 Enemy enemy[2] = 
 { 
-	{ 4, 4, 60},
-	{ 5, 1, 90} 
+	{ 4, 60},
+	{ 5, 90}
 };
 
 //“G
@@ -35,7 +34,7 @@ int E_AttackMode[ENEMY_AMOUNT];//ËŒ‚ƒpƒ^[ƒ“‚Ì‘JˆÚ
 int CloseEnemy = -1;
 float CloseDist = 1100;
 
-void EnemyGenerate(int num, int type, int x, int y, int hitboxsize)
+void EnemyGenerate(int num, int type ,int move ,int x, int y, int hitboxsize)
 {
 	Enemy_exist[num] = true;
 	Enemy_visible[num] = false;
@@ -44,7 +43,7 @@ void EnemyGenerate(int num, int type, int x, int y, int hitboxsize)
 	Enemy_Y[num] = y;
 	Enemy_HitBoxSize[num] = hitboxsize;
 	Enemy_MoveTime[num] = 0;
-	MovePattern[num] = enemy[Enemy_Type[num]].movepattern;
+	MovePattern[num] = move;
 	NowMoveMode[num] = 0;
 	Enemy_HP[num] = enemy[Enemy_Type[num]].hp;
 	E_ShotCoolTime[num] = enemy[Enemy_Type[num]].firstshottime;
@@ -71,23 +70,17 @@ void EnemyDestroy(int num)
 	CloseDist = 1100;
 }
 
-void spawn(int type,int x,int y)
+void EnemySpawn(int type, MoveList move, int x, int y)
 {
 	for (int i = 0; i < ENEMY_AMOUNT; i++)
 	{
 		if (Enemy_exist[i] == false)
 		{
-			EnemyGenerate(i, type, x, y, 16);
+			EnemyGenerate(i, type, move, x, y, 16);
 			break;
 		}
 	}
 }
-
-void EnemySpawn(int type,int posX,int posY)
-{
-	spawn(type, posX, posY);
-}
-
 
 void move(int num, int spdX, int spdY, int time)
 {
@@ -107,14 +100,14 @@ void EnemyMove(int num)
 	
 	switch (MovePattern[num])
 	{
-		case 0://’¼i
+		case MOVE_A://’¼i
 			switch (NowMoveMode[num])
 			{
 				case 0: move(num, 0, 2, 9999); break;
 				default: break;
 			}
 			break;
-		case 1://‚‘¬inˆê’â~Œã’¼i
+		case MOVE_B://‚‘¬inˆê’â~Œã’¼i
 			switch (NowMoveMode[num])
 			{
 				case 0: move(num, 0, 5, 30); break;
@@ -123,7 +116,7 @@ void EnemyMove(int num)
 				default: break;
 			}
 			break;
-		case 2://‚‘¬inˆê’â~Œã¶‰º
+		case MOVE_C://‚‘¬inˆê’â~Œã¶‰º
 			switch (NowMoveMode[num])
 			{
 				case 0: move(num, 0, 5, 30); break;
@@ -132,7 +125,7 @@ void EnemyMove(int num)
 				default: break;
 			}
 			break;
-		case 3://‚‘¬inˆê’â~Œã‰E‰º
+		case MOVE_D://‚‘¬inˆê’â~Œã‰E‰º
 			switch (NowMoveMode[num])
 			{
 				case 0: move(num, 0, 5, 30); break;
@@ -141,7 +134,7 @@ void EnemyMove(int num)
 				default: break;
 			}
 			break;
-		case 4://‰E ‚©‚ç ‰º
+		case MOVE_E://‰E ‚©‚ç ‰º
 			switch (NowMoveMode[num])
 			{
 				case 0: move(num, 3, 0, 180); break;

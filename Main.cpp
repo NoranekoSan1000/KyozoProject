@@ -122,12 +122,12 @@ void end(SceneManager Next)
 	nextScene = Next;
 	NowStageMode = -1;
 }
-void  spawn(int enemy,int amt, int interval,int posX, int posY)
+void  spawn(int enemy,int amt, int interval,MoveList move,int posX, int posY)
 {
 	if (amount == 0) amount = amt;
 	else
 	{
-		EnemySpawn(enemy, posX, posY);
+		EnemySpawn(enemy, move, posX, posY);
 		amount--;
 		if (amount == 0) NowStageMode++;
 		else StageModeUpdateTime = interval;
