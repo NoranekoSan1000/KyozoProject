@@ -157,46 +157,58 @@ void CheckDistance(int num)
 	CloseDist = Enemy_dist[CloseEnemy];
 }
 
+int amount = 0;
+
+void wait(int num,int time)
+{
+	E_ShotCoolTime[num] = time;
+	E_AttackMode[num]++;
+}
+void shot(int num, int design, EnemyShotPattern type, int size, int capacity, int arc, int interval)
+{
+	if (amount == 0) amount == 3;
+	else
+	{
+		EnemyShot(design, Explosion, Enemy_X[num], Enemy_Y[num], size, capacity, arc);//射撃	
+		amount--;
+		if (amount == 0) E_AttackMode[num]++;
+		else E_ShotCoolTime[num] = interval;
+	}
+}
+
 void EnemyShotAction(int num)
 {
-	if (E_ShotCoolTime[num] > 0) return;
-	int x = Enemy_X[num];
-	int y = Enemy_Y[num];
-
-	if (Enemy_Type[num] == 0) 
+	if (E_ShotCoolTime[num] >= 0) E_ShotCoolTime[num]--;
+	if (E_ShotCoolTime[num] < 0)
 	{
-		if (E_AttackMode[num] == 0)
+		if (Enemy_Type[num] == 0)
 		{
-			EnemyShot(0, Explosion, x, y, 4, 5, NULL);//射撃	
-			E_ShotCoolTime[num] = 30;//次のショットまでの時間
+			switch (E_AttackMode[num])
+			{
+				case 0: wait(num, 30); break;
+				case 1: shot(num, 0, Diffusion, 4, 5, NULL, 30); break;
+			}
 		}
-		if (E_AttackMode[num] == 1)
+		if (Enemy_Type[num] == 1)
 		{
-			EnemyShot(1, Diffusion, x, y, 4, 5, 90);//射撃	
+			if (E_AttackMode[num] == 0)
+			{
+				EnemyShot(7, Explosion, x, y, 6, 10, NULL);//射撃	
+				E_ShotCoolTime[num] = 5;//次のショットまでの時間
+			}
+			if (E_AttackMode[num] == 1)
+			{
+				EnemyShot(8, Explosion, x, y, 6, 10, NULL);//射撃	
+				E_ShotCoolTime[num] = 5;//次のショットまでの時間
+			}
+			if (E_AttackMode[num] == 2)
+			{
+				EnemyShot(9, Explosion, x, y, 6, 10, NULL);//射撃	
+			}
+			E_AttackMode[num] ++;
+			return;
 		}
-		E_AttackMode[num] ++;
-		return;
 	}
-	if (Enemy_Type[num] == 1)
-	{
-		if (E_AttackMode[num] == 0)
-		{
-			EnemyShot(7, Explosion, x, y, 6, 10, NULL);//射撃	
-			E_ShotCoolTime[num] = 5;//次のショットまでの時間
-		}
-		if (E_AttackMode[num] == 1)
-		{
-			EnemyShot(8, Explosion, x, y, 6, 10, NULL);//射撃	
-			E_ShotCoolTime[num] = 5;//次のショットまでの時間
-		}
-		if (E_AttackMode[num] == 2)
-		{
-			EnemyShot(9, Explosion, x, y, 6, 10, NULL);//射撃	
-		}
-		E_AttackMode[num] ++;
-		return;
-	}
-	
 	
 }
 
