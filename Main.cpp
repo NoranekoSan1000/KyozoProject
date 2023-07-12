@@ -122,34 +122,12 @@ void end(SceneManager Next)
 	nextScene = Next;
 	NowStageMode = 0;
 }
-void  formation_A(int enemy, int interval) //上部左側から出現
+void  formation(int enemy,int amt, int interval,int posX, int posY) //上部左側から出現
 {
-	if (amount == 0) amount = 3;
+	if (amount == 0) amount = amt;
 	else
 	{
-		EnemySpawn(enemy, 150, 0);
-		amount--;
-		if (amount == 0) NowStageMode++;
-		else StageModeUpdateTime = interval;
-	}
-}
-void  formation_B(int enemy, int interval) //上部右側から出現
-{
-	if (amount == 0) amount = 3;
-	else
-	{
-		EnemySpawn(enemy, 450, 0);
-		amount--;
-		if (amount == 0) NowStageMode++;
-		else StageModeUpdateTime = interval;
-	}
-}
-void  formation_C(int enemy, int interval) //上部中央から出現
-{
-	if (amount == 0) amount = 1;
-	else
-	{
-		EnemySpawn(enemy, 300, 0);
+		EnemySpawn(enemy, posX, posY);
 		amount--;
 		if (amount == 0) NowStageMode++;
 		else StageModeUpdateTime = interval;
@@ -163,12 +141,13 @@ void StageUpdater(SceneManager Next)
 	{	
 		switch (NowStageMode)
 		{
+			//(敵タイプ,出現数,出現間隔,X座標,Y座標)
 			case 0: wait(180); break;
-			case 1: formation_A(0, 40); break;
+			case 1: formation(0, 3, 40, 150, 0); break;
 			case 2: wait(180); break;
-			case 3: formation_B(0, 40); break;
+			case 3: formation(0, 3, 40, 450, 0); break;
 			case 4: wait(60); break;
-			case 5: formation_C(1, 40); break;
+			case 5: formation(1, 1, 40, 300, 0); break;
 			case 6: wait(240); break;
 			case 7: end(Next); break;
 			default: break;
