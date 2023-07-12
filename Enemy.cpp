@@ -8,13 +8,12 @@ using namespace std;
 struct Enemy
 {
 	int hp;//体力
-	int movepattern;//移動パターン
 	int firstshottime;
 };
 Enemy enemy[2] = 
 { 
-	{ 4, 0, 60},
-	{ 5, 1, 90} 
+	{ 4, 60},
+	{ 5, 90}
 };
 
 //敵
@@ -26,6 +25,7 @@ int Enemy_Y[ENEMY_AMOUNT];
 int Enemy_HitBoxSize[ENEMY_AMOUNT];
 int Enemy_MoveTime[ENEMY_AMOUNT];
 int MovePattern[ENEMY_AMOUNT];//移動パターン
+int NowMoveMode[ENEMY_AMOUNT];
 int Enemy_HP[ENEMY_AMOUNT];
 float Enemy_dist[ENEMY_AMOUNT];
 float E_ShotCoolTime[ENEMY_AMOUNT];
@@ -34,7 +34,7 @@ int E_AttackMode[ENEMY_AMOUNT];//射撃パターンの遷移
 int CloseEnemy = -1;
 float CloseDist = 1100;
 
-void EnemyGenerate(int num, int type, int x, int y, int hitboxsize)
+void EnemyGenerate(int num, int type ,int move ,int x, int y, int hitboxsize)
 {
 	Enemy_exist[num] = true;
 	Enemy_visible[num] = false;
@@ -43,7 +43,8 @@ void EnemyGenerate(int num, int type, int x, int y, int hitboxsize)
 	Enemy_Y[num] = y;
 	Enemy_HitBoxSize[num] = hitboxsize;
 	Enemy_MoveTime[num] = 0;
-	MovePattern[num] = enemy[Enemy_Type[num]].movepattern;
+	MovePattern[num] = move;
+	NowMoveMode[num] = 0;
 	Enemy_HP[num] = enemy[Enemy_Type[num]].hp;
 	E_ShotCoolTime[num] = enemy[Enemy_Type[num]].firstshottime;
 	E_AttackMode[num] = 0;
@@ -59,6 +60,7 @@ void EnemyDestroy(int num)
 	Enemy_HitBoxSize[num] = NULL;
 	Enemy_MoveTime[num] = NULL;
 	MovePattern[num] = NULL;
+	NowMoveMode[num] = NULL;
 	Enemy_HP[num] = NULL;
 	Enemy_dist[num] = NULL;
 	E_ShotCoolTime[num] = NULL;
@@ -68,55 +70,77 @@ void EnemyDestroy(int num)
 	CloseDist = 1100;
 }
 
-void spawn(int type,int x,int y)
+void EnemySpawn(int type, MoveList move, int x, int y)
 {
 	for (int i = 0; i < ENEMY_AMOUNT; i++)
 	{
 		if (Enemy_exist[i] == false)
 		{
-			EnemyGenerate(i, type, x, y, 16);
+			EnemyGenerate(i, type, move, x, y, 16);
 			break;
 		}
 	}
 }
 
-void EnemySpawn(int spawnPattern)
+void move(int num, int spdX, int spdY, int time)
 {
-	if (spawnPattern == 0) return;
-	else if (spawnPattern == 1) //上から3体
+	if(Enemy_MoveTime[num] <= 0) Enemy_MoveTime[num] = time;
+	else
 	{
-		spawn(0, 150, 0);
+		Enemy_X[num] += spdX;
+		Enemy_Y[num] += spdY;
+		Enemy_MoveTime[num]--;
+		if (Enemy_MoveTime[num] <= 0) NowMoveMode[num]++;
 	}
-	else if (spawnPattern == 2) //上から3体
-	{
-		spawn(0, 450, 0);
-	}
-	else if (spawnPattern == 3)
-	{
-		spawn(1, 300, -300);
-	}
+	
 }
 
 void EnemyMove(int num)
 {
-	Enemy_MoveTime[num]++;
+	
 	switch (MovePattern[num])
 	{
-		case 0://直進
-			Enemy_Y[num] += 2;
-			break;
-		case 1://高速in一時停止後直進
-			if(Enemy_MoveTime[num] < 80) Enemy_Y[num] += 6;
-			else if (Enemy_MoveTime[num] >= 80 && Enemy_MoveTime[num] < 240) Enemy_Y[num] += 0;
-			else if (Enemy_MoveTime[num] >= 240) Enemy_Y[num] += 2;
-			break;
-		case 2://高速in一時停止後左下
-			if (Enemy_MoveTime[num] < 50) Enemy_Y[num] += 5;
-			else if (Enemy_MoveTime[num] >= 50 && Enemy_MoveTime[num] < 120) Enemy_Y[num] += 0;
-			else if (Enemy_MoveTime[num] >= 120)
+		case MOVE_A://直進
+			switch (NowMoveMode[num])
 			{
-				Enemy_X[num] -= 1;
-				Enemy_Y[num] += 2;
+				case 0: move(num, 0, 2, 9999); break;
+				default: break;
+			}
+			break;
+		case MOVE_B://高速in一時停止後直進
+			switch (NowMoveMode[num])
+			{
+				case 0: move(num, 0, 5, 30); break;
+				case 1: move(num, 0, 0, 160); break;
+				case 2: move(num, 0, 2, 9999); break;
+				default: break;
+			}
+			break;
+		case MOVE_C://高速in一時停止後左下
+			switch (NowMoveMode[num])
+			{
+				case 0: move(num, 0, 5, 30); break;
+				case 1: move(num, 0, 0, 70); break;
+				case 2: move(num, -1, 2, 9999); break;
+				default: break;
+			}
+			break;
+		case MOVE_D://高速in一時停止後右下
+			switch (NowMoveMode[num])
+			{
+				case 0: move(num, 0, 5, 30); break;
+				case 1: move(num, 0, 0, 70); break;
+				case 2: move(num, 1, 2, 9999); break;
+				default: break;
+			}
+			break;
+		case MOVE_E://右 から 下
+			switch (NowMoveMode[num])
+			{
+				case 0: move(num, 3, 0, 180); break;
+				case 1: move(num, 0, 0, 20); break;
+				case 2: move(num, 0, 2, 9999); break;
+				default: break;
 			}
 			break;
 		default:

@@ -16,9 +16,7 @@ extern float E_ShotCoolTime[];
 extern int CloseEnemy;
 extern float CloseDist;
 
-void EnemyGenerate(int num, int type, int x, int y, int hitboxsize, int movespeed, int movepattern, int hp);
-void EnemyDestroy(int num);
-void EnemySpawn(int pattern);
+void EnemySpawn(int type, MoveList move, int x, int y);
 void CheckDistance(int num);
 void EnemyMove(int num);
 void EnemyAction(void);

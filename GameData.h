@@ -36,3 +36,12 @@ enum EnemyShotPattern
 	AimingDiffusion,
 	ShotEnd,
 };
+
+enum MoveList
+{
+	MOVE_A,
+	MOVE_B,
+	MOVE_C,
+	MOVE_D,
+	MOVE_E
+};

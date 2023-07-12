@@ -6,14 +6,6 @@
 #include "Enemy_Bullet.h"
 #include <string>
 
-int SpawnPattern[4][50] = //[stage][NowStageMode]
-{
-	{0,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,0,-1},//Stage1
-	{0,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,0,-1},
-	{0,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,0,-1},
-	{0,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,2,2,2,0,3,0,0,1,1,1,0,3,0,0,0,-1},
-};
-
 int SelectDifficulty = 0;
 
 float StageModeUpdateTime = 120;
@@ -90,7 +82,7 @@ void viewStageTitle(int i)
 	if (StageTitleFadeTime < 500) StageTitleFadeTime++;
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 450 - StageTitleFadeTime);
-	DrawRotaGraph(300, 250 + (StageTitleFadeTime / 8), 1, 0, StageTitle_img[i], TRUE);//画像表示
+	DrawRotaGraph(300, 250 + (StageTitleFadeTime / 8), 1, 0, Enemy_img[i], TRUE);//画像表示
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
 }
 
@@ -118,39 +110,49 @@ void GameProcess(void)
 	ViewStatus();	
 }
 
+int amount = 0;
+void wait(int time)
+{
+	StageModeUpdateTime = time;
+	NowStageMode++;
+}
+void end(SceneManager Next)
+{
+	ChangeSceneActive = true;
+	nextScene = Next;
+	NowStageMode = -1;
+}
+void  spawn(int enemy,int amt, int interval,MoveList move,int posX, int posY)
+{
+	if (amount == 0) amount = amt;
+	else
+	{
+		EnemySpawn(enemy, move, posX, posY);
+		amount--;
+		if (amount == 0) NowStageMode++;
+		else StageModeUpdateTime = interval;
+	}
+}
+
 void StageUpdater(SceneManager Next)
 {
-	int spw = SpawnPattern[0][NowStageMode];
-
 	if (StageModeUpdateTime >= 0) StageModeUpdateTime--;
 	if (StageModeUpdateTime < 0)//120フレーム毎に実行
 	{	
-		NowStageMode++;
-		if (spw == -1)//ステージ終了
+		switch (NowStageMode)
 		{
-			ChangeSceneActive = true;
-			nextScene = Next;
-			NowStageMode = 0;
-		}
-		else if (spw == 0)//�x�e
-		{
-			StageModeUpdateTime = 60;
-		}
-		else if (spw == 1)
-		{
-			EnemySpawn(spw);//�G�o��
-			StageModeUpdateTime = 40;
-		}
-		else if (spw == 2)
-		{
-			EnemySpawn(spw);//�G�o��
-			StageModeUpdateTime = 40;
-		}
-		else if (spw == 3)
-		{
-			EnemySpawn(spw);//�G�o��
-			StageModeUpdateTime = 30;
-		}
+			//spawn(敵タイプ,出現数,出現間隔,移動パターン,X座標,Y座標)
+			case -1: wait(180); break;
+			case 0: wait(180); break;
+			case 1: spawn(0, 3, 40, MOVE_A, 100, 0); break;
+			case 2: wait(180); break;
+			case 3: spawn(0, 3, 40, MOVE_A, 450, 0); break;
+			case 4: wait(60); break;
+			case 5: spawn(1, 1, 40, MOVE_B, 300, 0); break;
+			case 6: wait(240); break;
+			case 7: end(Next); break;
+			default: break;
+		};
 	}
 }
 
