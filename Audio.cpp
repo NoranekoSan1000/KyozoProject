@@ -1,11 +1,11 @@
 #include <DxLib.h>
-int BGM[10];
+int BGM[12];
 int SE_PlayerShot;
 int SE_Bomb;
 
 int NowPlayBGM;
 
-int BGMVolume = 100;
+int BGMVolume = 150;
 int SEVolume = 100;
 
 void AudioInit(void)
@@ -18,13 +18,13 @@ void AudioInit(void)
 	BGM[5] = LoadSoundMem("audio/05_KnightRoad.mp3");
 	BGM[6] = LoadSoundMem("audio/06_Ruthlessblade.mp3");
 	BGM[7] = LoadSoundMem("audio/07_ResonanceAtTwilight.mp3");
-	BGM[8] = LoadSoundMem("audio/08_HermitOfTheAbyss.mp3");
-	BGM[9] = LoadSoundMem("audio/09_EndofTheStory.mp3");
+	BGM[8] = LoadSoundMem("audio/08_null.mp3");
+	BGM[9] = LoadSoundMem("audio/09_HermitOfTheAbyss.mp3");
+	BGM[10] = LoadSoundMem("audio/10_null.mp3");
+	BGM[11] = LoadSoundMem("audio/11_EndofTheStory.mp3");
 	SE_PlayerShot = LoadSoundMem("audio/SE_PlayerShot.mp3");
 	SE_Bomb = LoadSoundMem("audio/SE_BOON.mp3");
 }
-
-
 
 void PlayBGM(int music)
 {

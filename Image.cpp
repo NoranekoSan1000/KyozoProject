@@ -18,8 +18,8 @@ int slash_img;
 int gameFrame_img;
 
 //BackGround
-int StageTitle_img[4];
-int background_img[5];
+int StageTitle_img[5];
+int background_img[6];
 
 int power_img;
 int PlayerShot01_img;
@@ -59,14 +59,14 @@ void ImageInit(void)// ‰æ‘œ‚Ì‰Šú‰»
 	slash_img = LoadGraph("image/Number/sl.png");
 	gameFrame_img = LoadGraph("image/gameFrame.png");
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		char fileName[30]; // “K“–‚È’·‚³‚Ì•¶š—ñ
 		sprintf_s(fileName, "image/StageTitle%d.png", i+1);
 		StageTitle_img[i] = LoadGraph(fileName);
 	}
 	
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		char fileName[30]; // “K“–‚È’·‚³‚Ì•¶š—ñ
 		sprintf_s(fileName, "image/BackGround/%d.png", i);

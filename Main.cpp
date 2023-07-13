@@ -68,10 +68,15 @@ void ViewBackGround(void)//背景ループ
 	else if (GameScene == Stage3_Scene)
 	{
 		DrawRotaGraph(300, 0 + intu, 1, 0, background_img[3], TRUE);//手前
+		DrawRotaGraph(300, 0 + intu, 1, 0, background_img[4], TRUE);//手前
 	}
 	else if (GameScene == Stage4_Scene)
 	{
-		DrawRotaGraph(300, 0 + intu, 1, 0, background_img[4], TRUE);//手前
+		DrawRotaGraph(300, 0 + intu, 1, 0, background_img[5], TRUE);//手前
+	}
+	else if (GameScene == Stage4_Scene)
+	{
+		DrawRotaGraph(300, 0, 1, 0, background_img[6], TRUE);//手前
 	}
 	
 	if (intu >= 800) intu = 0;
@@ -82,7 +87,7 @@ void viewStageTitle(int i)
 	if (StageTitleFadeTime < 500) StageTitleFadeTime++;
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 450 - StageTitleFadeTime);
-	DrawRotaGraph(300, 250 + (StageTitleFadeTime / 8), 1, 0, Enemy_img[i], TRUE);//画像表示
+	DrawRotaGraph(300, 250 + (StageTitleFadeTime / 8), 1, 0, StageTitle_img[i], TRUE);//画像表示
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
 }
 
@@ -144,12 +149,12 @@ void StageUpdater(SceneManager Next)
 			//spawn(敵タイプ,出現数,出現間隔,移動パターン,X座標,Y座標)
 			case -1: wait(180); break;
 			case 0: wait(180); break;
-			case 1: spawn(0, 3, 40, MOVE_A, 150, 0); break;
+			case 1: spawn(0, 3, 40, MOVE_A, 175, 0); break;
 			case 2: wait(180); break;
 			case 3: spawn(0, 3, 40, MOVE_A, 450, 0); break;
 			case 4: wait(60); break;
-			case 5: spawn(1, 1, 40, MOVE_B, 300, 0); break;
-			case 6: wait(240); break;
+			case 5: spawn(1, 1, 40, MOVE_B, 325, 0); break;
+			case 6: wait(1200); break;
 			case 7: end(Next); break;
 			default: break;
 		};
@@ -192,7 +197,7 @@ void Update(void) //毎フレーム処理
 		if (KeyState[KEY_INPUT_Z] == TRUE)
 		{
 			ChangeSceneActive = true;
-			nextScene = Stage1_Scene;//シーン遷移用。この２つはセット
+			nextScene = Stage3_Scene;//シーン遷移用。この２つはセット
 		}
 		if (KeyState[KEY_INPUT_X] == TRUE)
 		{
@@ -230,7 +235,7 @@ void Update(void) //毎フレーム処理
 	}
 	if (GameScene == Stage5_Scene)
 	{
-		PlayBGM(BGM[8]);
+		PlayBGM(BGM[9]);
 		GameProcess();
 		viewStageTitle(4);
 		StageUpdater(Title_Scene);
