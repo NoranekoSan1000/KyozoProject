@@ -9,9 +9,9 @@ struct Enemy
 {
 	int hp;//‘Ì—Í
 };
-Enemy enemy[2] = 
+Enemy enemy[3] = 
 { 
-	{ 4},{ 5}
+	{ 4},{ 5},{ 100}
 };
 
 //“G
@@ -90,7 +90,6 @@ void move(int num, int spdX, int spdY, int time)
 		Enemy_MoveTime[num]--;
 		if (Enemy_MoveTime[num] <= 0) NowMoveMode[num]++;
 	}
-	
 }
 
 void EnemyMove(int num)
@@ -141,6 +140,14 @@ void EnemyMove(int num)
 				default: break;
 			}
 			break;
+		case MOVE_BOSS://ƒ{ƒX
+			switch (NowMoveMode[num])
+			{
+				case 0: move(num, 0, 5, 30); break;
+				case 1: move(num, 0, 0, 160); break;
+				default: break;
+			}
+			break;
 		default:
 			break;
 	}
@@ -159,6 +166,10 @@ void wait(int num,int time)
 {
 	E_ShotCoolTime[num] = time;
 	E_AttackMode[num]++;
+}
+void roop(int num)
+{
+	E_AttackMode[num] = 0;
 }
 void shot(int num, int design, EnemyShotPattern type, int size, int capacity, int arc, int interval)
 {
@@ -188,6 +199,17 @@ void EnemyShotAction(int num)
 				case 1: shot(num, 7, Explosion, 6, 10, NULL, 10); break;
 				case 2: shot(num, 8, Explosion, 6, 10, NULL, 10); break;
 				case 3: shot(num, 9, Explosion, 6, 10, NULL, 5); break;
+			}
+		}
+		if (Enemy_Type[num] == 2)
+		{
+			switch (E_AttackMode[num])
+			{
+				case 0: wait(num, 90); break;
+				case 1: shot(num, 0, Explosion, 6, 20, NULL, 10); break;
+				case 2: shot(num, 1, Explosion, 6, 20, NULL, 10); break;
+				case 3: shot(num, 2, Explosion, 6, 30, NULL, 5); break;
+				case 4: roop(num); break;
 			}
 		}
 	}

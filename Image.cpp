@@ -27,6 +27,7 @@ int PlayerShot02_img;
 int EnemyShot_img[15];
 int Enemy_img[2];
 int player_img[3];
+int orivia_img[3];
 
 int BombEff_img[3];
 
@@ -93,6 +94,9 @@ void ImageInit(void)// ‰æ‘œ‚Ì‰Šú‰»
 	player_img[0] = LoadGraph("image/Player/0.png");
 	player_img[1] = LoadGraph("image/Player/1.png");
 	player_img[2] = LoadGraph("image/Player/2.png");
+	orivia_img[0] = LoadGraph("image/Orivia/0.png");
+	orivia_img[1] = LoadGraph("image/Orivia/1.png");
+	orivia_img[2] = LoadGraph("image/Orivia/2.png");
 
 	BombEff_img[0] = LoadGraph("image/Bomb1.png");
 	BombEff_img[1] = LoadGraph("image/Bomb2.png");

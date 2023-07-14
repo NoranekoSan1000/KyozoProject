@@ -160,8 +160,10 @@ void StageUpdater(SceneManager Next)
 			case  9: spawn(0, 3, 40, MOVE_A, 450, 0); break;
 			case 10: wait(60); break;
 			case 11: spawn(1, 1, 40, MOVE_B, 325, 0); break;
-			case 12: wait(1200); break;
-			case 13: end(Next); break;
+			case 12: wait(120); break;
+			case 13: spawn(2, 1, 40, MOVE_BOSS, 325, 0); break;
+			case 14: wait(48000); break;
+			case 15: end(Next); break;
 			default: break;
 		};
 	}
