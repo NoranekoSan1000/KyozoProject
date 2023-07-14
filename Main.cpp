@@ -148,14 +148,20 @@ void StageUpdater(SceneManager Next)
 		{
 			//spawn(敵タイプ,出現数,出現間隔,移動パターン,X座標,Y座標)
 			case -1: wait(180); break;
-			case 0: wait(180); break;
-			case 1: spawn(0, 3, 40, MOVE_A, 175, 0); break;
-			case 2: wait(180); break;
-			case 3: spawn(0, 3, 40, MOVE_A, 450, 0); break;
-			case 4: wait(60); break;
-			case 5: spawn(1, 1, 40, MOVE_B, 325, 0); break;
-			case 6: wait(1200); break;
-			case 7: end(Next); break;
+			case  0: wait(180); break;
+			case  1: spawn(0, 3, 40, MOVE_A, 175, 0); break;
+			case  2: wait(180); break;
+			case  3: spawn(0, 3, 40, MOVE_A, 450, 0); break;
+			case  4: wait(60); break;
+			case  5: spawn(1, 1, 40, MOVE_B, 325, 0); break;
+			case  6: wait(180); break;
+			case  7: spawn(0, 3, 40, MOVE_A, 175, 0); break;
+			case  8: wait(180); break;
+			case  9: spawn(0, 3, 40, MOVE_A, 450, 0); break;
+			case 10: wait(60); break;
+			case 11: spawn(1, 1, 40, MOVE_B, 325, 0); break;
+			case 12: wait(1200); break;
+			case 13: end(Next); break;
 			default: break;
 		};
 	}
@@ -197,7 +203,7 @@ void Update(void) //毎フレーム処理
 		if (KeyState[KEY_INPUT_Z] == TRUE)
 		{
 			ChangeSceneActive = true;
-			nextScene = Stage3_Scene;//シーン遷移用。この２つはセット
+			nextScene = Stage1_Scene;//シーン遷移用。この２つはセット
 		}
 		if (KeyState[KEY_INPUT_X] == TRUE)
 		{
