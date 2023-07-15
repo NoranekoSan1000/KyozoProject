@@ -132,6 +132,11 @@ void wait(int time)
 	StageModeUpdateTime = time;
 	NowStageMode++;
 }
+void bosswait()
+{
+	if (BossActive) StageModeUpdateTime = 0;
+	else NowStageMode++;
+}
 void end(SceneManager Next)
 {
 	ChangeSceneActive = true;
@@ -171,10 +176,24 @@ void StageUpdater(SceneManager Next)
 			case  9: spawn(0, 3, 40, MOVE_A, 450, 0); break;
 			case 10: wait(60); break;
 			case 11: spawn(1, 1, 40, MOVE_B, 325, 0); break;
-			case 12: wait(120); break;
+			case 12: wait(180); break;
 			case 13: spawn(2, 1, 40, MOVE_BOSS, 325, 0); break;//中ボス
-			case 14: wait(48000); break;
-			case 15: end(Next); break;
+			case 14: bosswait(); break;//中ボス死亡時、次へ
+			case 15: wait(180); break;
+			case 16: spawn(0, 3, 40, MOVE_A, 175, 0); break;
+			case 17: wait(180); break;
+			case 18: spawn(0, 3, 40, MOVE_A, 450, 0); break;
+			case 19: wait(60); break;
+			case 20: spawn(1, 1, 40, MOVE_B, 325, 0); break;
+			case 21: wait(180); break;
+			case 22: spawn(0, 3, 40, MOVE_A, 175, 0); break;
+			case 23: wait(180); break;
+			case 24: spawn(0, 3, 40, MOVE_A, 450, 0); break;
+			case 25: wait(60); break;
+			case 26: spawn(1, 1, 40, MOVE_B, 325, 0); break;
+			case 27: wait(120); break;
+			case 28: spawn(2, 1, 40, MOVE_BOSS, 325, 0); break;//中ボス
+			case 29: end(Next); break;
 			default: break;
 		};
 	}
