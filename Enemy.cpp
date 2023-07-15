@@ -33,6 +33,12 @@ int E_AttackMode[ENEMY_AMOUNT];//射撃パターンの遷移
 int CloseEnemy = -1;
 float CloseDist = 1100;
 
+bool BossActive = false;
+int Boss = 0;
+int BossMaxHp = 0;
+int BossCurrentHp = 0;
+int BossStock = 0;//ターン数
+
 void EnemyGenerate(int num, int type ,int move ,int x, int y, int hitboxsize)
 {
 	Enemy_exist[num] = true;
@@ -47,6 +53,15 @@ void EnemyGenerate(int num, int type ,int move ,int x, int y, int hitboxsize)
 	Enemy_HP[num] = enemy[Enemy_Type[num]].hp;
 	E_ShotCoolTime[num] = 0;
 	E_AttackMode[num] = 0;
+
+	if (enemy[type].boss == true)
+	{
+		BossActive = true;
+		Boss = num;
+		BossMaxHp = enemy[Enemy_Type[num]].hp;
+		BossCurrentHp = enemy[Enemy_Type[num]].hp;
+		BossStock = 1;
+	}
 }
 
 void EnemyDestroy(int num)
@@ -168,9 +183,9 @@ void wait(int num,int time)
 	E_ShotCoolTime[num] = time;
 	E_AttackMode[num]++;
 }
-void roop(int num)
+void loop(int num,int back)
 {
-	E_AttackMode[num] = 0;
+	E_AttackMode[num] = back;
 }
 void shot(int num, int design, EnemyShotPattern type, int size, int capacity, int arc, int interval)
 {
@@ -210,7 +225,7 @@ void EnemyShotAction(int num)
 				case 1: shot(num, 0, Explosion, 6, 20, NULL, 10); break;
 				case 2: shot(num, 1, Explosion, 6, 20, NULL, 10); break;
 				case 3: shot(num, 2, Explosion, 6, 30, NULL, 5); break;
-				case 4: roop(num); break;
+				case 4: loop(num, 0); break;
 			}
 		}
 	}
@@ -219,8 +234,10 @@ void EnemyShotAction(int num)
 
 void EnemyAction(void)
 {
+
 	for (int i = 0; i < ENEMY_AMOUNT; i++)
 	{
+
 		//敵キャラ画像表示
 		if (Enemy_exist[i] == true) DrawRotaGraph(Enemy_X[i], Enemy_Y[i], 1.0, 0, Enemy_img[Enemy_Type[i]], TRUE); //画像の描画
 		else continue;
@@ -284,7 +301,24 @@ void EnemyAction(void)
 			}
 
 			if(Enemy_HP[i] <= 0)//死亡時
-			{
+			{		
+				if (i == Boss && BossStock == 0)
+				{
+					BossActive = false;
+					BossStock = NULL;
+					BossMaxHp = NULL;
+					BossCurrentHp = NULL;
+					Boss = NULL;				
+				}
+				else if (i == Boss && BossStock > 0) //次のターン
+				{
+					BossStock--;
+					Enemy_HP[i] = enemy[Enemy_Type[i]].hp;
+					BossMaxHp = enemy[Enemy_Type[i]].hp;
+					BossCurrentHp = enemy[Enemy_Type[i]].hp;
+					break;
+				}
+				
 				Score += 10;
 				ItemSpawn(Enemy_X[i], Enemy_Y[i]);//アイテム生成
 				EnemyDestroy(i);

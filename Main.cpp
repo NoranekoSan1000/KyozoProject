@@ -93,8 +93,11 @@ void viewStageTitle(int i)
 
 void viewBossHpBar(void)
 {
+	BossCurrentHp = Enemy_HP[Boss];
+	
 	DrawBox(25, 20, 600, 36, GetColor(0, 0, 0), 1);
-	DrawBox(25, 16, 600, 32, GetColor(0, 255, 0), 1);
+	DrawBox(25, 16, ((555 * BossCurrentHp) / BossMaxHp)+25, 32, GetColor(0, 255, 0), 1);
+	DrawFormatString(590, 18, GetColor(0, 255, 0), "%d ", BossStock);
 }
 
 void GameProcess(void)
@@ -120,7 +123,7 @@ void GameProcess(void)
 	ViewFadeWindow();
 	ViewStatus();	
 
-	viewBossHpBar();
+	if(BossActive) viewBossHpBar();
 }
 
 int amount = 0;
