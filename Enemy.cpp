@@ -8,10 +8,11 @@ using namespace std;
 struct Enemy
 {
 	int hp;//‘Ì—Í
+	bool boss;
 };
 Enemy enemy[3] = 
 { 
-	{ 4},{ 5},{ 100}
+	{3 ,false},{4 ,false},{100 ,true}
 };
 
 //“G

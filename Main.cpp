@@ -91,6 +91,12 @@ void viewStageTitle(int i)
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
 }
 
+void viewBossHpBar(void)
+{
+	DrawBox(25, 20, 600, 36, GetColor(0, 0, 0), 1);
+	DrawBox(25, 16, 600, 32, GetColor(0, 255, 0), 1);
+}
+
 void GameProcess(void)
 {
 	ViewBackGround(); //Fade用黒背景 ViewBackGroundが挿入されていないシーンではフェードは反映されない
@@ -113,6 +119,8 @@ void GameProcess(void)
 
 	ViewFadeWindow();
 	ViewStatus();	
+
+	viewBossHpBar();
 }
 
 int amount = 0;
@@ -161,7 +169,7 @@ void StageUpdater(SceneManager Next)
 			case 10: wait(60); break;
 			case 11: spawn(1, 1, 40, MOVE_B, 325, 0); break;
 			case 12: wait(120); break;
-			case 13: spawn(2, 1, 40, MOVE_BOSS, 325, 0); break;
+			case 13: spawn(2, 1, 40, MOVE_BOSS, 325, 0); break;//中ボス
 			case 14: wait(48000); break;
 			case 15: end(Next); break;
 			default: break;
