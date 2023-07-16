@@ -192,8 +192,9 @@ void StageUpdater(SceneManager Next)
 			case 25: wait(60); break;
 			case 26: spawn(1, 1, 40, MOVE_B, 325, 0); break;
 			case 27: wait(120); break;
-			case 28: spawn(2, 1, 40, MOVE_BOSS, 325, 0); break;//中ボス
-			case 29: end(Next); break;
+			case 28: spawn(2, 1, 40, MOVE_BOSS, 325, 0); break;//ボス
+			case 29: bosswait(); break;//中ボス死亡時、次へ
+			case 30: end(Next); break;
 			default: break;
 		};
 	}

@@ -40,7 +40,7 @@ void ItemSpawn(int en_x,int en_y)
 
 void ItemMove(int num)
 {
-	if (!CollectTime[num]) Item_Y[num] += 2;
+	if (!CollectTime[num]) Item_Y[num] += 1;
 	else
 	{
 		if (px < Item_X[num] - 8) Item_X[num] -= 8;

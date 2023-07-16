@@ -219,14 +219,30 @@ void EnemyShotAction(int num)
 		}
 		if (Enemy_Type[num] == 2)
 		{
-			switch (E_AttackMode[num])
+			if (BossStock == 1)
 			{
+				switch (E_AttackMode[num])
+				{
 				case 0: wait(num, 90); break;
 				case 1: shot(num, 0, Explosion, 6, 20, NULL, 10); break;
 				case 2: shot(num, 1, Explosion, 6, 20, NULL, 10); break;
 				case 3: shot(num, 2, Explosion, 6, 30, NULL, 5); break;
 				case 4: loop(num, 0); break;
+				}
 			}
+			if (BossStock == 0)
+			{
+				switch (E_AttackMode[num])
+				{
+				case 0: wait(num, 90); break;
+				case 1: shot(num, 5, Explosion, 10, 20, NULL, 20); break;
+				case 2: shot(num, 6, Explosion, 10, 20, NULL, 20); break;
+				case 3: shot(num, 7, Explosion, 10, 30, NULL, 20); break;
+				case 4: shot(num, 8, Explosion, 10, 30, NULL, 20); break;
+				case 5: loop(num, 0); break;
+				}
+			}
+			
 		}
 	}
 	
@@ -316,6 +332,8 @@ void EnemyAction(void)
 					Enemy_HP[i] = enemy[Enemy_Type[i]].hp;
 					BossMaxHp = enemy[Enemy_Type[i]].hp;
 					BossCurrentHp = enemy[Enemy_Type[i]].hp;
+					E_AttackMode[i] = 0;
+					E_ShotCoolTime[i] = 0;
 					break;
 				}
 				
