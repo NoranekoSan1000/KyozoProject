@@ -31,6 +31,9 @@ int orivia_img[3];
 
 int BombEff_img[3];
 
+int CharaTalk_img[3];
+int talkwindow_img;
+
 void ImageInit(void)// ‰æ‘œ‚Ì‰Šú‰»
 {
 	Title_img = LoadGraph("image/title.png");
@@ -101,4 +104,12 @@ void ImageInit(void)// ‰æ‘œ‚Ì‰Šú‰»
 	BombEff_img[0] = LoadGraph("image/Bomb1.png");
 	BombEff_img[1] = LoadGraph("image/Bomb2.png");
 	BombEff_img[2] = LoadGraph("image/Bomb3.png");
+
+	for (int i = 0; i < 3; i++)
+	{
+		char fileName[30]; // “K“–‚È’·‚³‚Ì•¶š—ñ
+		sprintf_s(fileName, "image/Character/%d.png", i + 1);
+		CharaTalk_img[i] = LoadGraph(fileName);
+	}
+	talkwindow_img = LoadGraph("image/talkwindow.png");
 }

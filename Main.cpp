@@ -154,6 +154,10 @@ void  spawn(int enemy,int amt, int interval,MoveList move,int posX, int posY)
 		else StageModeUpdateTime = interval;
 	}
 }
+void talk()
+{
+	DrawRotaGraph(450, 140, 1, 0, talkwindow_img, TRUE);//画像表示
+}
 
 void StageUpdater(SceneManager Next)
 {
@@ -192,9 +196,10 @@ void StageUpdater(SceneManager Next)
 			case 25: wait(60); break;
 			case 26: spawn(1, 1, 40, MOVE_B, 325, 0); break;
 			case 27: wait(120); break;
-			case 28: spawn(2, 1, 40, MOVE_BOSS, 325, 0); break;//ボス
-			case 29: bosswait(); break;//中ボス死亡時、次へ
-			case 30: end(Next); break;
+			case 28: talk(); break;
+			case 29: spawn(2, 1, 40, MOVE_BOSS, 325, 0); break;//ボス
+			case 30: bosswait(); break;//中ボス死亡時、次へ
+			case 31: end(Next); break;
 			default: break;
 		};
 	}
