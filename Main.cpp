@@ -156,7 +156,9 @@ void  spawn(int enemy,int amt, int interval,MoveList move,int posX, int posY)
 }
 void talk()
 {
-	DrawRotaGraph(450, 140, 1, 0, talkwindow_img, TRUE);//画像表示
+	DrawRotaGraph(515, 575, 1, 0, CharaTalk_img[0], TRUE);//画像表示
+	DrawRotaGraph(115, 575, 1, 0, CharaTalk_img[1], TRUE);//画像表示
+	DrawRotaGraph(315, 675, 1, 0, talkwindow_img, TRUE);//画像表示
 }
 
 void StageUpdater(SceneManager Next)

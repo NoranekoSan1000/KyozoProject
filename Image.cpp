@@ -108,7 +108,7 @@ void ImageInit(void)// ‰æ‘œ‚Ì‰Šú‰»
 	for (int i = 0; i < 3; i++)
 	{
 		char fileName[30]; // “K“–‚È’·‚³‚Ì•¶š—ñ
-		sprintf_s(fileName, "image/Character/%d.png", i + 1);
+		sprintf_s(fileName, "image/Character/%d.png", i);
 		CharaTalk_img[i] = LoadGraph(fileName);
 	}
 	talkwindow_img = LoadGraph("image/talkwindow.png");
