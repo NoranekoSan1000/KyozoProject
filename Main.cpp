@@ -88,7 +88,7 @@ void viewStageTitle(int i)
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 450 - StageTitleFadeTime);
 	DrawRotaGraph(300, 250 + (StageTitleFadeTime / 8), 1, 0, StageTitle_img[i], TRUE);//画像表示
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 }
 
 void viewBossHpBar(void)
@@ -143,7 +143,7 @@ void end(SceneManager Next)
 	nextScene = Next;
 	NowStageMode = -1;
 }
-void  spawn(int enemy,int amt, int interval,MoveList move,int posX, int posY)
+void spawn(int enemy,int amt, int interval,MoveList move,int posX, int posY)
 {
 	if (amount == 0) amount = amt;
 	else
@@ -156,8 +156,18 @@ void  spawn(int enemy,int amt, int interval,MoveList move,int posX, int posY)
 }
 void talk()
 {
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
 	DrawRotaGraph(515, 575, 1, 0, CharaTalk_img[0], TRUE);//画像表示
-	DrawRotaGraph(115, 575, 1, 0, CharaTalk_img[1], TRUE);//画像表示
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
+	if (GameScene == Stage1_Scene) DrawRotaGraph(115, 575, 1, 0, CharaTalk_img[1], TRUE);//画像表示
+	else if (GameScene == Stage2_Scene) DrawRotaGraph(115, 575, 1, 0, CharaTalk_img[2], TRUE);//画像表示
+	else if (GameScene == Stage3_Scene) DrawRotaGraph(115, 575, 1, 0, CharaTalk_img[3], TRUE);//画像表示
+	else if (GameScene == Stage4_Scene) DrawRotaGraph(115, 575, 1, 0, CharaTalk_img[4], TRUE);//画像表示
+	else if (GameScene == Stage5_Scene) DrawRotaGraph(115, 575, 1, 0, CharaTalk_img[5], TRUE);//画像表示
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+
 	DrawRotaGraph(315, 675, 1, 0, talkwindow_img, TRUE);//画像表示
 }
 
@@ -200,7 +210,7 @@ void StageUpdater(SceneManager Next)
 			case 27: wait(120); break;
 			case 28: talk(); break;
 			case 29: spawn(2, 1, 40, MOVE_BOSS, 325, 0); break;//ボス
-			case 30: bosswait(); break;//中ボス死亡時、次へ
+			case 30: bosswait(); break;//ボス死亡時、次へ
 			case 31: end(Next); break;
 			default: break;
 		};
@@ -236,7 +246,7 @@ void Update(void) //毎フレーム処理
 			{
 				SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
 				DrawRotaGraph(450, 140 + (i * 170), 1, 0, DifficultyLv_img[i], TRUE);//画像表示
-				SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
+				SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 			}
 			
 		}

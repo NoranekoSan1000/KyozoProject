@@ -105,7 +105,7 @@ void ImageInit(void)// ‰æ‘œ‚Ì‰Šú‰»
 	BombEff_img[1] = LoadGraph("image/Bomb2.png");
 	BombEff_img[2] = LoadGraph("image/Bomb3.png");
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		char fileName[30]; // “K“–‚È’·‚³‚Ì•¶š—ñ
 		sprintf_s(fileName, "image/Character/%d.png", i);
