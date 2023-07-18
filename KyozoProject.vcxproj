@@ -149,6 +149,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Player_Bullet.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="Talk.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enemy_Bullet.h" />
@@ -161,6 +162,7 @@
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Player_Bullet.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="Talk.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

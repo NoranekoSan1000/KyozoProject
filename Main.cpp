@@ -5,6 +5,7 @@
 #include "Player_Bullet.h"
 #include "Enemy_Bullet.h"
 #include <string>
+#include "Talk.h"
 
 int SelectDifficulty = 0;
 
@@ -156,11 +157,13 @@ void spawn(int enemy,int amt, int interval,MoveList move,int posX, int posY)
 }
 void talk()
 {
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
+	TalkActive = true;
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80 + (275 * PlayerTalk));
 	DrawRotaGraph(515, 575, 1, 0, CharaTalk_img[0], TRUE);//画像表示
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80 + (275 * BossTalk));
 	if (GameScene == Stage1_Scene) DrawRotaGraph(115, 575, 1, 0, CharaTalk_img[1], TRUE);//画像表示
 	else if (GameScene == Stage2_Scene) DrawRotaGraph(115, 575, 1, 0, CharaTalk_img[2], TRUE);//画像表示
 	else if (GameScene == Stage3_Scene) DrawRotaGraph(115, 575, 1, 0, CharaTalk_img[3], TRUE);//画像表示
@@ -169,6 +172,13 @@ void talk()
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 
 	DrawRotaGraph(315, 675, 1, 0, talkwindow_img, TRUE);//画像表示
+
+	if (KeyState[KEY_INPUT_Z] == TRUE)
+	{
+		TalkStep++;
+	}
+
+	if(!TalkActive) NowStageMode++; //会話終了を検知
 }
 
 void StageUpdater(SceneManager Next)
