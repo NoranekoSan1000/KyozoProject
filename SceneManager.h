@@ -7,6 +7,7 @@ enum SceneManager
 	Stage2_Scene,
 	Stage3_Scene,
 	Stage4_Scene,
+	Stage5_Scene,
 	MusicRoom_Scene,
 };
 

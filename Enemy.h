@@ -16,6 +16,12 @@ extern float E_ShotCoolTime[];
 extern int CloseEnemy;
 extern float CloseDist;
 
+extern bool BossActive;
+extern int Boss;
+extern int BossMaxHp;
+extern int BossCurrentHp;
+extern int BossStock;
+
 void EnemySpawn(int type, MoveList move, int x, int y);
 void CheckDistance(int num);
 void EnemyMove(int num);

@@ -68,10 +68,15 @@ void ViewBackGround(void)//背景ループ
 	else if (GameScene == Stage3_Scene)
 	{
 		DrawRotaGraph(300, 0 + intu, 1, 0, background_img[3], TRUE);//手前
+		DrawRotaGraph(300, 0 + intu, 1, 0, background_img[4], TRUE);//手前
 	}
 	else if (GameScene == Stage4_Scene)
 	{
-		DrawRotaGraph(300, 0 + intu, 1, 0, background_img[4], TRUE);//手前
+		DrawRotaGraph(300, 0 + intu, 1, 0, background_img[5], TRUE);//手前
+	}
+	else if (GameScene == Stage4_Scene)
+	{
+		DrawRotaGraph(300, 0, 1, 0, background_img[6], TRUE);//手前
 	}
 	
 	if (intu >= 800) intu = 0;
@@ -82,8 +87,17 @@ void viewStageTitle(int i)
 	if (StageTitleFadeTime < 500) StageTitleFadeTime++;
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 450 - StageTitleFadeTime);
-	DrawRotaGraph(300, 250 + (StageTitleFadeTime / 8), 1, 0, Enemy_img[i], TRUE);//画像表示
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
+	DrawRotaGraph(300, 250 + (StageTitleFadeTime / 8), 1, 0, StageTitle_img[i], TRUE);//画像表示
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+}
+
+void viewBossHpBar(void)
+{
+	BossCurrentHp = Enemy_HP[Boss];
+	
+	DrawBox(25, 20, 600, 36, GetColor(0, 0, 0), 1);
+	DrawBox(25, 16, ((555 * BossCurrentHp) / BossMaxHp)+25, 32, GetColor(0, 255, 0), 1);
+	DrawFormatString(590, 18, GetColor(0, 255, 0), "%d ", BossStock);
 }
 
 void GameProcess(void)
@@ -108,6 +122,8 @@ void GameProcess(void)
 
 	ViewFadeWindow();
 	ViewStatus();	
+
+	if(BossActive) viewBossHpBar();
 }
 
 int amount = 0;
@@ -116,13 +132,18 @@ void wait(int time)
 	StageModeUpdateTime = time;
 	NowStageMode++;
 }
+void bosswait()
+{
+	if (BossActive) StageModeUpdateTime = 0;
+	else NowStageMode++;
+}
 void end(SceneManager Next)
 {
 	ChangeSceneActive = true;
 	nextScene = Next;
 	NowStageMode = -1;
 }
-void  spawn(int enemy,int amt, int interval,MoveList move,int posX, int posY)
+void spawn(int enemy,int amt, int interval,MoveList move,int posX, int posY)
 {
 	if (amount == 0) amount = amt;
 	else
@@ -132,6 +153,22 @@ void  spawn(int enemy,int amt, int interval,MoveList move,int posX, int posY)
 		if (amount == 0) NowStageMode++;
 		else StageModeUpdateTime = interval;
 	}
+}
+void talk()
+{
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
+	DrawRotaGraph(515, 575, 1, 0, CharaTalk_img[0], TRUE);//画像表示
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
+	if (GameScene == Stage1_Scene) DrawRotaGraph(115, 575, 1, 0, CharaTalk_img[1], TRUE);//画像表示
+	else if (GameScene == Stage2_Scene) DrawRotaGraph(115, 575, 1, 0, CharaTalk_img[2], TRUE);//画像表示
+	else if (GameScene == Stage3_Scene) DrawRotaGraph(115, 575, 1, 0, CharaTalk_img[3], TRUE);//画像表示
+	else if (GameScene == Stage4_Scene) DrawRotaGraph(115, 575, 1, 0, CharaTalk_img[4], TRUE);//画像表示
+	else if (GameScene == Stage5_Scene) DrawRotaGraph(115, 575, 1, 0, CharaTalk_img[5], TRUE);//画像表示
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+
+	DrawRotaGraph(315, 675, 1, 0, talkwindow_img, TRUE);//画像表示
 }
 
 void StageUpdater(SceneManager Next)
@@ -143,14 +180,38 @@ void StageUpdater(SceneManager Next)
 		{
 			//spawn(敵タイプ,出現数,出現間隔,移動パターン,X座標,Y座標)
 			case -1: wait(180); break;
-			case 0: wait(180); break;
-			case 1: spawn(0, 3, 40, MOVE_A, 100, 0); break;
-			case 2: wait(180); break;
-			case 3: spawn(0, 3, 40, MOVE_A, 450, 0); break;
-			case 4: wait(60); break;
-			case 5: spawn(1, 1, 40, MOVE_B, 300, 0); break;
-			case 6: wait(240); break;
-			case 7: end(Next); break;
+			case  0: wait(180); break;
+			case  1: spawn(0, 3, 40, MOVE_A, 175, 0); break;
+			case  2: wait(180); break;
+			case  3: spawn(0, 3, 40, MOVE_A, 450, 0); break;
+			case  4: wait(60); break;
+			case  5: spawn(1, 1, 40, MOVE_B, 325, 0); break;
+			case  6: wait(180); break;
+			case  7: spawn(0, 3, 40, MOVE_A, 175, 0); break;
+			case  8: wait(180); break;
+			case  9: spawn(0, 3, 40, MOVE_A, 450, 0); break;
+			case 10: wait(60); break;
+			case 11: spawn(1, 1, 40, MOVE_B, 325, 0); break;
+			case 12: wait(180); break;
+			case 13: spawn(2, 1, 40, MOVE_BOSS, 325, 0); break;//中ボス
+			case 14: bosswait(); break;//中ボス死亡時、次へ
+			case 15: wait(180); break;
+			case 16: spawn(0, 3, 40, MOVE_A, 175, 0); break;
+			case 17: wait(180); break;
+			case 18: spawn(0, 3, 40, MOVE_A, 450, 0); break;
+			case 19: wait(60); break;
+			case 20: spawn(1, 1, 40, MOVE_B, 325, 0); break;
+			case 21: wait(180); break;
+			case 22: spawn(0, 3, 40, MOVE_A, 175, 0); break;
+			case 23: wait(180); break;
+			case 24: spawn(0, 3, 40, MOVE_A, 450, 0); break;
+			case 25: wait(60); break;
+			case 26: spawn(1, 1, 40, MOVE_B, 325, 0); break;
+			case 27: wait(120); break;
+			case 28: talk(); break;
+			case 29: spawn(2, 1, 40, MOVE_BOSS, 325, 0); break;//ボス
+			case 30: bosswait(); break;//ボス死亡時、次へ
+			case 31: end(Next); break;
 			default: break;
 		};
 	}
@@ -185,7 +246,7 @@ void Update(void) //毎フレーム処理
 			{
 				SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
 				DrawRotaGraph(450, 140 + (i * 170), 1, 0, DifficultyLv_img[i], TRUE);//画像表示
-				SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
+				SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 			}
 			
 		}
@@ -226,6 +287,13 @@ void Update(void) //毎フレーム処理
 		PlayBGM(BGM[7]);
 		GameProcess();
 		viewStageTitle(3);
+		StageUpdater(Stage5_Scene);
+	}
+	if (GameScene == Stage5_Scene)
+	{
+		PlayBGM(BGM[9]);
+		GameProcess();
+		viewStageTitle(4);
 		StageUpdater(Title_Scene);
 	}
 }

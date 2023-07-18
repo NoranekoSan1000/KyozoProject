@@ -24,7 +24,11 @@ extern int PlayerShot02_img;
 extern int EnemyShot_img[];
 extern int Enemy_img[];
 extern int player_img[];
+extern int orivia_img[];
 
 extern int BombEff_img[];
+
+extern int CharaTalk_img[];
+extern int talkwindow_img;
 
 void ImageInit(void);

@@ -5,6 +5,8 @@
 #include "Item.h"
 #include "Player.h"
 
+void StatusReset(void);
+
 float StageTitleFadeTime = 0;
 
 bool FadeIn = false;
@@ -59,9 +61,22 @@ void ChangeScene(void)
 		StageTitleFadeTime = 0;
 		px = InitialPosX;
 		py = InitialPosY;
+		if (nextScene == Title_Scene) StatusReset();
 		GameScene = nextScene;
 		FadeIn = true;
 		ChangeSceneActive = false;
 	}
+}
+
+void StatusReset(void)
+{
+	Power = 0;
+	Level = 0;
+	Score = 0;
+	Life = 3;
+	Bomb = 2;
+	BombTime = 0;
+	DamagedCoolTime = 0;
+	P_ShotCoolTime = 0;
 }
 

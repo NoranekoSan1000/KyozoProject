@@ -18,8 +18,8 @@ int slash_img;
 int gameFrame_img;
 
 //BackGround
-int StageTitle_img[4];
-int background_img[5];
+int StageTitle_img[5];
+int background_img[6];
 
 int power_img;
 int PlayerShot01_img;
@@ -27,8 +27,12 @@ int PlayerShot02_img;
 int EnemyShot_img[15];
 int Enemy_img[2];
 int player_img[3];
+int orivia_img[3];
 
 int BombEff_img[3];
+
+int CharaTalk_img[3];
+int talkwindow_img;
 
 void ImageInit(void)// ‰æ‘œ‚Ì‰Šú‰»
 {
@@ -59,14 +63,14 @@ void ImageInit(void)// ‰æ‘œ‚Ì‰Šú‰»
 	slash_img = LoadGraph("image/Number/sl.png");
 	gameFrame_img = LoadGraph("image/gameFrame.png");
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		char fileName[30]; // “K“–‚È’·‚³‚Ì•¶š—ñ
 		sprintf_s(fileName, "image/StageTitle%d.png", i+1);
 		StageTitle_img[i] = LoadGraph(fileName);
 	}
 	
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		char fileName[30]; // “K“–‚È’·‚³‚Ì•¶š—ñ
 		sprintf_s(fileName, "image/BackGround/%d.png", i);
@@ -93,8 +97,19 @@ void ImageInit(void)// ‰æ‘œ‚Ì‰Šú‰»
 	player_img[0] = LoadGraph("image/Player/0.png");
 	player_img[1] = LoadGraph("image/Player/1.png");
 	player_img[2] = LoadGraph("image/Player/2.png");
+	orivia_img[0] = LoadGraph("image/Orivia/0.png");
+	orivia_img[1] = LoadGraph("image/Orivia/1.png");
+	orivia_img[2] = LoadGraph("image/Orivia/2.png");
 
 	BombEff_img[0] = LoadGraph("image/Bomb1.png");
 	BombEff_img[1] = LoadGraph("image/Bomb2.png");
 	BombEff_img[2] = LoadGraph("image/Bomb3.png");
+
+	for (int i = 0; i < 6; i++)
+	{
+		char fileName[30]; // “K“–‚È’·‚³‚Ì•¶š—ñ
+		sprintf_s(fileName, "image/Character/%d.png", i);
+		CharaTalk_img[i] = LoadGraph(fileName);
+	}
+	talkwindow_img = LoadGraph("image/talkwindow.png");
 }

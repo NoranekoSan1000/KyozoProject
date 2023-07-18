@@ -43,5 +43,6 @@ enum MoveList
 	MOVE_B,
 	MOVE_C,
 	MOVE_D,
-	MOVE_E
+	MOVE_E,
+	MOVE_BOSS
 };
