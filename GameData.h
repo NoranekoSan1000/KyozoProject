@@ -23,6 +23,7 @@ using namespace std;
 #define FRAME_HEIGHT 775
 
 extern float StageTitleFadeTime;
+extern bool BossBGM;
 
 enum Difficulty { Easy, Normal, Hard, HellDiva };
 
