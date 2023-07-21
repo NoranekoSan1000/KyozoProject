@@ -12,7 +12,7 @@ struct Enemy
 };
 Enemy enemy[3] = 
 { 
-	{3 ,false},{4 ,false},{100 ,true}
+	{3 ,false},{4 ,false},{75 ,true}
 };
 
 //“G

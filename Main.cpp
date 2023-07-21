@@ -5,11 +5,14 @@
 #include "Player_Bullet.h"
 #include "Enemy_Bullet.h"
 #include <string>
+#include "Talk.h"
 
 int SelectDifficulty = 0;
 
 float StageModeUpdateTime = 120;
 int NowStageMode = 0;
+
+bool BossBGM = false;
 
 void ViewStatus(void)
 {
@@ -156,11 +159,17 @@ void spawn(int enemy,int amt, int interval,MoveList move,int posX, int posY)
 }
 void talk()
 {
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
+	TalkActive = true;
+
+	if(PlayerTalk == 0) SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0);
+	else if (PlayerTalk == 1) SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
+	else if (PlayerTalk == 2)SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 	DrawRotaGraph(515, 575, 1, 0, CharaTalk_img[0], TRUE);//画像表示
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
+	if (BossTalk == 0) SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0);
+	else if (BossTalk == 1) SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
+	else if (BossTalk == 2)SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 	if (GameScene == Stage1_Scene) DrawRotaGraph(115, 575, 1, 0, CharaTalk_img[1], TRUE);//画像表示
 	else if (GameScene == Stage2_Scene) DrawRotaGraph(115, 575, 1, 0, CharaTalk_img[2], TRUE);//画像表示
 	else if (GameScene == Stage3_Scene) DrawRotaGraph(115, 575, 1, 0, CharaTalk_img[3], TRUE);//画像表示
@@ -169,6 +178,20 @@ void talk()
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 
 	DrawRotaGraph(315, 675, 1, 0, talkwindow_img, TRUE);//画像表示
+	TalkProcess();
+
+	if (KeyState[KEY_INPUT_Z] == TRUE)
+	{
+		TalkStep++;
+	}
+
+	if (!TalkActive)
+	{
+		BossBGM = true;
+		NowStageMode++; //会話終了を検知
+		TalkStep = 0;
+		TalkScene++;
+	}
 }
 
 void StageUpdater(SceneManager Next)
@@ -219,6 +242,11 @@ void StageUpdater(SceneManager Next)
 
 void Update(void) //毎フレーム処理
 {
+	if (KeyState[KEY_INPUT_P] == TRUE)//デバッグ用
+	{
+		NowStageMode++;
+	}
+
 	ChangeScene();//fadeを用いたシーンチェンジ　ChangeSceneActive -> trueで実行
 
 	if (GameScene == Title_Scene)
@@ -263,35 +291,35 @@ void Update(void) //毎フレーム処理
 	}
 	if (GameScene == Stage1_Scene)
 	{
-		PlayBGM(BGM[1]);
+		PlayBGM(BGM[1 + BossBGM]);
 		GameProcess();
 		viewStageTitle(0);
 		StageUpdater(Stage2_Scene);//引数に次のステージ
 	}
 	if (GameScene == Stage2_Scene)
 	{
-		PlayBGM(BGM[3]);
+		PlayBGM(BGM[3 + BossBGM]);
 		GameProcess();
 		viewStageTitle(1);
 		StageUpdater(Stage3_Scene);//引数に次のステージ
 	}
 	if (GameScene == Stage3_Scene)
 	{
-		PlayBGM(BGM[5]);
+		PlayBGM(BGM[5 + BossBGM]);
 		GameProcess();
 		viewStageTitle(2);
 		StageUpdater(Stage4_Scene);
 	}
 	if (GameScene == Stage4_Scene)
 	{
-		PlayBGM(BGM[7]);
+		PlayBGM(BGM[7 + BossBGM]);
 		GameProcess();
 		viewStageTitle(3);
 		StageUpdater(Stage5_Scene);
 	}
 	if (GameScene == Stage5_Scene)
 	{
-		PlayBGM(BGM[9]);
+		PlayBGM(BGM[9 + BossBGM]);
 		GameProcess();
 		viewStageTitle(4);
 		StageUpdater(Title_Scene);
@@ -306,6 +334,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 	SetOutApplicationLogValidFlag(FALSE);//Log.txtを生成しないように設定
 	SetMainWindowText("鏡像の歌姫 - Reflection of Diva -");
 	SetBackgroundColor(100, 100, 100);
+
 
 	if (DxLib_Init() == -1) { return -1; }		// ＤＸライブラリ初期化処理  エラーが起きたら直ちに終了
 

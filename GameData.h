@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <DxLib.h>
 #include <math.h>
+#include <string>
 #include "KeyManager.h"
 #include "Image.h"
 #include "Audio.h"
@@ -22,6 +23,8 @@ using namespace std;
 #define FRAME_HEIGHT 775
 
 extern float StageTitleFadeTime;
+extern bool BossBGM;
+extern int TalkScene;
 
 enum Difficulty { Easy, Normal, Hard, HellDiva };
 
