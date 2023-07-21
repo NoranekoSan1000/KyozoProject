@@ -161,11 +161,15 @@ void talk()
 {
 	TalkActive = true;
 
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80 + (275 * PlayerTalk));
+	if(PlayerTalk == 0) SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0);
+	else if (PlayerTalk == 1) SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
+	else if (PlayerTalk == 2)SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 	DrawRotaGraph(515, 575, 1, 0, CharaTalk_img[0], TRUE);//画像表示
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80 + (275 * BossTalk));
+	if (BossTalk == 0) SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0);
+	else if (BossTalk == 1) SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
+	else if (BossTalk == 2)SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 	if (GameScene == Stage1_Scene) DrawRotaGraph(115, 575, 1, 0, CharaTalk_img[1], TRUE);//画像表示
 	else if (GameScene == Stage2_Scene) DrawRotaGraph(115, 575, 1, 0, CharaTalk_img[2], TRUE);//画像表示
 	else if (GameScene == Stage3_Scene) DrawRotaGraph(115, 575, 1, 0, CharaTalk_img[3], TRUE);//画像表示

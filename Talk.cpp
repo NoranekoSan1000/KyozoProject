@@ -1,8 +1,8 @@
 #include "GameData.h"
 
 bool TalkActive = false;
-bool PlayerTalk = false;
-bool BossTalk = false;
+int PlayerTalk = 0;
+int BossTalk = 0;
 
 int TalkStep = 0;
 string str = "";
@@ -12,16 +12,16 @@ int Font = CreateFontToHandle("ＭＳ ゴシック", 50, 9, DX_FONTTYPE_ANTIALIASING);
 struct TalkList
 {
 	char Conversation[50];
-	bool p;
-	bool b;
+	int p; //0 <-Disable 1<-stand-by 2<-Enable
+	int b;
 };
 
 TalkList talklist[4] = 
 { 
-	{"こんにちは\0",true,false},
-	{"さようなら\0",false,true},
-	{"なんですか\0",true,false},
-	{"\0",false,false}//終了
+	{"そこのお前！とまれ！\0",0,0},
+	{"お前、確か指名手配されていた女だな！\0",1,2},
+	{"あれは私じゃないわ。別人よ。\0",2,1},
+	{"\0",0,0}//終了
 };
 
 void TalkProcess(void)
