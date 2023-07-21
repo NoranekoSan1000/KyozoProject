@@ -190,6 +190,7 @@ void talk()
 		BossBGM = true;
 		NowStageMode++; //会話終了を検知
 		TalkStep = 0;
+		TalkScene++;
 	}
 }
 

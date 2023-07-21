@@ -79,5 +79,6 @@ void StatusReset(void)
 	BombTime = 0;
 	DamagedCoolTime = 0;
 	P_ShotCoolTime = 0;
+	TalkScene = 0;
 }
 
