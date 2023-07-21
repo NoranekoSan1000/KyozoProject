@@ -7,6 +7,7 @@
 #include <string>
 #include "Talk.h"
 
+int SelectTitleAction = 0;
 int SelectDifficulty = 0;
 
 float StageModeUpdateTime = 120;
@@ -251,12 +252,36 @@ void Update(void) //毎フレーム処理
 
 	if (GameScene == Title_Scene)
 	{
+		if (KeyState[KEY_INPUT_UP] == TRUE && SelectTitleAction > 0) SelectTitleAction--;
+		else if (KeyState[KEY_INPUT_UP] == TRUE && SelectTitleAction == 0) SelectTitleAction = 3;
+		if (KeyState[KEY_INPUT_DOWN] == TRUE && SelectTitleAction < 3) SelectTitleAction++;
+		else if (KeyState[KEY_INPUT_DOWN] == TRUE && SelectTitleAction == 3) SelectTitleAction = 0;
+
 		PlayBGM(BGM[0]);
 		DrawRotaGraph(450, 400, 1, 0, Title_img, TRUE);
 		if (KeyState[KEY_INPUT_Z] == TRUE)
 		{		
 			ChangeSceneActive = true;
-			nextScene = DifficultyLvSelect_Scene;//シーン遷移用。この２つはセット
+			if (SelectTitleAction == 0) nextScene = DifficultyLvSelect_Scene;//シーン遷移用。この２つはセット
+			else if (SelectTitleAction == 1) nextScene = MusicRoom_Scene;
+			else if (SelectTitleAction == 2) nextScene = Setting_Scene;
+			else if (SelectTitleAction == 3) DxLib_End();
+		}
+	}
+	if (GameScene == MusicRoom_Scene)
+	{
+		if (KeyState[KEY_INPUT_X] == TRUE)
+		{
+			ChangeSceneActive = true;
+			nextScene = Title_Scene;//シーン遷移用。この２つはセット
+		}
+	}
+	if (GameScene == Setting_Scene)
+	{
+		if (KeyState[KEY_INPUT_X] == TRUE)
+		{
+			ChangeSceneActive = true;
+			nextScene = Title_Scene;//シーン遷移用。この２つはセット
 		}
 	}
 	if (GameScene == DifficultyLvSelect_Scene)

@@ -9,6 +9,7 @@ enum SceneManager
 	Stage4_Scene,
 	Stage5_Scene,
 	MusicRoom_Scene,
+	Setting_Scene,
 };
 
 extern bool FadeIn;
