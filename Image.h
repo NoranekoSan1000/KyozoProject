@@ -1,6 +1,12 @@
 #pragma once
 
 extern int Title_img;
+extern int gamestart_text;
+extern int musicroom_text;
+extern int setting_text;
+extern int exit_text;
+extern int select_icon;
+
 extern int DifficultyLv_img[];
 extern int DifficultyText_img[];
 

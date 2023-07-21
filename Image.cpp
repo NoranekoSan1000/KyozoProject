@@ -2,6 +2,12 @@
 
 //Title , DifficultySelect
 int Title_img;
+int gamestart_text;
+int musicroom_text;
+int setting_text;
+int exit_text;
+int select_icon;
+
 int DifficultyLv_img[4];
 int DifficultyText_img[4];
 
@@ -36,7 +42,13 @@ int talkwindow_img;
 
 void ImageInit(void)// âÊëúÇÃèâä˙âª
 {
-	Title_img = LoadGraph("image/title.png");
+	Title_img = LoadGraph("image/title_back.png");
+	gamestart_text = LoadGraph("image/title/gamestart_text.png");
+	musicroom_text = LoadGraph("image/title/musicroom_text.png");
+	setting_text = LoadGraph("image/title/setting_text.png");
+	exit_text = LoadGraph("image/title/exit_text.png");
+	select_icon = LoadGraph("image/title/select_icon.png");
+
 	DifficultyLv_img[Easy] = LoadGraph("image/easy.png");
 	DifficultyLv_img[Normal] = LoadGraph("image/normal.png");
 	DifficultyLv_img[Hard] = LoadGraph("image/hard.png");
