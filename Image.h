@@ -2,6 +2,7 @@
 
 extern int Title_img;
 extern int MusicRoom_img;
+extern int Setting_img;
 extern int gamestart_text;
 extern int musicroom_text;
 extern int setting_text;

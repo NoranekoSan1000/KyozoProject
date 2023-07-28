@@ -287,7 +287,29 @@ void Update(void) //毎フレーム処理
 	}
 	if (GameScene == Setting_Scene)
 	{
-		DrawRotaGraph(450, 400, 1, 0, Title_img, TRUE);
+		DrawRotaGraph(450, 400, 1, 0, Setting_img, TRUE);
+
+		DrawRotaGraph(50, 340, 1, 0, select_icon, TRUE);//画像表示
+		if (KeyState[KEY_INPUT_LEFT] == TRUE && BGMCurrentVolume > 0) BGMCurrentVolume--;
+		if (KeyState[KEY_INPUT_RIGHT] == TRUE && BGMCurrentVolume < 9) BGMCurrentVolume++;
+		for (int i = 0; i < 10; i++)
+		{	
+			int alpha = 80;
+			if (BGMCurrentVolume == i) alpha = 255;
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+			DrawRotaGraph(60 * (i + 1) + 150, 340, 0.8, 0, NumberText_img[i], TRUE);
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+		}
+
+		for (int i = 0; i < 10; i++)
+		{
+			int alpha = 80;
+			if (SECurrentVolume == i) alpha = 255;
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+			DrawRotaGraph(60 * (i + 1) + 150, 410, 0.8, 0, NumberText_img[i], TRUE);
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+		}
+		
 		if (KeyState[KEY_INPUT_X] == TRUE)
 		{
 			ChangeSceneActive = true;
