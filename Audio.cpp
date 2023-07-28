@@ -5,8 +5,13 @@ int SE_Bomb;
 
 int NowPlayBGM;
 
-int BGMVolume = 150;
-int SEVolume = 100;
+int BGMVolume = 0;
+int SEVolume = 0;
+
+int BGMVolumeList[10] = { 0,25,50,75,100,125,150,175,200,225 };
+int BGMCurrentVolume = 6;
+int SEVolumeList[10] = { 0,25,50,75,100,125,150,175,200,225 };
+int SECurrentVolume = 3;
 
 void AudioInit(void)
 {
@@ -22,6 +27,7 @@ void AudioInit(void)
 	BGM[9] = LoadSoundMem("audio/09_HermitOfTheAbyss.mp3");
 	BGM[10] = LoadSoundMem("audio/10_null.mp3");
 	BGM[11] = LoadSoundMem("audio/11_EndofTheStory.mp3");
+
 	SE_PlayerShot = LoadSoundMem("audio/SE_PlayerShot.mp3");
 	SE_Bomb = LoadSoundMem("audio/SE_BOON.mp3");
 }
@@ -31,22 +37,12 @@ void PlayBGM(int music)
 	if (music == NowPlayBGM) return;
 	StopSoundMem(NowPlayBGM);
 	NowPlayBGM = music;
-	ChangeVolumeSoundMem(BGMVolume, NowPlayBGM);//volume 0-255
+	ChangeVolumeSoundMem(BGMVolumeList[BGMCurrentVolume], NowPlayBGM);//volume 0-255
 	PlaySoundMem(NowPlayBGM, DX_PLAYTYPE_LOOP);
 }
 
 void PlaySE(int se)
 {
-	ChangeVolumeSoundMem(SEVolume, se);//volume 0-255
+	ChangeVolumeSoundMem(SEVolumeList[SECurrentVolume], se);//volume 0-255
 	PlaySoundMem(se, DX_PLAYTYPE_BACK);
-}
-
-void BGMVolumeSetting(int newVolume)
-{
-	BGMVolume = newVolume;
-}
-
-void SEVolumeSetting(int newVolume)
-{
-	SEVolume = newVolume;
 }

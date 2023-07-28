@@ -278,6 +278,7 @@ void Update(void) //毎フレーム処理
 	}
 	if (GameScene == MusicRoom_Scene)
 	{
+		DrawRotaGraph(450, 400, 1, 0, MusicRoom_img, TRUE);
 		if (KeyState[KEY_INPUT_X] == TRUE)
 		{
 			ChangeSceneActive = true;
@@ -286,6 +287,7 @@ void Update(void) //毎フレーム処理
 	}
 	if (GameScene == Setting_Scene)
 	{
+		DrawRotaGraph(450, 400, 1, 0, Title_img, TRUE);
 		if (KeyState[KEY_INPUT_X] == TRUE)
 		{
 			ChangeSceneActive = true;
