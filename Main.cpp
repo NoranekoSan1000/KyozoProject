@@ -9,6 +9,7 @@
 
 int SelectTitleAction = 0;
 int SelectDifficulty = 0;
+int SelectSetting = 0;
 
 float StageModeUpdateTime = 120;
 int NowStageMode = 0;
@@ -289,9 +290,26 @@ void Update(void) //毎フレーム処理
 	{
 		DrawRotaGraph(450, 400, 1, 0, Setting_img, TRUE);
 
-		DrawRotaGraph(50, 340, 1, 0, select_icon, TRUE);//画像表示
-		if (KeyState[KEY_INPUT_LEFT] == TRUE && BGMCurrentVolume > 0) BGMCurrentVolume--;
-		if (KeyState[KEY_INPUT_RIGHT] == TRUE && BGMCurrentVolume < 9) BGMCurrentVolume++;
+		if (KeyState[KEY_INPUT_UP] == TRUE && SelectSetting > 0) SelectSetting--;
+		else if (KeyState[KEY_INPUT_UP] == TRUE && SelectSetting == 0) SelectSetting = 1;
+		if (KeyState[KEY_INPUT_DOWN] == TRUE && SelectSetting < 1) SelectSetting++;
+		else if (KeyState[KEY_INPUT_DOWN] == TRUE && SelectSetting == 1) SelectSetting = 0;
+
+		int y[2] = { 340,410 };
+
+		DrawRotaGraph(50, y[SelectSetting], 1, 0, select_icon, TRUE);//画像表示
+		if (SelectSetting == 0)
+		{
+			if (KeyState[KEY_INPUT_LEFT] == TRUE && BGMCurrentVolume > 0) BGMCurrentVolume--;
+			if (KeyState[KEY_INPUT_RIGHT] == TRUE && BGMCurrentVolume < 9) BGMCurrentVolume++;
+		}
+		else if (SelectSetting == 1)
+		{
+			if (KeyState[KEY_INPUT_LEFT] == TRUE && SECurrentVolume > 0) SECurrentVolume--;
+			if (KeyState[KEY_INPUT_RIGHT] == TRUE && SECurrentVolume < 9) SECurrentVolume++;
+		}
+
+
 		for (int i = 0; i < 10; i++)
 		{	
 			int alpha = 80;
