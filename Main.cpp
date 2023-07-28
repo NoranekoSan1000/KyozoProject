@@ -401,6 +401,8 @@ void Update(void) //毎フレーム処理
 	}
 }
 
+
+int Font00;
 // プログラムは WinMain から始まる
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
 {
@@ -410,6 +412,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 	SetMainWindowText("鏡像の歌姫 - Reflection of Diva -");
 	SetBackgroundColor(100, 100, 100);
 
+	Font00 = CreateFontToHandle("ＭＳ　ゴシック", 70, 3, DX_FONTTYPE_NORMAL);//"メイリオ"  の30pt,太さ3のフォントを作成
 
 	if (DxLib_Init() == -1) { return -1; }		// ＤＸライブラリ初期化処理  エラーが起きたら直ちに終了
 
@@ -426,6 +429,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 		ScreenFlip();//裏画面を表画面にコピー
 	}
 
+	DeleteFontToHandle(Font00);
 	DxLib_End();			// ＤＸライブラリ使用の終了処理
 	return 0;				// ソフトの終了 
 }

@@ -26,6 +26,8 @@ extern float StageTitleFadeTime;
 extern bool BossBGM;
 extern int TalkScene;
 
+extern int Font00;
+
 enum Difficulty { Easy, Normal, Hard, HellDiva };
 
 enum EnemyShotPattern

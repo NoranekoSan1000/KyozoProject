@@ -1,5 +1,7 @@
 #include "GameData.h"
 
+
+
 int TalkScene = 0;
 
 bool TalkActive = false;
@@ -81,7 +83,8 @@ void TalkProcess(void)
 	if (TalkScene == 0)
 	{
 		if (talklist_0[TalkStep].Conversation[0] == '\0') TalkActive = false;
-		DrawFormatString(x, y, GetColor(255, 255, 255), "%s", talklist_0[TalkStep].Conversation);
+		DrawFormatStringToHandle(x, y, GetColor(255, 255, 255), Font00, "%s",talklist_0[TalkStep].Conversation);
+		//DrawFormatString(x, y, GetColor(255, 255, 255), "%s",talklist_0[TalkStep].Conversation);
 		PlayerTalk = talklist_0[TalkStep].p;
 		BossTalk = talklist_0[TalkStep].b;
 	}
