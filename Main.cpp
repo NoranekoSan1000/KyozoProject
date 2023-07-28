@@ -9,6 +9,7 @@
 
 int SelectTitleAction = 0;
 int SelectDifficulty = 0;
+int SelectMusic = 0;
 int SelectSetting = 0;
 
 float StageModeUpdateTime = 120;
@@ -288,6 +289,33 @@ void Update(void) //毎フレーム処理
 		int Font;
 		Font = CreateFontToHandle("メイリオ", 20, 9, DX_FONTTYPE_ANTIALIASING_EDGE);
 		DrawStringToHandle(60, WINDOW_HEIGHT - 30, "Xキーを押して戻る", GetColor(255, 255, 255), Font);
+
+		int i = 70,j = 30;
+
+		if (KeyState[KEY_INPUT_UP] == TRUE && SelectMusic > 0) SelectMusic--;
+		else if (KeyState[KEY_INPUT_UP] == TRUE && SelectMusic == 0) SelectMusic = 0;
+		if (KeyState[KEY_INPUT_DOWN] == TRUE && SelectMusic < 11) SelectMusic++;
+		else if (KeyState[KEY_INPUT_DOWN] == TRUE && SelectMusic == 11) SelectMusic = 11;
+
+		int x[2] = { i + j -60 , WINDOW_WIDTH / 2 + j - 60};
+
+		int sel = 0;
+		if (SelectMusic < 6) sel = 0;
+		else sel = 1;
+		DrawRotaGraph(x[sel], (SelectMusic % 6 + 2) * i + 10, 1, 0, select_icon, TRUE);//画像表示
+
+		DrawStringToHandle(i + j, i * 2, "MirrorImageDiva", GetColor(255, 255, 255), Font);
+		DrawStringToHandle(i + j, i * 3, "Departure", GetColor(255, 255, 255), Font);
+		DrawStringToHandle(i + j, i * 4, "Explosion", GetColor(255, 255, 255), Font);
+		DrawStringToHandle(i + j, i * 5, "WitchPromenade", GetColor(255, 255, 255), Font);
+		DrawStringToHandle(i + j, i * 6, "Jade-coloredWitch", GetColor(255, 255, 255), Font);
+		DrawStringToHandle(i + j, i * 7, "KnightRoad", GetColor(255, 255, 255), Font);
+		DrawStringToHandle(WINDOW_WIDTH / 2 + j, i * 2, "Ruthlessblade", GetColor(255, 255, 255), Font);
+		DrawStringToHandle(WINDOW_WIDTH / 2 + j, i * 3, "ResonanceAtTwilight", GetColor(255, 255, 255), Font);
+		DrawStringToHandle(WINDOW_WIDTH / 2 + j, i * 4, "null", GetColor(255, 255, 255), Font);
+		DrawStringToHandle(WINDOW_WIDTH / 2 + j, i * 5, "HermitOfTheAbyss", GetColor(255, 255, 255), Font);
+		DrawStringToHandle(WINDOW_WIDTH / 2 + j, i * 6, "null", GetColor(255, 255, 255), Font);
+		DrawStringToHandle(WINDOW_WIDTH / 2 + j, i * 7, "EndofTheStory", GetColor(255, 255, 255), Font);
 		DeleteFontToHandle(Font);
 
 		if (KeyState[KEY_INPUT_X] == TRUE)
