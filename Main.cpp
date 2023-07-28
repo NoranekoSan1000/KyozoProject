@@ -102,7 +102,11 @@ void viewBossHpBar(void)
 	
 	DrawBox(25, 20, 600, 36, GetColor(0, 0, 0), 1);
 	DrawBox(25, 16, ((555 * BossCurrentHp) / BossMaxHp)+25, 32, GetColor(0, 255, 0), 1);
-	DrawFormatString(590, 18, GetColor(0, 255, 0), "%d ", BossStock);
+
+	int Font;
+	Font = CreateFontToHandle("メイリオ", 20, 9, DX_FONTTYPE_ANTIALIASING_EDGE);
+	DrawFormatStringToHandle(590, 14, GetColor(0, 255, 0), Font, "%d", BossStock);
+	DeleteFontToHandle(Font);
 }
 
 void GameProcess(void)
@@ -280,6 +284,12 @@ void Update(void) //毎フレーム処理
 	if (GameScene == MusicRoom_Scene)
 	{
 		DrawRotaGraph(450, 400, 1, 0, MusicRoom_img, TRUE);
+
+		int Font;
+		Font = CreateFontToHandle("メイリオ", 20, 9, DX_FONTTYPE_ANTIALIASING_EDGE);
+		DrawStringToHandle(60, WINDOW_HEIGHT - 30, "Xキーを押して戻る", GetColor(255, 255, 255), Font);
+		DeleteFontToHandle(Font);
+
 		if (KeyState[KEY_INPUT_X] == TRUE)
 		{
 			ChangeSceneActive = true;
@@ -289,6 +299,11 @@ void Update(void) //毎フレーム処理
 	if (GameScene == Setting_Scene)
 	{
 		DrawRotaGraph(450, 400, 1, 0, Setting_img, TRUE);
+
+		int Font;
+		Font = CreateFontToHandle("メイリオ", 20, 9, DX_FONTTYPE_ANTIALIASING_EDGE);
+		DrawStringToHandle(60, WINDOW_HEIGHT - 30, "Xキーを押して戻る", GetColor(255, 255, 255),Font);
+		DeleteFontToHandle(Font);
 
 		if (KeyState[KEY_INPUT_UP] == TRUE && SelectSetting > 0) SelectSetting--;
 		else if (KeyState[KEY_INPUT_UP] == TRUE && SelectSetting == 0) SelectSetting = 1;
@@ -402,7 +417,6 @@ void Update(void) //毎フレーム処理
 }
 
 
-int Font00;
 // プログラムは WinMain から始まる
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
 {
@@ -411,8 +425,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 	SetOutApplicationLogValidFlag(FALSE);//Log.txtを生成しないように設定
 	SetMainWindowText("鏡像の歌姫 - Reflection of Diva -");
 	SetBackgroundColor(100, 100, 100);
-
-	Font00 = CreateFontToHandle("ＭＳ　ゴシック", 70, 3, DX_FONTTYPE_NORMAL);//"メイリオ"  の30pt,太さ3のフォントを作成
 
 	if (DxLib_Init() == -1) { return -1; }		// ＤＸライブラリ初期化処理  エラーが起きたら直ちに終了
 
@@ -429,7 +441,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 		ScreenFlip();//裏画面を表画面にコピー
 	}
 
-	DeleteFontToHandle(Font00);
 	DxLib_End();			// ＤＸライブラリ使用の終了処理
 	return 0;				// ソフトの終了 
 }
