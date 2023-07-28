@@ -11,3 +11,5 @@ extern int SECurrentVolume;
 void AudioInit(void);
 void PlayBGM(int music);
 void PlaySE(int se);
+
+void volumeSetBGM(void);

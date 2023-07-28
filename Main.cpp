@@ -302,13 +302,13 @@ void Update(void) //毎フレーム処理
 		{
 			if (KeyState[KEY_INPUT_LEFT] == TRUE && BGMCurrentVolume > 0) BGMCurrentVolume--;
 			if (KeyState[KEY_INPUT_RIGHT] == TRUE && BGMCurrentVolume < 9) BGMCurrentVolume++;
+			volumeSetBGM();//音量再設定
 		}
 		else if (SelectSetting == 1)
 		{
 			if (KeyState[KEY_INPUT_LEFT] == TRUE && SECurrentVolume > 0) SECurrentVolume--;
 			if (KeyState[KEY_INPUT_RIGHT] == TRUE && SECurrentVolume < 9) SECurrentVolume++;
 		}
-
 
 		for (int i = 0; i < 10; i++)
 		{	

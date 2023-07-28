@@ -8,9 +8,9 @@ int NowPlayBGM;
 int BGMVolume = 0;
 int SEVolume = 0;
 
-int BGMVolumeList[10] = { 0,25,50,75,100,125,150,175,200,225 };
+int BGMVolumeList[11] = { 0,25,50,75,100,125,150,185,220,255 };
 int BGMCurrentVolume = 6;
-int SEVolumeList[10] = { 0,25,50,75,100,125,150,175,200,225 };
+int SEVolumeList[11] = { 0,25,50,75,100,125,150,185,220,255 };
 int SECurrentVolume = 3;
 
 void AudioInit(void)
@@ -46,3 +46,10 @@ void PlaySE(int se)
 	ChangeVolumeSoundMem(SEVolumeList[SECurrentVolume], se);//volume 0-255
 	PlaySoundMem(se, DX_PLAYTYPE_BACK);
 }
+
+void volumeSetBGM(void)
+{
+	ChangeVolumeSoundMem(BGMVolumeList[BGMCurrentVolume], NowPlayBGM);//volume 0-255
+}
+
+
