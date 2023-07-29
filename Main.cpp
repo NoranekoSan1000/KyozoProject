@@ -10,6 +10,7 @@
 int SelectTitleAction = 0;
 int SelectDifficulty = 0;
 int SelectMusic = 0;
+int PlayingMusic = 0;
 int SelectSetting = 0;
 
 float StageModeUpdateTime = 120;
@@ -292,17 +293,31 @@ void Update(void) //毎フレーム処理
 
 		int i = 70,j = 30;
 
+		//カーソル移動
 		if (KeyState[KEY_INPUT_UP] == TRUE && SelectMusic > 0) SelectMusic--;
 		else if (KeyState[KEY_INPUT_UP] == TRUE && SelectMusic == 0) SelectMusic = 0;
 		if (KeyState[KEY_INPUT_DOWN] == TRUE && SelectMusic < 11) SelectMusic++;
 		else if (KeyState[KEY_INPUT_DOWN] == TRUE && SelectMusic == 11) SelectMusic = 11;
+		if (KeyState[KEY_INPUT_LEFT] == TRUE && SelectMusic >= 6) SelectMusic -= 6;
+		if (KeyState[KEY_INPUT_RIGHT] == TRUE && SelectMusic < 6) SelectMusic += 6;
+
+		//再生
+		if (KeyState[KEY_INPUT_Z] == TRUE)
+		{
+			PlayBGM(BGM[SelectMusic]);
+			PlayingMusic = SelectMusic;
+		}
 
 		int x[2] = { i + j -60 , WINDOW_WIDTH / 2 + j - 60};
 
-		int sel = 0;
+		int sel = 0,ply = 0;
 		if (SelectMusic < 6) sel = 0;
 		else sel = 1;
-		DrawRotaGraph(x[sel], (SelectMusic % 6 + 2) * i + 10, 1, 0, select_icon, TRUE);//画像表示
+		if (PlayingMusic < 6) ply = 0;
+		else ply = 1;
+		DrawRotaGraph(x[sel] +25, (SelectMusic % 6 + 2) * i + 10, 1, 0, select_icon, TRUE);//画像表示
+
+		DrawBox(x[ply]+55, (PlayingMusic % 6 + 2) * i + 10 -20 , x[ply]+350, (PlayingMusic % 6 + 2) * i + 10 + 20,GetColor(0, 50, 100),1);
 
 		DrawStringToHandle(i + j, i * 2, "MirrorImageDiva", GetColor(255, 255, 255), Font);
 		DrawStringToHandle(i + j, i * 3, "Departure", GetColor(255, 255, 255), Font);
@@ -320,6 +335,8 @@ void Update(void) //毎フレーム処理
 
 		if (KeyState[KEY_INPUT_X] == TRUE)
 		{
+			PlayingMusic = 0;
+			SelectMusic = 0;
 			ChangeSceneActive = true;
 			nextScene = Title_Scene;//シーン遷移用。この２つはセット
 		}
