@@ -13,7 +13,8 @@ struct Enemy
 };
 Enemy enemy[3] = 
 { 
-	{3 ,false ,2},{4 ,false ,3},{75 ,true , 0}
+	{3 ,false ,2},{4 ,false ,3},//Enemy
+	{75 ,true , 0}//Boss
 };
 
 //“G
@@ -254,10 +255,15 @@ void EnemyAction(void)
 
 	for (int i = 0; i < ENEMY_AMOUNT; i++)
 	{
+		if (Enemy_exist[i] != true) continue;
 
 		//“GƒLƒƒƒ‰‰æ‘œ•\Ž¦
-		if (Enemy_exist[i] == true) DrawRotaGraph(Enemy_X[i], Enemy_Y[i], 1.0, 0, Enemy_img[enemy[Enemy_Type[i]].enemyImg], TRUE); //‰æ‘œ‚Ì•`‰æ
-		else continue;
+		if (!enemy[Enemy_Type[i]].boss) DrawRotaGraph(Enemy_X[i], Enemy_Y[i], 1.0, 0, Enemy_img[enemy[Enemy_Type[i]].enemyImg], TRUE);
+		else 
+		{
+			if(enemy[Enemy_Type[i]].enemyImg == 0) DrawRotaGraph(Enemy_X[i], Enemy_Y[i], 1.0, 0, orivia_img[0], TRUE);//1boss
+			else if (enemy[Enemy_Type[i]].enemyImg == 0) DrawRotaGraph(Enemy_X[i], Enemy_Y[i], 1.0, 0, orivia_img[0], TRUE);//2boss
+		}
 
 		//DrawCircle(Enemy_X[i], Enemy_Y[i], Enemy_HitBoxSize[i], GetColor(255, 0, 0), 1);
 		
