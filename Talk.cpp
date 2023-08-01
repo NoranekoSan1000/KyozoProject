@@ -9,8 +9,6 @@ int BossTalk = 0;
 int TalkStep = 0;
 string str = "";
 
-int Font = CreateFontToHandle("ＭＳ ゴシック", 50, 9, DX_FONTTYPE_ANTIALIASING);
-
 struct TalkList
 {
 	char Conversation[70];
@@ -81,36 +79,51 @@ void TalkProcess(void)
 	if (TalkScene == 0)
 	{
 		if (talklist_0[TalkStep].Conversation[0] == '\0') TalkActive = false;
-		DrawFormatString(x, y, GetColor(255, 255, 255), "%s", talklist_0[TalkStep].Conversation);
+		int Font;
+		Font = CreateFontToHandle("メイリオ", 20, 9, DX_FONTTYPE_ANTIALIASING_EDGE);
+		DrawFormatStringToHandle(x, y, GetColor(255, 255, 255), Font, "%s",talklist_0[TalkStep].Conversation);
 		PlayerTalk = talklist_0[TalkStep].p;
 		BossTalk = talklist_0[TalkStep].b;
+		DeleteFontToHandle(Font);
 	}
 	if (TalkScene == 1)
 	{
 		if (talklist_1[TalkStep].Conversation[0] == '\0') TalkActive = false;
-		DrawFormatString(x, y, GetColor(255, 255, 255), "%s", talklist_1[TalkStep].Conversation);
+		int Font;
+		Font = CreateFontToHandle("メイリオ", 20, 9, DX_FONTTYPE_ANTIALIASING_EDGE);
+		DrawFormatStringToHandle(x, y, GetColor(255, 255, 255), Font, "%s", talklist_1[TalkStep].Conversation);
 		PlayerTalk = talklist_1[TalkStep].p;
 		BossTalk = talklist_1[TalkStep].b;
+		DeleteFontToHandle(Font);
 	}
 	if (TalkScene == 2)
 	{
 		if (talklist_2[TalkStep].Conversation[0] == '\0') TalkActive = false;
-		DrawFormatString(x, y, GetColor(255, 255, 255), "%s", talklist_2[TalkStep].Conversation);
+		int Font;
+		Font = CreateFontToHandle("メイリオ", 20, 9, DX_FONTTYPE_ANTIALIASING_EDGE);
+		DrawFormatStringToHandle(x, y, GetColor(255, 255, 255), Font, "%s", talklist_2[TalkStep].Conversation);
 		PlayerTalk = talklist_2[TalkStep].p;
 		BossTalk = talklist_2[TalkStep].b;
+		DeleteFontToHandle(Font);
 	}
 	if (TalkScene == 3)
 	{
 		if (talklist_3[TalkStep].Conversation[0] == '\0') TalkActive = false;
-		DrawFormatString(x, y, GetColor(255, 255, 255), "%s", talklist_3[TalkStep].Conversation);
+		int Font;
+		Font = CreateFontToHandle("メイリオ", 20, 9, DX_FONTTYPE_ANTIALIASING_EDGE);
+		DrawFormatStringToHandle(x, y, GetColor(255, 255, 255), Font, "%s", talklist_3[TalkStep].Conversation);
 		PlayerTalk = talklist_3[TalkStep].p;
 		BossTalk = talklist_3[TalkStep].b;
+		DeleteFontToHandle(Font);
 	}
 	if (TalkScene == 4)
 	{
 		if (talklist_4[TalkStep].Conversation[0] == '\0') TalkActive = false;
-		DrawFormatString(x, y, GetColor(255, 255, 255), "%s", talklist_4[TalkStep].Conversation);
+		int Font;
+		Font = CreateFontToHandle("メイリオ", 20, 9, DX_FONTTYPE_ANTIALIASING_EDGE);
+		DrawFormatStringToHandle(x, y, GetColor(255, 255, 255), Font, "%s", talklist_4[TalkStep].Conversation);
 		PlayerTalk = talklist_4[TalkStep].p;
 		BossTalk = talklist_4[TalkStep].b;
+		DeleteFontToHandle(Font);
 	}
 }

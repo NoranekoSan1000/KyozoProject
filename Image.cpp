@@ -2,6 +2,14 @@
 
 //Title , DifficultySelect
 int Title_img;
+int MusicRoom_img;
+int Setting_img;
+int gamestart_text;
+int musicroom_text;
+int setting_text;
+int exit_text;
+int select_icon;
+
 int DifficultyLv_img[4];
 int DifficultyText_img[4];
 
@@ -25,7 +33,7 @@ int power_img;
 int PlayerShot01_img;
 int PlayerShot02_img;
 int EnemyShot_img[15];
-int Enemy_img[2];
+int Enemy_img[4];
 int player_img[3];
 int orivia_img[3];
 
@@ -36,7 +44,15 @@ int talkwindow_img;
 
 void ImageInit(void)// ‰æ‘œ‚Ì‰Šú‰»
 {
-	Title_img = LoadGraph("image/title.png");
+	Title_img = LoadGraph("image/title_back.png");
+	MusicRoom_img = LoadGraph("image/musicroom_back.png");
+	Setting_img = LoadGraph("image/setting_back.png");
+	gamestart_text = LoadGraph("image/title/gamestart_text.png");
+	musicroom_text = LoadGraph("image/title/musicroom_text.png");
+	setting_text = LoadGraph("image/title/setting_text.png");
+	exit_text = LoadGraph("image/title/exit_text.png");
+	select_icon = LoadGraph("image/title/select_icon.png");
+
 	DifficultyLv_img[Easy] = LoadGraph("image/easy.png");
 	DifficultyLv_img[Normal] = LoadGraph("image/normal.png");
 	DifficultyLv_img[Hard] = LoadGraph("image/hard.png");
@@ -87,7 +103,7 @@ void ImageInit(void)// ‰æ‘œ‚Ì‰Šú‰»
 		EnemyShot_img[i] = LoadGraph(fileName);
 	}
 
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 4; i++)
 	{
 		char fileName[30]; // “K“–‚È’·‚³‚Ì•¶š—ñ
 		sprintf_s(fileName, "image/Enemy/%d.png", i);

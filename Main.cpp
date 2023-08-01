@@ -7,7 +7,11 @@
 #include <string>
 #include "Talk.h"
 
+int SelectTitleAction = 0;
 int SelectDifficulty = 0;
+int SelectMusic = 0;
+int PlayingMusic = 0;
+int SelectSetting = 0;
 
 float StageModeUpdateTime = 120;
 int NowStageMode = 0;
@@ -100,7 +104,11 @@ void viewBossHpBar(void)
 	
 	DrawBox(25, 20, 600, 36, GetColor(0, 0, 0), 1);
 	DrawBox(25, 16, ((555 * BossCurrentHp) / BossMaxHp)+25, 32, GetColor(0, 255, 0), 1);
-	DrawFormatString(590, 18, GetColor(0, 255, 0), "%d ", BossStock);
+
+	int Font;
+	Font = CreateFontToHandle("メイリオ", 20, 9, DX_FONTTYPE_ANTIALIASING_EDGE);
+	DrawFormatStringToHandle(590, 14, GetColor(0, 255, 0), Font, "%d", BossStock);
+	DeleteFontToHandle(Font);
 }
 
 void GameProcess(void)
@@ -253,10 +261,137 @@ void Update(void) //毎フレーム処理
 	{
 		PlayBGM(BGM[0]);
 		DrawRotaGraph(450, 400, 1, 0, Title_img, TRUE);
+
+		if (KeyState[KEY_INPUT_UP] == TRUE && SelectTitleAction > 0) SelectTitleAction--;
+		else if (KeyState[KEY_INPUT_UP] == TRUE && SelectTitleAction == 0) SelectTitleAction = 3;
+		if (KeyState[KEY_INPUT_DOWN] == TRUE && SelectTitleAction < 3) SelectTitleAction++;
+		else if (KeyState[KEY_INPUT_DOWN] == TRUE && SelectTitleAction == 3) SelectTitleAction = 0;
+
+		int y[4] = {500 ,570 ,650 ,710};
+		DrawRotaGraph(560 + (10 * SelectTitleAction), y[SelectTitleAction], 1, 0, select_icon, TRUE);//画像表示
+		DrawRotaGraph(860, y[0], 1, 0, gamestart_text, TRUE);//画像表示
+		DrawRotaGraph(870, y[1], 1, 0, musicroom_text, TRUE);//画像表示
+		DrawRotaGraph(880, y[2], 1, 0, setting_text, TRUE);//画像表示
+		DrawRotaGraph(890, y[3], 1, 0, exit_text, TRUE);//画像表示
+
 		if (KeyState[KEY_INPUT_Z] == TRUE)
 		{		
 			ChangeSceneActive = true;
-			nextScene = DifficultyLvSelect_Scene;//シーン遷移用。この２つはセット
+			if (SelectTitleAction == 0) nextScene = DifficultyLvSelect_Scene;//シーン遷移用。この２つはセット
+			else if (SelectTitleAction == 1) nextScene = MusicRoom_Scene;
+			else if (SelectTitleAction == 2) nextScene = Setting_Scene;
+			else if (SelectTitleAction == 3) DxLib_End();
+		}
+	}
+	if (GameScene == MusicRoom_Scene)
+	{
+		DrawRotaGraph(450, 400, 1, 0, MusicRoom_img, TRUE);
+
+		int Font;
+		Font = CreateFontToHandle("メイリオ", 20, 9, DX_FONTTYPE_ANTIALIASING_EDGE);
+		DrawStringToHandle(60, WINDOW_HEIGHT - 30, "Xキーを押して戻る", GetColor(255, 255, 255), Font);
+
+		int i = 70,j = 30;
+
+		//カーソル移動
+		if (KeyState[KEY_INPUT_UP] == TRUE && SelectMusic > 0) SelectMusic--;
+		else if (KeyState[KEY_INPUT_UP] == TRUE && SelectMusic == 0) SelectMusic = 0;
+		if (KeyState[KEY_INPUT_DOWN] == TRUE && SelectMusic < 11) SelectMusic++;
+		else if (KeyState[KEY_INPUT_DOWN] == TRUE && SelectMusic == 11) SelectMusic = 11;
+		if (KeyState[KEY_INPUT_LEFT] == TRUE && SelectMusic >= 6) SelectMusic -= 6;
+		if (KeyState[KEY_INPUT_RIGHT] == TRUE && SelectMusic < 6) SelectMusic += 6;
+
+		//再生
+		if (KeyState[KEY_INPUT_Z] == TRUE)
+		{
+			PlayBGM(BGM[SelectMusic]);
+			PlayingMusic = SelectMusic;
+		}
+
+		int x[2] = { i + j -60 , WINDOW_WIDTH / 2 + j - 60};
+
+		int sel = 0,ply = 0;
+		if (SelectMusic < 6) sel = 0;
+		else sel = 1;
+		if (PlayingMusic < 6) ply = 0;
+		else ply = 1;
+		DrawRotaGraph(x[sel] +25, (SelectMusic % 6 + 2) * i + 10, 1, 0, select_icon, TRUE);//画像表示
+
+		DrawBox(x[ply]+55, (PlayingMusic % 6 + 2) * i + 10 -20 , x[ply]+350, (PlayingMusic % 6 + 2) * i + 10 + 20,GetColor(0, 50, 100),1);
+
+		DrawStringToHandle(i + j, i * 2, "MirrorImageDiva", GetColor(255, 255, 255), Font);
+		DrawStringToHandle(i + j, i * 3, "Departure", GetColor(255, 255, 255), Font);
+		DrawStringToHandle(i + j, i * 4, "Explosion", GetColor(255, 255, 255), Font);
+		DrawStringToHandle(i + j, i * 5, "WitchPromenade", GetColor(255, 255, 255), Font);
+		DrawStringToHandle(i + j, i * 6, "Jade-coloredWitch", GetColor(255, 255, 255), Font);
+		DrawStringToHandle(i + j, i * 7, "KnightRoad", GetColor(255, 255, 255), Font);
+		DrawStringToHandle(WINDOW_WIDTH / 2 + j, i * 2, "Ruthlessblade", GetColor(255, 255, 255), Font);
+		DrawStringToHandle(WINDOW_WIDTH / 2 + j, i * 3, "ResonanceAtTwilight", GetColor(255, 255, 255), Font);
+		DrawStringToHandle(WINDOW_WIDTH / 2 + j, i * 4, "null", GetColor(255, 255, 255), Font);
+		DrawStringToHandle(WINDOW_WIDTH / 2 + j, i * 5, "HermitOfTheAbyss", GetColor(255, 255, 255), Font);
+		DrawStringToHandle(WINDOW_WIDTH / 2 + j, i * 6, "null", GetColor(255, 255, 255), Font);
+		DrawStringToHandle(WINDOW_WIDTH / 2 + j, i * 7, "EndofTheStory", GetColor(255, 255, 255), Font);
+		DeleteFontToHandle(Font);
+
+		if (KeyState[KEY_INPUT_X] == TRUE)
+		{
+			PlayingMusic = 0;
+			SelectMusic = 0;
+			ChangeSceneActive = true;
+			nextScene = Title_Scene;//シーン遷移用。この２つはセット
+		}
+	}
+	if (GameScene == Setting_Scene)
+	{
+		DrawRotaGraph(450, 400, 1, 0, Setting_img, TRUE);
+
+		int Font;
+		Font = CreateFontToHandle("メイリオ", 20, 9, DX_FONTTYPE_ANTIALIASING_EDGE);
+		DrawStringToHandle(60, WINDOW_HEIGHT - 30, "Xキーを押して戻る", GetColor(255, 255, 255),Font);
+		DeleteFontToHandle(Font);
+
+		if (KeyState[KEY_INPUT_UP] == TRUE && SelectSetting > 0) SelectSetting--;
+		else if (KeyState[KEY_INPUT_UP] == TRUE && SelectSetting == 0) SelectSetting = 1;
+		if (KeyState[KEY_INPUT_DOWN] == TRUE && SelectSetting < 1) SelectSetting++;
+		else if (KeyState[KEY_INPUT_DOWN] == TRUE && SelectSetting == 1) SelectSetting = 0;
+
+		int y[2] = { 340,410 };
+
+		DrawRotaGraph(50, y[SelectSetting], 1, 0, select_icon, TRUE);//画像表示
+		if (SelectSetting == 0)
+		{
+			if (KeyState[KEY_INPUT_LEFT] == TRUE && BGMCurrentVolume > 0) BGMCurrentVolume--;
+			if (KeyState[KEY_INPUT_RIGHT] == TRUE && BGMCurrentVolume < 9) BGMCurrentVolume++;
+			volumeSetBGM();//音量再設定
+		}
+		else if (SelectSetting == 1)
+		{
+			if (KeyState[KEY_INPUT_LEFT] == TRUE && SECurrentVolume > 0) SECurrentVolume--;
+			if (KeyState[KEY_INPUT_RIGHT] == TRUE && SECurrentVolume < 9) SECurrentVolume++;
+		}
+
+		for (int i = 0; i < 10; i++)
+		{	
+			int alpha = 80;
+			if (BGMCurrentVolume == i) alpha = 255;
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+			DrawRotaGraph(60 * (i + 1) + 150, 340, 0.8, 0, NumberText_img[i], TRUE);
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+		}
+
+		for (int i = 0; i < 10; i++)
+		{
+			int alpha = 80;
+			if (SECurrentVolume == i) alpha = 255;
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+			DrawRotaGraph(60 * (i + 1) + 150, 410, 0.8, 0, NumberText_img[i], TRUE);
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+		}
+		
+		if (KeyState[KEY_INPUT_X] == TRUE)
+		{
+			ChangeSceneActive = true;
+			nextScene = Title_Scene;//シーン遷移用。この２つはセット
 		}
 	}
 	if (GameScene == DifficultyLvSelect_Scene)
@@ -326,6 +461,7 @@ void Update(void) //毎フレーム処理
 	}
 }
 
+
 // プログラムは WinMain から始まる
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
 {
@@ -334,7 +470,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 	SetOutApplicationLogValidFlag(FALSE);//Log.txtを生成しないように設定
 	SetMainWindowText("鏡像の歌姫 - Reflection of Diva -");
 	SetBackgroundColor(100, 100, 100);
-
 
 	if (DxLib_Init() == -1) { return -1; }		// ＤＸライブラリ初期化処理  エラーが起きたら直ちに終了
 

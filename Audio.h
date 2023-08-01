@@ -5,8 +5,11 @@ extern int SE_Bomb;
 
 extern int NowPlayBGM;
 
+extern int BGMCurrentVolume;
+extern int SECurrentVolume;
+
 void AudioInit(void);
 void PlayBGM(int music);
 void PlaySE(int se);
-void BGMVolumeSetting(int newVolume);
-void SEVolumeSetting(int newVolume);
+
+void volumeSetBGM(void);
