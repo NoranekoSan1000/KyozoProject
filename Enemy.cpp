@@ -9,10 +9,11 @@ struct Enemy
 {
 	int hp;//‘Ì—Í
 	bool boss;
+	int enemyImg;
 };
 Enemy enemy[3] = 
 { 
-	{3 ,false},{4 ,false},{75 ,true}
+	{3 ,false ,2},{4 ,false ,3},{75 ,true , 0}
 };
 
 //“G
@@ -255,7 +256,7 @@ void EnemyAction(void)
 	{
 
 		//“GƒLƒƒƒ‰‰æ‘œ•\Ž¦
-		if (Enemy_exist[i] == true) DrawRotaGraph(Enemy_X[i], Enemy_Y[i], 1.0, 0, Enemy_img[Enemy_Type[i]], TRUE); //‰æ‘œ‚Ì•`‰æ
+		if (Enemy_exist[i] == true) DrawRotaGraph(Enemy_X[i], Enemy_Y[i], 1.0, 0, Enemy_img[enemy[Enemy_Type[i]].enemyImg], TRUE); //‰æ‘œ‚Ì•`‰æ
 		else continue;
 
 		//DrawCircle(Enemy_X[i], Enemy_Y[i], Enemy_HitBoxSize[i], GetColor(255, 0, 0), 1);

@@ -33,7 +33,7 @@ int power_img;
 int PlayerShot01_img;
 int PlayerShot02_img;
 int EnemyShot_img[15];
-int Enemy_img[2];
+int Enemy_img[4];
 int player_img[3];
 int orivia_img[3];
 
@@ -103,7 +103,7 @@ void ImageInit(void)// ‰æ‘œ‚Ì‰Šú‰»
 		EnemyShot_img[i] = LoadGraph(fileName);
 	}
 
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 4; i++)
 	{
 		char fileName[30]; // “K“–‚È’·‚³‚Ì•¶š—ñ
 		sprintf_s(fileName, "image/Enemy/%d.png", i);
