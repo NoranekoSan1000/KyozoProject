@@ -103,7 +103,7 @@ void EnemyShot(int design, EnemyShotPattern type, int en_x, int en_y, int size, 
 void EnemyBulletMove(int num)
 {
 	float angle = (PI / 2);//‰º•û
-	float speed = 6;
+	float speed = 3;
 
 	switch (E_Bullet_MovePattern[num])
 	{
