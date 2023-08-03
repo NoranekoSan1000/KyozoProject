@@ -84,6 +84,7 @@ void ItemAction(void)
 			//ÚG”»’è
 			Power += 1;
 			Score += 2;
+			PlaySE(SE_ItemGet);
 			ItemDestroy(i);
 			continue;
 		}

@@ -203,10 +203,22 @@ void EnemyShotAction(int num)
 	{
 		if (Enemy_Type[num] == 0)
 		{
-			switch (E_AttackMode[num])
+			if (SelectDifficulty == 0 || SelectDifficulty == 1); //NoAction
+			else if (SelectDifficulty == 2)
 			{
-				case 0: wait(num, 60); break;
-				case 1: shot(num, 0, AimingDiffusion, 4, 5, 10, 30); break;
+				switch (E_AttackMode[num])
+				{
+					case 0: wait(num, 90); break;
+					case 1: shot(num, 0, AimingOneShot, 4, 1, 10, NULL); break;
+				}
+			}
+			else if (SelectDifficulty == 3)
+			{
+				switch (E_AttackMode[num])
+				{
+					case 0: wait(num, 90); break;
+					case 1: shot(num, 0, AimingDiffusion, 4, 3, 10, 90); break;
+				}
 			}
 		}
 		if (Enemy_Type[num] == 1)

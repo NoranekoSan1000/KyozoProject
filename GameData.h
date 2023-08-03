@@ -25,6 +25,7 @@ using namespace std;
 extern float StageTitleFadeTime;
 extern bool BossBGM;
 extern int TalkScene;
+extern int SelectDifficulty;
 
 enum Difficulty { Easy, Normal, Hard, HellDiva };
 

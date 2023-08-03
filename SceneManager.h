@@ -1,4 +1,5 @@
 #pragma once
+
 enum SceneManager
 {
 	Title_Scene,
