@@ -36,7 +36,7 @@ int CloseEnemy = -1;
 float CloseDist = 1100;
 
 bool BossActive = false;
-int Boss = 0;
+int Boss = -1;
 int BossMaxHp = 0;
 int BossCurrentHp = 0;
 int BossStock = 0;//ターン数
@@ -331,7 +331,8 @@ void EnemyAction(void)
 					BossStock = NULL;
 					BossMaxHp = NULL;
 					BossCurrentHp = NULL;
-					Boss = NULL;				
+					Boss = -1;		
+					PlaySE(SE_ExplosionB);
 				}
 				else if (i == Boss && BossStock > 0) //次のターン
 				{
@@ -347,6 +348,7 @@ void EnemyAction(void)
 				Score += 10;
 				ItemSpawn(Enemy_X[i], Enemy_Y[i]);//アイテム生成
 				EnemyDestroy(i);
+				PlaySE(SE_ExplosionA);
 			}
 		}
 	}
