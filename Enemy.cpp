@@ -13,7 +13,8 @@ struct Enemy
 };
 Enemy enemy[3] = 
 { 
-	{3 ,false ,2},{4 ,false ,3},{75 ,true , 0}
+	{3 ,false ,2},{4 ,false ,3},//Enemy
+	{75 ,true , 0}//Boss
 };
 
 //敵
@@ -35,7 +36,7 @@ int CloseEnemy = -1;
 float CloseDist = 1100;
 
 bool BossActive = false;
-int Boss = 0;
+int Boss = -1;
 int BossMaxHp = 0;
 int BossCurrentHp = 0;
 int BossStock = 0;//ターン数
@@ -202,10 +203,22 @@ void EnemyShotAction(int num)
 	{
 		if (Enemy_Type[num] == 0)
 		{
-			switch (E_AttackMode[num])
+			if (SelectDifficulty == 0 || SelectDifficulty == 1); //NoAction
+			else if (SelectDifficulty == 2)
 			{
-				case 0: wait(num, 60); break;
-				case 1: shot(num, 0, AimingDiffusion, 4, 5, 10, 30); break;
+				switch (E_AttackMode[num])
+				{
+					case 0: wait(num, 90); break;
+					case 1: shot(num, 0, AimingOneShot, 4, 1, 10, NULL); break;
+				}
+			}
+			else if (SelectDifficulty == 3)
+			{
+				switch (E_AttackMode[num])
+				{
+					case 0: wait(num, 90); break;
+					case 1: shot(num, 0, AimingDiffusion, 4, 3, 10, 90); break;
+				}
 			}
 		}
 		if (Enemy_Type[num] == 1)
@@ -254,10 +267,15 @@ void EnemyAction(void)
 
 	for (int i = 0; i < ENEMY_AMOUNT; i++)
 	{
+		if (Enemy_exist[i] != true) continue;
 
 		//敵キャラ画像表示
-		if (Enemy_exist[i] == true) DrawRotaGraph(Enemy_X[i], Enemy_Y[i], 1.0, 0, Enemy_img[enemy[Enemy_Type[i]].enemyImg], TRUE); //画像の描画
-		else continue;
+		if (!enemy[Enemy_Type[i]].boss) DrawRotaGraph(Enemy_X[i], Enemy_Y[i], 1.0, 0, Enemy_img[enemy[Enemy_Type[i]].enemyImg], TRUE);
+		else 
+		{
+			if(enemy[Enemy_Type[i]].enemyImg == 0) DrawRotaGraph(Enemy_X[i], Enemy_Y[i], 1.0, 0, orivia_img[0], TRUE);//1boss
+			else if (enemy[Enemy_Type[i]].enemyImg == 0) DrawRotaGraph(Enemy_X[i], Enemy_Y[i], 1.0, 0, orivia_img[0], TRUE);//2boss
+		}
 
 		//DrawCircle(Enemy_X[i], Enemy_Y[i], Enemy_HitBoxSize[i], GetColor(255, 0, 0), 1);
 		
@@ -325,7 +343,8 @@ void EnemyAction(void)
 					BossStock = NULL;
 					BossMaxHp = NULL;
 					BossCurrentHp = NULL;
-					Boss = NULL;				
+					Boss = -1;		
+					PlaySE(SE_ExplosionB);
 				}
 				else if (i == Boss && BossStock > 0) //次のターン
 				{
@@ -341,6 +360,7 @@ void EnemyAction(void)
 				Score += 10;
 				ItemSpawn(Enemy_X[i], Enemy_Y[i]);//アイテム生成
 				EnemyDestroy(i);
+				PlaySE(SE_ExplosionA);
 			}
 		}
 	}

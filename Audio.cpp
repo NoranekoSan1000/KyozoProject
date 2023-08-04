@@ -2,6 +2,9 @@
 int BGM[12];
 int SE_PlayerShot;
 int SE_Bomb;
+int SE_ExplosionA;
+int SE_ExplosionB;
+int SE_ItemGet;
 
 int NowPlayBGM;
 
@@ -30,6 +33,9 @@ void AudioInit(void)
 
 	SE_PlayerShot = LoadSoundMem("audio/SE_PlayerShot.mp3");
 	SE_Bomb = LoadSoundMem("audio/SE_BOON.mp3");
+	SE_ExplosionA = LoadSoundMem("audio/SE_ExplosionA.mp3");
+	SE_ExplosionB = LoadSoundMem("audio/SE_ExplosionB.mp3");
+	SE_ItemGet = LoadSoundMem("audio/SE_ItemGet.mp3");
 }
 
 void PlayBGM(int music)
