@@ -358,7 +358,7 @@ void EnemyAction(void)
 				}
 				
 				Score += 10;
-				ItemSpawn(Enemy_X[i], Enemy_Y[i]);//アイテム生成
+				ItemSpawn(0,Enemy_X[i], Enemy_Y[i]);//アイテム生成
 				EnemyDestroy(i);
 				PlaySE(SE_ExplosionA);
 			}
