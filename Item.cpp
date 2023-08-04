@@ -43,10 +43,10 @@ void ItemMove(int num)
 	if (!CollectTime[num]) Item_Y[num] += 1;
 	else
 	{
-		if (px < Item_X[num] - 8) Item_X[num] -= 8;
+		if (px < Item_X[num] - 8) Item_X[num] -= 8; //player.cpp
 		else if(px > Item_X[num] + 8) Item_X[num] += 8;
 		else Item_X[num] += 0;
-		if (py < Item_Y[num] - 10 ) Item_Y[num] -= 10;
+		if (py < Item_Y[num] - 10 ) Item_Y[num] -= 10; //player.cpp
 		else if (py > Item_Y[num] +10) Item_Y[num] += 10;
 		else Item_Y[num] += 0;
 	}
@@ -54,7 +54,7 @@ void ItemMove(int num)
 
 void CollectItem(int num) 
 {
-	if (py <= 150) CollectTime[num] = true;
+	if (py <= 150) CollectTime[num] = true; //player.cpp
 }
 
 void ItemAction(void)
@@ -70,7 +70,7 @@ void ItemAction(void)
 		ItemMove(i);
 
 		//“G‚ÆƒvƒŒƒCƒ„[‚ªÚG
-		float dis = sqrt(pow((double)Item_X[i] - px, 2) + pow((double)Item_Y[i] - py, 2));
+		float dis = sqrt(pow((double)Item_X[i] - px, 2) + pow((double)Item_Y[i] - py, 2)); //player.cpp
 
 		//‰æ–ÊŠO‚ÅÁ–Å
 		if (Item_Y[i] > FRAME_HEIGHT || 0 > Item_X[i] || Item_X[i] > FRAME_WIDTH)
@@ -79,11 +79,11 @@ void ItemAction(void)
 			continue;
 		}
 
-		if (dis <= Item_HitBoxSize[i] + Player_HitBoxSize)
+		if (dis <= Item_HitBoxSize[i] + Player_HitBoxSize) //player.cpp
 		{
 			//ÚG”»’è
-			Power += 1;
-			Score += 2;
+			Power += 1; //player.cpp
+			Score += 2; //player.cpp
 			PlaySE(SE_ItemGet);
 			ItemDestroy(i);
 			continue;
