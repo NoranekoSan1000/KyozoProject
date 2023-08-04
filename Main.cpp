@@ -118,7 +118,7 @@ void GameProcess(void)
 	if (P_ShotCoolTime >= 0) P_ShotCoolTime--;
 	if (DamagedCoolTime >= 0) DamagedCoolTime--;
 
-	ItemAction();
+	ItemMovement();
 
 	EnemyAction();
 
