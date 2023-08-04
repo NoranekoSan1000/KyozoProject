@@ -7,14 +7,14 @@ private:
 	bool CollectTime;
 
 public:
+	bool State;
 	int x;
 	int y;
 	int Item_HitBoxSize;
-	bool Item_exist;
 
 	void ItemGenerate(int ex, int ey, int hitboxsize) //コンストラクタ
 	{
-		Item_exist = true;
+		State = true;
 		x = ex;
 		y = ey;
 		Item_HitBoxSize = hitboxsize;
@@ -23,7 +23,7 @@ public:
 
 	void ItemDestroy()
 	{
-		Item_exist = false;
+		State = false;
 		x = NULL;
 		y = NULL;
 		Item_HitBoxSize = NULL;
@@ -56,7 +56,7 @@ void ItemSpawn(int en_x, int en_y)
 {
 	for (int i = 0; i < ITEM_AMOUNT; i++)
 	{
-		if (item[i].Item_exist != true)
+		if (item[i].State != true)
 		{
 			item[i].ItemGenerate(en_x, en_y, 40);
 			break;
@@ -71,7 +71,7 @@ void ItemMovement(void)
 {
 	for (int i = 0; i < ITEM_AMOUNT; i++)
 	{
-		if (!item[i].Item_exist) continue;
+		if (!item[i].State) continue;
 
 		item[i].CollectItem();//プレイヤーが画面上部へ行った時
 		item[i].ItemMove();
