@@ -13,7 +13,7 @@ public:
 	int y;
 	int Item_HitBoxSize;
 
-	void ItemGenerate(int itemtype, int ex, int ey, int hitboxsize) //コンストラクタ
+	void ItemGenerate(int itemtype, int ex, int ey, int hitboxsize)
 	{
 		State = true;
 		ItemType = itemtype;

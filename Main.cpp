@@ -99,11 +99,9 @@ void viewStageTitle(int i)
 }
 
 void viewBossHpBar(void)
-{
-	BossCurrentHp = Enemy_HP[Boss];
-	
+{	
 	DrawBox(25, 20, 600, 36, GetColor(0, 0, 0), 1);
-	DrawBox(25, 16, ((555 * BossCurrentHp) / BossMaxHp)+25, 32, GetColor(0, 255, 0), 1);
+	DrawBox(25, 16, ((555 * GetBossCurrentHP()) / GetBossMaxHP())+25, 32, GetColor(0, 255, 0), 1);//Enemy.cpp
 
 	int Font;
 	Font = CreateFontToHandle("メイリオ", 20, 9, DX_FONTTYPE_ANTIALIASING_EDGE);

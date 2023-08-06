@@ -32,7 +32,7 @@ void PlayerBulletDestroy(int num)
 double AngleCalc(int px, int py)
 {
 	double tmp;
-	tmp = atan2((Enemy_Y[CloseEnemy] + 40.0 - py), (Enemy_X[CloseEnemy] - px));
+	tmp = atan2((GetCloseEnemy_Y() + 40.0 - py), (GetCloseEnemy_X() - px)); //Enemy.cpp
 	return tmp;
 }
 
@@ -62,9 +62,9 @@ void PlayerShot(int px,int py,int type)
 			PlaySE(SE_PlayerShot); //Œø‰Ê‰¹
 			angle = AngleCalc(px,py);
 
-			if (CloseEnemy == -1 && type == 5) type = 3;
-			if (CloseEnemy == -1 && type == 6) type = 4;
-			if (CloseEnemy == -1 && type == 7) type = 8;
+			if (GetCloseEnemyNum() == -1 && type == 5) type = 3;	//Enemy.cpp
+			if (GetCloseEnemyNum() == -1 && type == 6) type = 4;
+			if (GetCloseEnemyNum() == -1 && type == 7) type = 8;
 			PlayerBulletGenerate(i, px, py, 4, type, angle);
 			break;
 		}
