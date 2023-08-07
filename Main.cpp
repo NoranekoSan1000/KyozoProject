@@ -4,7 +4,6 @@
 #include "Enemy.h"
 #include "Player_Bullet.h"
 #include "Enemy_Bullet.h"
-#include <string>
 #include "Talk.h"
 
 int SelectTitleAction = 0;
