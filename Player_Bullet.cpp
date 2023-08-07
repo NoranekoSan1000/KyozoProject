@@ -1,40 +1,92 @@
 #include "GameData.h"
 #include "Enemy.h"
 
-//ÉvÉåÉCÉÑÅ[ÇÃíe
-bool P_Bullet_exist[PLAYER_BULLET_AMOUNT];
-double P_Bullet_PosX[PLAYER_BULLET_AMOUNT];
-double P_Bullet_PosY[PLAYER_BULLET_AMOUNT];
-int P_Bullet_HitBoxSize[PLAYER_BULLET_AMOUNT];
-int P_Bullet_MovePattern[PLAYER_BULLET_AMOUNT];
-double P_Bullet_Angle[PLAYER_BULLET_AMOUNT];
-
-void PlayerBulletGenerate(int num, double x, double y, int hitboxsize, int pattern, double angle)
+class PlayerBullet
 {
-	P_Bullet_exist[num] = true;
-	P_Bullet_PosX[num] = x;
-	P_Bullet_PosY[num] = y;
-	P_Bullet_HitBoxSize[num] = hitboxsize;
-	P_Bullet_MovePattern[num] = pattern;
-	P_Bullet_Angle[num] = angle;
-}
+public:
+	bool State;
+	double X,Y;
+	int HitBoxSize;
+	int MovePattern;
+	double IndivAngle;
 
-void PlayerBulletDestroy(int num)
-{
-	P_Bullet_exist[num] = false;
-	P_Bullet_PosX[num] = NULL;
-	P_Bullet_PosY[num] = NULL;
-	P_Bullet_HitBoxSize[num] = NULL;
-	P_Bullet_MovePattern[num] = NULL;
-	P_Bullet_Angle[num] = NULL;
-}
+	void PlayerBulletGenerate(double x, double y, int hitboxsize, int pattern, double angle)
+	{
+		State = true;
+		X = x;
+		Y = y;
+		HitBoxSize = hitboxsize;
+		MovePattern = pattern;
+		IndivAngle = angle;
+	}
 
-double AngleCalc(int px, int py)
-{
-	double tmp;
-	tmp = atan2((GetCloseEnemy_Y() + 40.0 - py), (GetCloseEnemy_X() - px)); //Enemy.cpp
-	return tmp;
-}
+	void PlayerBulletDestroy()
+	{
+		State = false;
+		X = Y = HitBoxSize = MovePattern = IndivAngle = NULL;
+	}
+
+	double AngleCalc(int px, int py)
+	{
+		double tmp;
+		tmp = atan2((GetCloseEnemy_Y() + 40.0 - py), (GetCloseEnemy_X() - px)); //Enemy.cpp
+		return tmp;
+	}
+
+	void BulletMove()
+	{
+		float angle = (3 * PI / 2);//è„ï˚
+		float speed = 14;
+
+		switch (MovePattern)
+		{
+		case 0://íºêi
+			X += cos(angle) * speed;
+			Y += sin(angle) * speed;
+			break;
+		case 1://âEéŒÇﬂè¨
+			X += cos(angle + 0.15) * speed;
+			Y += sin(angle + 0.15) * speed;
+			break;
+		case 2://ç∂éŒÇﬂè¨
+			X += cos(angle - 0.15) * speed;
+			Y += sin(angle - 0.15) * speed;
+			break;
+		case 3://âEéŒÇﬂíÜ
+			X += cos(angle + 0.3) * speed;
+			Y += sin(angle + 0.3) * speed;
+			break;
+		case 4://ç∂éŒÇﬂíÜ
+			X += cos(angle - 0.3) * speed;
+			Y += sin(angle - 0.3) * speed;
+			break;
+		case 5://ãﬂÇ¢ìGë_Ç¢
+			X += cos(IndivAngle) * speed;
+			Y += sin(IndivAngle + 0.05) * speed;
+			break;
+		case 6://ãﬂÇ¢ìGë_Ç¢
+			X += cos(IndivAngle) * speed;
+			Y += sin(IndivAngle + 0.05) * speed;
+			break;
+		case 7://ãﬂÇ¢ìGë_Ç¢
+			X += cos(IndivAngle) * speed;
+			Y += sin(IndivAngle + 0.05) * speed;
+			break;
+		case 8://íºêi
+			X += cos(angle) * speed;
+			Y += sin(angle) * speed;
+			break;
+		case 9://bomb
+			X += cos(IndivAngle) * speed;
+			Y += sin(IndivAngle) * speed;
+			break;
+		default:
+			break;
+		}
+	}
+};
+
+PlayerBullet p_bullet[PLAYER_BULLET_AMOUNT];
 
 void PlayerBomb(int x, int y)
 {
@@ -42,9 +94,9 @@ void PlayerBomb(int x, int y)
 	{
 		for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++)
 		{
-			if (P_Bullet_exist[i] == false)//ÉVÉáÉbÉgê›íËäiî[èÍèäÇÃãÛÇ´ÇämîF
+			if (p_bullet[i].State == false)//ÉVÉáÉbÉgê›íËäiî[èÍèäÇÃãÛÇ´ÇämîF
 			{
-				PlayerBulletGenerate(i, x, y, 8, 9, PI / 360 * t);
+				p_bullet[i].PlayerBulletGenerate(x, y, 8, 9, PI / 360 * t);
 				break;
 			}
 		}
@@ -57,69 +109,17 @@ void PlayerShot(int px,int py,int type)
 	double angle;
 	for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++)
 	{
-		if (P_Bullet_exist[i] == false)//ÉVÉáÉbÉgê›íËäiî[èÍèäÇÃãÛÇ´ÇämîF
+		if (p_bullet[i].State == false)//ÉVÉáÉbÉgê›íËäiî[èÍèäÇÃãÛÇ´ÇämîF
 		{
 			PlaySE(SE_PlayerShot); //å¯â âπ
-			angle = AngleCalc(px,py);
+			angle = p_bullet[i].AngleCalc(px,py);
 
 			if (GetCloseEnemyNum() == -1 && type == 5) type = 3;	//Enemy.cpp
 			if (GetCloseEnemyNum() == -1 && type == 6) type = 4;
 			if (GetCloseEnemyNum() == -1 && type == 7) type = 8;
-			PlayerBulletGenerate(i, px, py, 4, type, angle);
+			p_bullet[i].PlayerBulletGenerate(px, py, 4, type, angle);
 			break;
 		}
-	}
-}
-
-void BulletMove(int num)
-{
-	float angle = (3 * PI / 2);//è„ï˚
-	float speed = 14;
-
-	switch (P_Bullet_MovePattern[num])
-	{
-	case 0://íºêi
-		P_Bullet_PosX[num] += cos(angle) * speed;
-		P_Bullet_PosY[num] += sin(angle) * speed;
-		break;
-	case 1://âEéŒÇﬂè¨
-		P_Bullet_PosX[num] += cos(angle + 0.15) * speed;
-		P_Bullet_PosY[num] += sin(angle + 0.15) * speed;
-		break;
-	case 2://ç∂éŒÇﬂè¨
-		P_Bullet_PosX[num] += cos(angle - 0.15) * speed;
-		P_Bullet_PosY[num] += sin(angle - 0.15) * speed;
-		break;
-	case 3://âEéŒÇﬂíÜ
-		P_Bullet_PosX[num] += cos(angle + 0.3) * speed;
-		P_Bullet_PosY[num] += sin(angle + 0.3) * speed;
-		break;
-	case 4://ç∂éŒÇﬂíÜ
-		P_Bullet_PosX[num] += cos(angle - 0.3) * speed;
-		P_Bullet_PosY[num] += sin(angle - 0.3) * speed;
-		break;
-	case 5://ãﬂÇ¢ìGë_Ç¢
-		P_Bullet_PosX[num] += cos(P_Bullet_Angle[num]) * speed;
-		P_Bullet_PosY[num] += sin(P_Bullet_Angle[num] + 0.05) * speed;
-		break;
-	case 6://ãﬂÇ¢ìGë_Ç¢
-		P_Bullet_PosX[num] += cos(P_Bullet_Angle[num]) * speed;
-		P_Bullet_PosY[num] += sin(P_Bullet_Angle[num] + 0.05) * speed;
-		break;
-	case 7://ãﬂÇ¢ìGë_Ç¢
-		P_Bullet_PosX[num] += cos(P_Bullet_Angle[num]) * speed;
-		P_Bullet_PosY[num] += sin(P_Bullet_Angle[num] + 0.05) * speed;
-		break;
-	case 8://íºêi
-		P_Bullet_PosX[num] += cos(angle) * speed;
-		P_Bullet_PosY[num] += sin(angle) * speed;
-		break;
-	case 9://bomb
-		P_Bullet_PosX[num] += cos(P_Bullet_Angle[num]) * speed;
-		P_Bullet_PosY[num] += sin(P_Bullet_Angle[num]) * speed;
-		break;
-	default:
-		break;
 	}
 }
 
@@ -127,20 +127,20 @@ void PlayerBulletAction(void)
 {
 	for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++)
 	{
-		if (P_Bullet_exist[i] == true) DrawCircle(P_Bullet_PosX[i], P_Bullet_PosY[i], P_Bullet_HitBoxSize[i], GetColor(100, 100, 255), 1);
+		if (p_bullet[i].State == true) DrawCircle(p_bullet[i].X, p_bullet[i].Y, p_bullet[i].HitBoxSize, GetColor(100, 100, 255), 1);
 		else continue;
 		
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200);
-		if(0 <= P_Bullet_MovePattern[i] && P_Bullet_MovePattern[i] <= 2 ) DrawRotaGraph(P_Bullet_PosX[i], P_Bullet_PosY[i], 1.0, 0, PlayerShot01_img, TRUE);
-		else DrawRotaGraph(P_Bullet_PosX[i], P_Bullet_PosY[i], 1.0, 0, PlayerShot02_img, TRUE);
+		if(0 <= p_bullet[i].MovePattern && p_bullet[i].MovePattern <= 2 ) DrawRotaGraph(p_bullet[i].X, p_bullet[i].Y, 1.0, 0, PlayerShot01_img, TRUE);
+		else DrawRotaGraph(p_bullet[i].X, p_bullet[i].Y, 1.0, 0, PlayerShot02_img, TRUE);
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
 
-		BulletMove(i);
+		p_bullet[i].BulletMove();
 
 		//âÊñ äOÇ≈è¡ñ≈
-		if (P_Bullet_PosY[i] < -20 || P_Bullet_PosY[i] > FRAME_HEIGHT || 0 > P_Bullet_PosX[i] || P_Bullet_PosX[i] > FRAME_WIDTH)
+		if (p_bullet[i].Y < -20 || p_bullet[i].Y > FRAME_HEIGHT || 0 > p_bullet[i].X || p_bullet[i].X > FRAME_WIDTH)
 		{
-			PlayerBulletDestroy(i);
+			p_bullet[i].PlayerBulletDestroy();
 			continue;
 		}
 	}
@@ -148,5 +148,22 @@ void PlayerBulletAction(void)
 
 void PlayerBulletClear(void)
 {
-	for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++) PlayerBulletDestroy(i);
+	for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++) p_bullet[i].PlayerBulletDestroy();
+}
+
+int GetP_BulletPosX(int num)
+{
+	return p_bullet[num].X;
+}
+int GetP_BulletPosY(int num)
+{
+	return p_bullet[num].Y;
+}
+int GetP_BulletHitBoxSize(int num)
+{
+	return p_bullet[num].HitBoxSize;
+}
+void DelP_Bullet(int num)
+{
+	 p_bullet[num].PlayerBulletDestroy();
 }

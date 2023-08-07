@@ -72,18 +72,8 @@ public:
 	{
 		State = false;
 		Visible = false;
-		Enemy_Type = NULL;
-		X = NULL;
-		Y = NULL;
-		HitBoxSize = NULL;
-		MoveTime = NULL;
-		MovePattern = NULL;
-		NowMoveMode = NULL;
-		HP = NULL;
-		Enemy_dist = NULL;
-		E_ShotCoolTime = NULL;
-		E_AttackMode = NULL;
-
+		Enemy_Type = X = Y = HitBoxSize = MoveTime = MovePattern = NowMoveMode = HP = Enemy_dist = E_ShotCoolTime = E_AttackMode = NULL;
+		
 		CloseEnemy = -1;//近いキャラをリセット
 		CloseDist = 1100;
 	}
@@ -323,10 +313,10 @@ void EnemyAction(void)
 			//ダメージ
 			for (int j = 0; j < PLAYER_BULLET_AMOUNT; j++)
 			{
-				float dis = sqrt(pow((double)enemy[i].X - P_Bullet_PosX[j], 2) + pow((double)enemy[i].Y - P_Bullet_PosY[j], 2));
-				if (dis <= enemy[i].HitBoxSize + P_Bullet_HitBoxSize[j])//被弾判定
+				float dis = sqrt(pow((double)enemy[i].X - GetP_BulletPosX(j), 2) + pow((double)enemy[i].Y - GetP_BulletPosY(j), 2));
+				if (dis <= enemy[i].HitBoxSize + GetP_BulletHitBoxSize(j))//被弾判定
 				{
-					PlayerBulletDestroy(j);
+					DelP_Bullet(j);
 					if (enemy[i].HP >= 1)
 					{
 						Score += 1;
