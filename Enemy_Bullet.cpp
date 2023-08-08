@@ -73,6 +73,7 @@ void EnemyBulletHit()
 	}
 
 }
+
 };
 
 EnemyBullet enemybullet[ENEMY_BULLET_AMOUNT];
