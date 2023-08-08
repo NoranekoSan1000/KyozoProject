@@ -1,36 +1,100 @@
 #include "GameData.h"
 #include "Player.h"
 
-//敵の弾
-bool E_Bullet_exist[ENEMY_BULLET_AMOUNT];
-int E_Bullet_Design[ENEMY_BULLET_AMOUNT];
-double E_Bullet_PosX[ENEMY_BULLET_AMOUNT];
-double E_Bullet_PosY[ENEMY_BULLET_AMOUNT];
-int E_Bullet_HitBoxSize[ENEMY_BULLET_AMOUNT];
-int E_Bullet_MovePattern[ENEMY_BULLET_AMOUNT];
-double E_Bullet_Angle[ENEMY_BULLET_AMOUNT];
+void EnemyBulletClear(void);
 
-void EnemyBulletGenerate(int num, int design, int x, int y, int hitboxsize, int pattern, double angle)
+class EnemyBullet
 {
-	E_Bullet_exist[num] = true;
-	E_Bullet_Design[num] = design;
-	E_Bullet_PosX[num] = x;
-	E_Bullet_PosY[num] = y;
-	E_Bullet_HitBoxSize[num] = hitboxsize;
-	E_Bullet_MovePattern[num] = pattern;
-	E_Bullet_Angle[num] = angle;
+public:
+	bool State;
+	int Design;
+	double X;
+	double Y;
+	int HitBoxSize;
+	int MovePattern;
+	double Angle;
+
+	void EnemyBulletGenerate(int design, int x, int y, int hitboxsize, int pattern, double angle)
+{
+	State = true;
+	Design = design;
+	X = x;
+	Y = y;
+	HitBoxSize = hitboxsize;
+	MovePattern = pattern;
+	Angle = angle;
 }
 
-void EnemyBulletDestroy(int num)
+void EnemyBulletDestroy()
 {
-	E_Bullet_exist[num] = false;
-	E_Bullet_Design[num] = NULL;
-	E_Bullet_PosX[num] = NULL;
-	E_Bullet_PosY[num] = NULL;
-	E_Bullet_HitBoxSize[num] = NULL;
-	E_Bullet_MovePattern[num] = NULL;
-	E_Bullet_Angle[num] = NULL;
+	State = false;
+	Design = X = Y = HitBoxSize = MovePattern = Angle = NULL;
 }
+
+
+void EnemyBulletMove()
+{
+	float angle = (PI / 2);//下方
+	float speed = 3;
+
+	switch (MovePattern)
+	{
+	case 0://真直ぐ
+		X += cos(Angle) * speed;
+		Y += sin(Angle) * speed;
+		break;
+	case 1://ウェーブ（仮）
+
+		break;
+	default:
+		break;
+	}
+}
+
+void EnemyBulletHit()
+{
+	//弾とプレイヤーが接触
+	double dis = sqrt(pow((double)px - X, 2) + pow((double)py - Y, 2));
+	if (dis <= HitBoxSize + Player_HitBoxSize)//被弾判定
+	{
+		//被弾判定
+		if (DamagedCoolTime <= 0 && BombTime <= 0)
+		{
+			if (Life > 0)
+			{
+				px = InitialPosX;
+				py = InitialPosY;
+				Life -= 1;
+				Bomb = 2;
+				DamagedCoolTime = 120;
+				EnemyBulletClear();
+			}
+		}
+	}
+
+}
+};
+
+EnemyBullet enemybullet[ENEMY_BULLET_AMOUNT];
+
+void EnemyBulletSpawn(int design, int en_x, int en_y, int size,int pattern,double angle)
+{
+	for (int i = 0; i < ENEMY_BULLET_AMOUNT; i++)
+	{
+		if (enemybullet[i].State == false)//ショット設定格納場所の空きを確認
+		{
+			PlaySE(SE_PlayerShot); //効果音
+			enemybullet[i].EnemyBulletGenerate(design, en_x, en_y, size, pattern, angle);
+			break;
+		}
+	}	
+}
+
+void EnemyBulletClear(void)
+{
+	for (int i = 0; i < ENEMY_BULLET_AMOUNT; i++) enemybullet[i].EnemyBulletDestroy();
+}
+
 
 double  EnemyAngleCalc(int en_x, int en_y)
 {
@@ -39,25 +103,7 @@ double  EnemyAngleCalc(int en_x, int en_y)
 	return tmp;
 }
 
-void EnemyBulletSpawn(int design, int en_x, int en_y, int size,int pattern,double angle)
-{
-	for (int i = 0; i < ENEMY_BULLET_AMOUNT; i++)
-	{
-		if (E_Bullet_exist[i] == false)//ショット設定格納場所の空きを確認
-		{
-			PlaySE(SE_PlayerShot); //効果音
-			EnemyBulletGenerate(i, design, en_x, en_y, size, pattern, angle);
-			break;
-		}
-	}	
-}
-
-void EnemyBulletClear(void)
-{
-	for (int i = 0; i < ENEMY_BULLET_AMOUNT; i++) EnemyBulletDestroy(i);
-}
-
-void EnemyShot(int design, EnemyShotPattern type, int en_x, int en_y, int size, int capacity,int arc)
+void EnemyShot(int design, EnemyShotPattern type, int en_x, int en_y, int size, int capacity, int arc)
 {
 	double angle;
 	angle = EnemyAngleCalc(en_x, en_y);//自機狙い用
@@ -75,7 +121,7 @@ void EnemyShot(int design, EnemyShotPattern type, int en_x, int en_y, int size, 
 		for (int t = 0; t < 720; t += (720 / capacity))
 		{
 			EnemyBulletSpawn(design, en_x, en_y, size, 0, PI / 360 * t);
-		}	
+		}
 	}
 	else if (type == AimingExplosion) // 自機狙い爆発
 	{
@@ -98,50 +144,9 @@ void EnemyShot(int design, EnemyShotPattern type, int en_x, int en_y, int size, 
 			EnemyBulletSpawn(design, en_x, en_y, size, 0, angle + PI / 360 * t);
 		}
 	}
-}
 
-void EnemyBulletMove(int num)
-{
-	float angle = (PI / 2);//下方
-	float speed = 3;
-
-	switch (E_Bullet_MovePattern[num])
-	{
-	case 0://真直ぐ
-		E_Bullet_PosX[num] += cos(E_Bullet_Angle[num]) * speed;
-		E_Bullet_PosY[num] += sin(E_Bullet_Angle[num]) * speed;
-		break;
-	case 1://ウェーブ（仮）
-
-		break;
-	default:
-		break;
-	}
-}
-
-void EnemyBulletHit(int num)
-{
-	//弾とプレイヤーが接触
-	double dis = sqrt(pow((double)px - E_Bullet_PosX[num], 2) + pow((double)py - E_Bullet_PosY[num], 2));
-	if (dis <= E_Bullet_HitBoxSize[num] + Player_HitBoxSize)//被弾判定
-	{
-		//被弾判定
-		if (DamagedCoolTime <= 0 && BombTime <= 0)
-		{
-			if (Life > 0)
-			{
-				px = InitialPosX;
-				py = InitialPosY;
-				Life -= 1;
-				Bomb = 2;
-				DamagedCoolTime = 120;
-				EnemyBulletClear();
-			}
-		}
-	}
 
 }
-
 
 void EnemyBulletAction(void)
 {
@@ -149,18 +154,18 @@ void EnemyBulletAction(void)
 	for (int i = 0; i < ENEMY_BULLET_AMOUNT; i++)
 	{
 
-		if (E_Bullet_exist[i] == true) DrawCircle((int)E_Bullet_PosX[i], (int)E_Bullet_PosY[i], E_Bullet_HitBoxSize[i], GetColor(100, 100, 255), 1);
+		if (enemybullet[i].State == true) DrawCircle((int)enemybullet[i].X, (int)enemybullet[i].Y, enemybullet[i].HitBoxSize, GetColor(100, 100, 255), 1);
 		else continue;
 
-		DrawRotaGraph((int)E_Bullet_PosX[i], (int)E_Bullet_PosY[i], 1.0, 0, EnemyShot_img[E_Bullet_Design[i]], TRUE);//画像
+		DrawRotaGraph((int)enemybullet[i].X, (int)enemybullet[i].Y, 1.0, 0, EnemyShot_img[enemybullet[i].Design], TRUE);//画像
 
-		EnemyBulletMove(i);
-		EnemyBulletHit(i);
+		enemybullet[i].EnemyBulletMove();
+		enemybullet[i].EnemyBulletHit();
 
 		//画面外で消滅
-		if (E_Bullet_PosY[i] < -20 || E_Bullet_PosY[i] > FRAME_HEIGHT || 0 > E_Bullet_PosX[i] ||E_Bullet_PosX[i] > FRAME_WIDTH)
+		if (enemybullet[i].Y < -20 || enemybullet[i].Y > FRAME_HEIGHT || 0 > enemybullet[i].X || enemybullet[i].X > FRAME_WIDTH)
 		{
-			EnemyBulletDestroy(i);
+			enemybullet[i].EnemyBulletDestroy();
 			continue;
 		}
 
