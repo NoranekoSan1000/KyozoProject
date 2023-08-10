@@ -13,7 +13,7 @@ public:
 	int y;
 	int Item_HitBoxSize;
 
-	void ItemGenerate(int itemtype, int ex, int ey, int hitboxsize) //コンストラクタ
+	void ItemGenerate(int itemtype, int ex, int ey, int hitboxsize)
 	{
 		State = true;
 		ItemType = itemtype;
@@ -26,10 +26,7 @@ public:
 	void ItemDestroy()
 	{
 		State = false;
-		ItemType = NULL;
-		x = NULL;
-		y = NULL;
-		Item_HitBoxSize = NULL;
+		ItemType = x = y = Item_HitBoxSize = NULL;
 		CollectTime = false;
 	}
 

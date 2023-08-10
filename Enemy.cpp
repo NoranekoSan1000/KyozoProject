@@ -5,303 +5,295 @@
 #include "Item.h"
 using namespace std;
 
-struct Enemy
+struct EnemyType
 {
 	int hp;//体力
 	bool boss;
 	int enemyImg;
 };
-Enemy enemy[3] = 
+EnemyType enemytype[3] = 
 { 
 	{3 ,false ,2},{4 ,false ,3},//Enemy
 	{75 ,true , 0}//Boss
 };
 
-//敵
-bool Enemy_exist[ENEMY_AMOUNT];//敵が存在するか
-bool Enemy_visible[ENEMY_AMOUNT];//敵が画面内にいるか
-int Enemy_Type[ENEMY_AMOUNT];//画像用
-int Enemy_X[ENEMY_AMOUNT];
-int Enemy_Y[ENEMY_AMOUNT];
-int Enemy_HitBoxSize[ENEMY_AMOUNT];
-int Enemy_MoveTime[ENEMY_AMOUNT];
-int MovePattern[ENEMY_AMOUNT];//移動パターン
-int NowMoveMode[ENEMY_AMOUNT];
-int Enemy_HP[ENEMY_AMOUNT];
-float Enemy_dist[ENEMY_AMOUNT];
-float E_ShotCoolTime[ENEMY_AMOUNT];
-int E_AttackMode[ENEMY_AMOUNT];//射撃パターンの遷移
-
-int CloseEnemy = -1;
 float CloseDist = 1100;
-
+int CloseEnemy = -1;
 bool BossActive = false;
 int Boss = -1;
 int BossMaxHp = 0;
 int BossCurrentHp = 0;
 int BossStock = 0;//ターン数
 
-void EnemyGenerate(int num, int type ,int move ,int x, int y, int hitboxsize)
+class Enemy
 {
-	Enemy_exist[num] = true;
-	Enemy_visible[num] = false;
-	Enemy_Type[num] = type;
-	Enemy_X[num] = x;
-	Enemy_Y[num] = y;
-	Enemy_HitBoxSize[num] = hitboxsize;
-	Enemy_MoveTime[num] = 0;
-	MovePattern[num] = move;
-	NowMoveMode[num] = 0;
-	Enemy_HP[num] = enemy[Enemy_Type[num]].hp;
-	E_ShotCoolTime[num] = 0;
-	E_AttackMode[num] = 0;
+private:
+	
+public:
+	bool State;//敵が存在するか
+	bool Visible;//敵が画面内にいるか
+	int Enemy_Type;//画像用
+	int X,Y;
+	int HitBoxSize;
+	int MoveTime;
+	int MovePattern;//移動パターン
+	int NowMoveMode;
+	int HP;
+	float Enemy_dist;
+	float E_ShotCoolTime;
+	int E_AttackMode;//射撃パターンの遷移
 
-	if (enemy[type].boss == true)
+	void EnemyGenerate(int num, int type, int move, int x, int y, int hitboxsize)
 	{
-		BossActive = true;
-		Boss = num;
-		BossMaxHp = enemy[Enemy_Type[num]].hp;
-		BossCurrentHp = enemy[Enemy_Type[num]].hp;
-		BossStock = 1;
-	}
-}
+		State = true;
+		Visible = false;
+		Enemy_Type = type;
+		X = x;
+		Y = y;
+		HitBoxSize = hitboxsize;
+		MoveTime = 0;
+		MovePattern = move;
+		NowMoveMode = 0;
+		HP = enemytype[Enemy_Type].hp;
+		E_ShotCoolTime = 0;
+		E_AttackMode = 0;
 
-void EnemyDestroy(int num)
-{
-	Enemy_exist[num] = false;
-	Enemy_visible[num] = false;
-	Enemy_Type[num] = NULL;
-	Enemy_X[num] = NULL;
-	Enemy_Y[num] = NULL;
-	Enemy_HitBoxSize[num] = NULL;
-	Enemy_MoveTime[num] = NULL;
-	MovePattern[num] = NULL;
-	NowMoveMode[num] = NULL;
-	Enemy_HP[num] = NULL;
-	Enemy_dist[num] = NULL;
-	E_ShotCoolTime[num] = NULL;
-	E_AttackMode[num] = NULL;
-
-	CloseEnemy = -1;//近いキャラをリセット
-	CloseDist = 1100;
-}
-
-void EnemySpawn(int type, MoveList move, int x, int y)
-{
-	for (int i = 0; i < ENEMY_AMOUNT; i++)
-	{
-		if (Enemy_exist[i] == false)
+		if (enemytype[type].boss == true)
 		{
-			EnemyGenerate(i, type, move, x, y, 16);
-			break;
+			BossActive = true;
+			Boss = num;
+			BossMaxHp = enemytype[Enemy_Type].hp;
+			BossCurrentHp = enemytype[Enemy_Type].hp;
+			BossStock = 1;
 		}
 	}
-}
 
-void move(int num, int spdX, int spdY, int time)
-{
-	if(Enemy_MoveTime[num] <= 0) Enemy_MoveTime[num] = time;
-	else
+	void EnemyDestroy()
 	{
-		Enemy_X[num] += spdX;
-		Enemy_Y[num] += spdY;
-		Enemy_MoveTime[num]--;
-		if (Enemy_MoveTime[num] <= 0) NowMoveMode[num]++;
+		State = false;
+		Visible = false;
+		Enemy_Type = X = Y = HitBoxSize = MoveTime = MovePattern = NowMoveMode = HP = Enemy_dist = E_ShotCoolTime = E_AttackMode = NULL;
+		
+		CloseEnemy = -1;//近いキャラをリセット
+		CloseDist = 1100;
 	}
-}
 
-void EnemyMove(int num)
-{
-	
-	switch (MovePattern[num])
+	void move(int spdX, int spdY, int time)
 	{
+		if (MoveTime <= 0) MoveTime = time;
+		else
+		{
+			X += spdX;
+			Y += spdY;
+			MoveTime--;
+			if (MoveTime <= 0) NowMoveMode++;
+		}
+	}
+	void EnemyMove()
+	{
+		switch (MovePattern)
+		{
 		case MOVE_A://直進
-			switch (NowMoveMode[num])
+			switch (NowMoveMode)
 			{
-				case 0: move(num, 0, 2, 9999); break;
-				default: break;
+			case 0: move(0, 2, 9999); break;
+			default: break;
 			}
 			break;
 		case MOVE_B://高速in一時停止後直進
-			switch (NowMoveMode[num])
+			switch (NowMoveMode)
 			{
-				case 0: move(num, 0, 5, 30); break;
-				case 1: move(num, 0, 0, 160); break;
-				case 2: move(num, 0, 2, 9999); break;
-				default: break;
+			case 0: move(0, 5, 30); break;
+			case 1: move(0, 0, 160); break;
+			case 2: move(0, 2, 9999); break;
+			default: break;
 			}
 			break;
 		case MOVE_C://高速in一時停止後左下
-			switch (NowMoveMode[num])
+			switch (NowMoveMode)
 			{
-				case 0: move(num, 0, 5, 30); break;
-				case 1: move(num, 0, 0, 70); break;
-				case 2: move(num, -1, 2, 9999); break;
-				default: break;
+			case 0: move(0, 5, 30); break;
+			case 1: move(0, 0, 70); break;
+			case 2: move(-1, 2, 9999); break;
+			default: break;
 			}
 			break;
 		case MOVE_D://高速in一時停止後右下
-			switch (NowMoveMode[num])
+			switch (NowMoveMode)
 			{
-				case 0: move(num, 0, 5, 30); break;
-				case 1: move(num, 0, 0, 70); break;
-				case 2: move(num, 1, 2, 9999); break;
-				default: break;
+			case 0: move(0, 5, 30); break;
+			case 1: move(0, 0, 70); break;
+			case 2: move(1, 2, 9999); break;
+			default: break;
 			}
 			break;
 		case MOVE_E://右 から 下
-			switch (NowMoveMode[num])
+			switch (NowMoveMode)
 			{
-				case 0: move(num, 3, 0, 180); break;
-				case 1: move(num, 0, 0, 20); break;
-				case 2: move(num, 0, 2, 9999); break;
-				default: break;
+			case 0: move(3, 0, 180); break;
+			case 1: move(0, 0, 20); break;
+			case 2: move(0, 2, 9999); break;
+			default: break;
 			}
 			break;
 		case MOVE_BOSS://ボス
-			switch (NowMoveMode[num])
+			switch (NowMoveMode)
 			{
-				case 0: move(num, 0, 5, 30); break;
-				case 1: move(num, 0, 0, 160); break;
-				default: break;
+			case 0: move(0, 5, 30); break;
+			case 1: move(0, 0, 160); break;
+			default: break;
 			}
 			break;
 		default:
 			break;
+		}
 	}
-}
 
-void CheckDistance(int num) 
-{
-	if (Enemy_dist[num] < CloseDist)
+	void wait(int time)
 	{
-		CloseEnemy = num;
+		E_ShotCoolTime = time;
+		E_AttackMode++;
 	}
-	CloseDist = Enemy_dist[CloseEnemy];
-}
-
-void wait(int num,int time)
-{
-	E_ShotCoolTime[num] = time;
-	E_AttackMode[num]++;
-}
-void loop(int num,int back)
-{
-	E_AttackMode[num] = back;
-}
-void shot(int num, int design, EnemyShotPattern type, int size, int capacity, int arc, int interval)
-{
-	EnemyShot(design, type, Enemy_X[num], Enemy_Y[num], size, capacity, arc);//射撃	
-	E_AttackMode[num]++;
-	E_ShotCoolTime[num] = interval;
-}
-
-void EnemyShotAction(int num)
-{
-	if (E_ShotCoolTime[num] >= 0) E_ShotCoolTime[num]--;
-	if (E_ShotCoolTime[num] < 0)
+	void loop(int back)
 	{
-		if (Enemy_Type[num] == 0)
-		{
-			if (SelectDifficulty == 0 || SelectDifficulty == 1); //NoAction
-			else if (SelectDifficulty == 2)
-			{
-				switch (E_AttackMode[num])
-				{
-					case 0: wait(num, 90); break;
-					case 1: shot(num, 0, AimingOneShot, 4, 1, 10, NULL); break;
-				}
-			}
-			else if (SelectDifficulty == 3)
-			{
-				switch (E_AttackMode[num])
-				{
-					case 0: wait(num, 90); break;
-					case 1: shot(num, 0, AimingDiffusion, 4, 3, 10, 90); break;
-				}
-			}
-		}
-		if (Enemy_Type[num] == 1)
-		{
-			switch (E_AttackMode[num])
-			{
-				case 0: wait(num, 90); break;
-				case 1: shot(num, 7, Explosion, 6, 10, NULL, 10); break;
-				case 2: shot(num, 8, Explosion, 6, 10, NULL, 10); break;
-				case 3: shot(num, 9, Explosion, 6, 10, NULL, 5); break;
-			}
-		}
-		if (Enemy_Type[num] == 2)
-		{
-			if (BossStock == 1)
-			{
-				switch (E_AttackMode[num])
-				{
-				case 0: wait(num, 90); break;
-				case 1: shot(num, 0, Explosion, 6, 20, NULL, 10); break;
-				case 2: shot(num, 1, Explosion, 6, 20, NULL, 10); break;
-				case 3: shot(num, 2, Explosion, 6, 30, NULL, 5); break;
-				case 4: loop(num, 0); break;
-				}
-			}
-			if (BossStock == 0)
-			{
-				switch (E_AttackMode[num])
-				{
-				case 0: wait(num, 90); break;
-				case 1: shot(num, 5, Explosion, 10, 20, NULL, 20); break;
-				case 2: shot(num, 6, Explosion, 10, 20, NULL, 20); break;
-				case 3: shot(num, 7, Explosion, 10, 30, NULL, 20); break;
-				case 4: shot(num, 8, Explosion, 10, 30, NULL, 20); break;
-				case 5: loop(num, 0); break;
-				}
-			}
-			
-		}
+		E_AttackMode = back;
 	}
-	
+	void shot(int design, EnemyShotPattern type, int size, int capacity, int arc, int interval)
+	{
+		EnemyShot(design, type, X, Y, size, capacity, arc);//射撃	
+		E_AttackMode++;
+		E_ShotCoolTime = interval;
+	}
+	void EnemyShotAction()
+	{
+		if (E_ShotCoolTime >= 0) E_ShotCoolTime--;
+		if (E_ShotCoolTime < 0)
+		{
+			if (Enemy_Type == 0)
+			{
+				if (SelectDifficulty == 0 || SelectDifficulty == 1); //NoAction
+				else if (SelectDifficulty == 2)
+				{
+					switch (E_AttackMode)
+					{
+					case 0: wait(90); break;
+					case 1: shot(0, AimingOneShot, 4, 1, 10, NULL); break;
+					}
+				}
+				else if (SelectDifficulty == 3)
+				{
+					switch (E_AttackMode)
+					{
+					case 0: wait(90); break;
+					case 1: shot(0, AimingDiffusion, 4, 3, 10, 90); break;
+					}
+				}
+			}
+			if (Enemy_Type == 1)
+			{
+				switch (E_AttackMode)
+				{
+				case 0: wait(90); break;
+				case 1: shot(7, Explosion, 6, 10, NULL, 10); break;
+				case 2: shot(8, Explosion, 6, 10, NULL, 10); break;
+				case 3: shot(9, Explosion, 6, 10, NULL, 5); break;
+				}
+			}
+			if (Enemy_Type == 2)
+			{
+				if (BossStock == 1)
+				{
+					switch (E_AttackMode)
+					{
+					case 0: wait(90); break;
+					case 1: shot(0, Explosion, 6, 20, NULL, 10); break;
+					case 2: shot(1, Explosion, 6, 20, NULL, 10); break;
+					case 3: shot(2, Explosion, 6, 30, NULL, 5); break;
+					case 4: loop(0); break;
+					}
+				}
+				if (BossStock == 0)
+				{
+					switch (E_AttackMode)
+					{
+					case 0: wait(90); break;
+					case 1: shot(5, Explosion, 10, 20, NULL, 20); break;
+					case 2: shot(6, Explosion, 10, 20, NULL, 20); break;
+					case 3: shot(7, Explosion, 10, 30, NULL, 20); break;
+					case 4: shot(8, Explosion, 10, 30, NULL, 20); break;
+					case 5: loop(0); break;
+					}
+				}
+
+			}
+		}
+
+	}
+};
+
+Enemy enemy[ENEMY_AMOUNT];
+
+void CheckDistance(int num)
+{
+	if (enemy[num].Enemy_dist < CloseDist) CloseEnemy = num;
+	CloseDist = enemy[CloseEnemy].Enemy_dist;//最近を編集
 }
 
+//外部から呼び出し
+void EnemySpawn(int type, MoveList move, int x, int y)
+{
+	for (int i = 0; i < ITEM_AMOUNT; i++)
+	{
+		if (enemy[i].State != true)
+		{
+			enemy[i].EnemyGenerate(i, type, move, x, y, 16);
+			break;
+		}
+	}
+}
+void EnemyClear(void)
+{
+	for (int i = 0; i < ENEMY_AMOUNT; i++) enemy[i].EnemyDestroy();
+}
 void EnemyAction(void)
 {
-
 	for (int i = 0; i < ENEMY_AMOUNT; i++)
 	{
-		if (Enemy_exist[i] != true) continue;
+		if (enemy[i].State != true) continue;
 
 		//敵キャラ画像表示
-		if (!enemy[Enemy_Type[i]].boss) DrawRotaGraph(Enemy_X[i], Enemy_Y[i], 1.0, 0, Enemy_img[enemy[Enemy_Type[i]].enemyImg], TRUE);
+		if (!enemytype[enemy[i].Enemy_Type].boss) DrawRotaGraph(enemy[i].X, enemy[i].Y, 1.0, 0, Enemy_img[enemytype[enemy[i].Enemy_Type].enemyImg], TRUE);
 		else 
 		{
-			if(enemy[Enemy_Type[i]].enemyImg == 0) DrawRotaGraph(Enemy_X[i], Enemy_Y[i], 1.0, 0, orivia_img[0], TRUE);//1boss
-			else if (enemy[Enemy_Type[i]].enemyImg == 0) DrawRotaGraph(Enemy_X[i], Enemy_Y[i], 1.0, 0, orivia_img[0], TRUE);//2boss
+			if(enemytype[enemy[i].Enemy_Type].enemyImg == 0) DrawRotaGraph(enemy[i].X, enemy[i].Y, 1.0, 0, orivia_img[0], TRUE);//1boss
+			else if (enemytype[enemy[i].Enemy_Type].enemyImg == 0) DrawRotaGraph(enemy[i].X, enemy[i].Y, 1.0, 0, orivia_img[0], TRUE);//2boss
 		}
 
-		//DrawCircle(Enemy_X[i], Enemy_Y[i], Enemy_HitBoxSize[i], GetColor(255, 0, 0), 1);
+		//DrawCircle(X[i], Y[i], HitBoxSize[i], GetColor(255, 0, 0), 1);
 		
-		//移動
-		EnemyMove(i);
+		enemy[i].EnemyMove();//移動
 
 		//画面内に一度でも入ればtrue
-		if (Enemy_X[i] <= FRAME_WIDTH && Enemy_X[i] >= 0 && Enemy_Y[i] <= FRAME_HEIGHT && Enemy_Y[i] >= 0) Enemy_visible[i] = true;
+		if (enemy[i].X <= FRAME_WIDTH && enemy[i].X >= 0 && enemy[i].Y <= FRAME_HEIGHT && enemy[i].Y >= 0) enemy[i].Visible = true;
 		
-		if (Enemy_visible[i])
+		if (enemy[i].Visible)
 		{
-			if (E_ShotCoolTime[i] >= 0) E_ShotCoolTime[i]--;
-			EnemyShotAction(i);
+			if (enemy[i].E_ShotCoolTime >= 0) enemy[i].E_ShotCoolTime--;
+			enemy[i].EnemyShotAction();
 
 			//敵とプレイヤーの距離
-			Enemy_dist[i] = sqrt(pow((double)Enemy_X[i] - px, 2) + pow((double)Enemy_Y[i] - py, 2));
+			enemy[i].Enemy_dist = sqrt(pow((double)enemy[i].X - px, 2) + pow((double)enemy[i].Y - py, 2));
 			CheckDistance(i);
+			
 
 			//画面外で消滅
-			if (Enemy_visible[i] && (Enemy_Y[i] > FRAME_HEIGHT || -20 > Enemy_X[i] || Enemy_X[i] > FRAME_WIDTH + 20))
+			if (enemy[i].Visible && (enemy[i].Y > FRAME_HEIGHT || -20 > enemy[i].X || enemy[i].X > FRAME_WIDTH + 20))
 			{
-				EnemyDestroy(i);
+				enemy[i].EnemyDestroy();
 				continue;
 			}
 
-			if (Enemy_dist[i] <= Enemy_HitBoxSize[i] + Player_HitBoxSize)
+			if (enemy[i].Enemy_dist <= enemy[i].HitBoxSize + Player_HitBoxSize)
 			{		
 				//被弾判定
 				if (DamagedCoolTime <= 0 && BombTime <= 0)
@@ -321,21 +313,20 @@ void EnemyAction(void)
 			//ダメージ
 			for (int j = 0; j < PLAYER_BULLET_AMOUNT; j++)
 			{
-				//敵との座標チェック
-				float dis = sqrt(pow((double)Enemy_X[i] - P_Bullet_PosX[j], 2) + pow((double)Enemy_Y[i] - P_Bullet_PosY[j], 2));
-				if (dis <= Enemy_HitBoxSize[i] + P_Bullet_HitBoxSize[j])//被弾判定
+				float dis = sqrt(pow((double)enemy[i].X - GetP_BulletPosX(j), 2) + pow((double)enemy[i].Y - GetP_BulletPosY(j), 2));
+				if (dis <= enemy[i].HitBoxSize + GetP_BulletHitBoxSize(j))//被弾判定
 				{
-					PlayerBulletDestroy(j);
-					if (Enemy_HP[i] >= 1)
+					DelP_Bullet(j);
+					if (enemy[i].HP >= 1)
 					{
 						Score += 1;
-						Enemy_HP[i] -= 1;
+						enemy[i].HP -= 1;
 					}
 					break;
 				}
 			}
 
-			if(Enemy_HP[i] <= 0)//死亡時
+			if(enemy[i].HP <= 0)//死亡時
 			{		
 				if (i == Boss && BossStock == 0)
 				{
@@ -349,24 +340,40 @@ void EnemyAction(void)
 				else if (i == Boss && BossStock > 0) //次のターン
 				{
 					BossStock--;
-					Enemy_HP[i] = enemy[Enemy_Type[i]].hp;
-					BossMaxHp = enemy[Enemy_Type[i]].hp;
-					BossCurrentHp = enemy[Enemy_Type[i]].hp;
-					E_AttackMode[i] = 0;
-					E_ShotCoolTime[i] = 0;
+					enemy[i].HP = enemytype[enemy[i].Enemy_Type].hp;
+					BossMaxHp = enemytype[enemy[i].Enemy_Type].hp;
+					BossCurrentHp = enemytype[enemy[i].Enemy_Type].hp;
+					enemy[i].E_AttackMode = 0;
+					enemy[i].E_ShotCoolTime = 0;
 					break;
 				}
 				
 				Score += 10;
-				ItemSpawn(0,Enemy_X[i], Enemy_Y[i]);//アイテム生成
-				EnemyDestroy(i);
+				ItemSpawn(0, enemy[i].X, enemy[i].Y);//アイテム生成
+				enemy[i].EnemyDestroy();
 				PlaySE(SE_ExplosionA);
 			}
 		}
 	}
 }
-
-void EnemyClear(void)
+int GetBossCurrentHP(void)
 {
-	for (int i = 0; i < ENEMY_AMOUNT; i++) EnemyDestroy(i);
+	return enemy[Boss].HP;
 }
+int GetBossMaxHP(void)
+{
+	return BossMaxHp;
+}
+int GetCloseEnemy_X(void)
+{
+	return enemy[CloseEnemy].X;
+}
+int GetCloseEnemy_Y(void)
+{
+	return enemy[CloseEnemy].Y;
+}
+int GetCloseEnemyNum(void)
+{
+	return CloseEnemy;
+}
+
