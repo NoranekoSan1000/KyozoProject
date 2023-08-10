@@ -1,9 +1,9 @@
 #include "GameData.h"
-#include "Enemy.h"
 #include "Player_Bullet.h"
 #include "Enemy_Bullet.h"
 #include "Item.h"
 #include "Player.h"
+#include "Enemy.h"
 
 void StatusReset(void);
 
@@ -45,9 +45,11 @@ void ViewFadeWindow(void)
 
 void ObjectClear(void)
 {
+	EnemyController enemyController;
+	enemyController.EnemyClear();
+
 	PlayerBulletClear();
 	EnemyBulletClear();
-	EnemyClear();
 	ItemClear();
 }
 

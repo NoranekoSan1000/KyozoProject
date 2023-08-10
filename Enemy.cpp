@@ -3,6 +3,7 @@
 #include "Player_Bullet.h"
 #include "Enemy_Bullet.h"
 #include "Item.h"
+#include "Enemy.h"
 using namespace std;
 
 struct EnemyType
@@ -27,8 +28,6 @@ int BossStock = 0;//ターン数
 
 class Enemy
 {
-private:
-	
 public:
 	bool State;//敵が存在するか
 	bool Visible;//敵が画面内にいるか
@@ -230,17 +229,15 @@ public:
 
 	}
 };
-
 Enemy enemy[ENEMY_AMOUNT];
 
-void CheckDistance(int num)
+void EnemyController::CheckDistance(int num)
 {
 	if (enemy[num].Enemy_dist < CloseDist) CloseEnemy = num;
 	CloseDist = enemy[CloseEnemy].Enemy_dist;//最近を編集
 }
 
-//外部から呼び出し
-void EnemySpawn(int type, MoveList move, int x, int y)
+void EnemyController::EnemySpawn(int type, MoveList move, int x, int y)
 {
 	for (int i = 0; i < ITEM_AMOUNT; i++)
 	{
@@ -251,11 +248,11 @@ void EnemySpawn(int type, MoveList move, int x, int y)
 		}
 	}
 }
-void EnemyClear(void)
+void EnemyController::EnemyClear(void)
 {
 	for (int i = 0; i < ENEMY_AMOUNT; i++) enemy[i].EnemyDestroy();
 }
-void EnemyAction(void)
+void EnemyController::EnemyAction(void)
 {
 	for (int i = 0; i < ENEMY_AMOUNT; i++)
 	{
@@ -263,19 +260,19 @@ void EnemyAction(void)
 
 		//敵キャラ画像表示
 		if (!enemytype[enemy[i].Enemy_Type].boss) DrawRotaGraph(enemy[i].X, enemy[i].Y, 1.0, 0, Enemy_img[enemytype[enemy[i].Enemy_Type].enemyImg], TRUE);
-		else 
+		else
 		{
-			if(enemytype[enemy[i].Enemy_Type].enemyImg == 0) DrawRotaGraph(enemy[i].X, enemy[i].Y, 1.0, 0, orivia_img[0], TRUE);//1boss
+			if (enemytype[enemy[i].Enemy_Type].enemyImg == 0) DrawRotaGraph(enemy[i].X, enemy[i].Y, 1.0, 0, orivia_img[0], TRUE);//1boss
 			else if (enemytype[enemy[i].Enemy_Type].enemyImg == 0) DrawRotaGraph(enemy[i].X, enemy[i].Y, 1.0, 0, orivia_img[0], TRUE);//2boss
 		}
 
 		//DrawCircle(X[i], Y[i], HitBoxSize[i], GetColor(255, 0, 0), 1);
-		
+
 		enemy[i].EnemyMove();//移動
 
 		//画面内に一度でも入ればtrue
 		if (enemy[i].X <= FRAME_WIDTH && enemy[i].X >= 0 && enemy[i].Y <= FRAME_HEIGHT && enemy[i].Y >= 0) enemy[i].Visible = true;
-		
+
 		if (enemy[i].Visible)
 		{
 			if (enemy[i].E_ShotCoolTime >= 0) enemy[i].E_ShotCoolTime--;
@@ -284,7 +281,7 @@ void EnemyAction(void)
 			//敵とプレイヤーの距離
 			enemy[i].Enemy_dist = sqrt(pow((double)enemy[i].X - px, 2) + pow((double)enemy[i].Y - py, 2));
 			CheckDistance(i);
-			
+
 
 			//画面外で消滅
 			if (enemy[i].Visible && (enemy[i].Y > FRAME_HEIGHT || -20 > enemy[i].X || enemy[i].X > FRAME_WIDTH + 20))
@@ -294,7 +291,7 @@ void EnemyAction(void)
 			}
 
 			if (enemy[i].Enemy_dist <= enemy[i].HitBoxSize + Player_HitBoxSize)
-			{		
+			{
 				//被弾判定
 				if (DamagedCoolTime <= 0 && BombTime <= 0)
 				{
@@ -326,15 +323,15 @@ void EnemyAction(void)
 				}
 			}
 
-			if(enemy[i].HP <= 0)//死亡時
-			{		
+			if (enemy[i].HP <= 0)//死亡時
+			{
 				if (i == Boss && BossStock == 0)
 				{
 					BossActive = false;
 					BossStock = NULL;
 					BossMaxHp = NULL;
 					BossCurrentHp = NULL;
-					Boss = -1;		
+					Boss = -1;
 					PlaySE(SE_ExplosionB);
 				}
 				else if (i == Boss && BossStock > 0) //次のターン
@@ -347,7 +344,7 @@ void EnemyAction(void)
 					enemy[i].E_ShotCoolTime = 0;
 					break;
 				}
-				
+
 				Score += 10;
 				ItemSpawn(0, enemy[i].X, enemy[i].Y);//アイテム生成
 				enemy[i].EnemyDestroy();
@@ -356,24 +353,27 @@ void EnemyAction(void)
 		}
 	}
 }
-int GetBossCurrentHP(void)
-{
-	return enemy[Boss].HP;
-}
-int GetBossMaxHP(void)
-{
-	return BossMaxHp;
-}
-int GetCloseEnemy_X(void)
-{
-	return enemy[CloseEnemy].X;
-}
-int GetCloseEnemy_Y(void)
-{
-	return enemy[CloseEnemy].Y;
-}
-int GetCloseEnemyNum(void)
-{
-	return CloseEnemy;
-}
+int EnemyController::GetBossCurrentHP(void)
+	{
+		return enemy[Boss].HP;
+	}
+int EnemyController::GetBossMaxHP(void)
+	{
+		return BossMaxHp;
+	}
+int EnemyController::GetCloseEnemy_X(void)
+	{
+		return enemy[CloseEnemy].X;
+	}
+int EnemyController::GetCloseEnemy_Y(void)
+	{
+		return enemy[CloseEnemy].Y;
+	}
+int EnemyController::GetCloseEnemyNum(void)
+	{
+		return CloseEnemy;
+	}
+
+
+
 

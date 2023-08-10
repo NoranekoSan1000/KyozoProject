@@ -1,10 +1,10 @@
 ﻿#include "GameData.h"
 #include "Item.h"
 #include "Player.h"
-#include "Enemy.h"
 #include "Player_Bullet.h"
 #include "Enemy_Bullet.h"
 #include "Talk.h"
+#include "Enemy.h"
 
 int SelectTitleAction = 0;
 int SelectDifficulty = 0;
@@ -17,6 +17,7 @@ int NowStageMode = 0;
 
 bool BossBGM = false;
 
+EnemyController enemyController;
 void ViewStatus(void)
 {
 	//枠
@@ -100,7 +101,7 @@ void viewStageTitle(int i)
 void viewBossHpBar(void)
 {	
 	DrawBox(25, 20, 600, 36, GetColor(0, 0, 0), 1);
-	DrawBox(25, 16, ((555 * GetBossCurrentHP()) / GetBossMaxHP())+25, 32, GetColor(0, 255, 0), 1);//Enemy.cpp
+	DrawBox(25, 16, ((555 * enemyController.GetBossCurrentHP()) / enemyController.GetBossMaxHP())+25, 32, GetColor(0, 255, 0), 1);//Enemy.cpp
 
 	int Font;
 	Font = CreateFontToHandle("メイリオ", 20, 9, DX_FONTTYPE_ANTIALIASING_EDGE);
@@ -117,7 +118,7 @@ void GameProcess(void)
 
 	ItemMovement();
 
-	EnemyAction();
+	enemyController.EnemyAction();
 
 	EnemyBulletAction();//敵の弾の処理
 
@@ -156,7 +157,7 @@ void spawn(int enemy,int amt, int interval,MoveList move,int posX, int posY)
 	if (amount == 0) amount = amt;
 	else
 	{
-		EnemySpawn(enemy, move, posX, posY);
+		enemyController.EnemySpawn(enemy, move, posX, posY);
 		amount--;
 		if (amount == 0) NowStageMode++;
 		else StageModeUpdateTime = interval;

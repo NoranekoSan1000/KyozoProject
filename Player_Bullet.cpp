@@ -1,4 +1,5 @@
 #include "GameData.h"
+
 #include "Enemy.h"
 
 class PlayerBullet
@@ -28,8 +29,9 @@ public:
 
 	double AngleCalc(int px, int py)
 	{
+		EnemyController enemyController;
 		double tmp;
-		tmp = atan2((GetCloseEnemy_Y() + 40.0 - py), (GetCloseEnemy_X() - px)); //Enemy.cpp
+		tmp = atan2((enemyController.GetCloseEnemy_Y() + 40.0 - py), (enemyController.GetCloseEnemy_X() - px)); //Enemy.cpp
 		return tmp;
 	}
 
@@ -106,6 +108,7 @@ void PlayerBomb(int x, int y)
 
 void PlayerShot(int px,int py,int type)
 {
+	EnemyController enemyController;
 	double angle;
 	for (int i = 0; i < PLAYER_BULLET_AMOUNT; i++)
 	{
@@ -114,9 +117,9 @@ void PlayerShot(int px,int py,int type)
 			PlaySE(SE_PlayerShot); //Œø‰Ê‰¹
 			angle = p_bullet[i].AngleCalc(px,py);
 
-			if (GetCloseEnemyNum() == -1 && type == 5) type = 3;	//Enemy.cpp
-			if (GetCloseEnemyNum() == -1 && type == 6) type = 4;
-			if (GetCloseEnemyNum() == -1 && type == 7) type = 8;
+			if (enemyController.GetCloseEnemyNum() == -1 && type == 5) type = 3;	//Enemy.cpp
+			if (enemyController.GetCloseEnemyNum() == -1 && type == 6) type = 4;
+			if (enemyController.GetCloseEnemyNum() == -1 && type == 7) type = 8;
 			p_bullet[i].PlayerBulletGenerate(px, py, 4, type, angle);
 			break;
 		}
