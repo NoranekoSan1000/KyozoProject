@@ -62,7 +62,7 @@ void ViewBackGround(void)//背景ループ
 	intu += 1;
 	if (GameScene == Stage1_Scene)
 	{
-	DrawRotaGraph(300, 0 + intu, 1, 0, background_img[0], TRUE);//手前
+		DrawRotaGraph(300, 0 + intu, 1, 0, background_img[0], TRUE);//手前
 	}
 	else if (GameScene == Stage2_Scene)
 	{
