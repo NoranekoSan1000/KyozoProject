@@ -31,11 +31,11 @@
     <Filter Include="ヘッダー ファイル\Manager">
       <UniqueIdentifier>{1c158a81-33a6-45b4-8909-2541d2ac0a53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Main">
+      <UniqueIdentifier>{07655cf1-3975-441c-9d0c-c487ce3dec0b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>ソース ファイル\Player</Filter>
     </ClCompile>
@@ -65,6 +65,18 @@
     </ClCompile>
     <ClCompile Include="Talk.cpp">
       <Filter>ソース ファイル\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>ソース ファイル\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Title.cpp">
+      <Filter>ソース ファイル\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="MusicRoom.cpp">
+      <Filter>ソース ファイル\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Setting.cpp">
+      <Filter>ソース ファイル\Main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -100,6 +112,9 @@
     </ClInclude>
     <ClInclude Include="Talk.h">
       <Filter>ヘッダー ファイル\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Main.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

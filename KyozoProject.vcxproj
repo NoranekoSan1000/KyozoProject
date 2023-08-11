@@ -146,15 +146,19 @@
     <ClCompile Include="KeyManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Image.cpp" />
+    <ClCompile Include="MusicRoom.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Player_Bullet.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="Setting.cpp" />
     <ClCompile Include="Talk.cpp" />
+    <ClCompile Include="Title.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enemy_Bullet.h" />
     <ClInclude Include="GameData.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Main.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="KeyManager.h" />
