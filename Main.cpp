@@ -110,23 +110,18 @@ void GameProcess(void)
 {
 	ViewBackGround(); //Fade用黒背景 ViewBackGroundが挿入されていないシーンではフェードは反映されない
 
-	if (P_ShotCoolTime >= 0) P_ShotCoolTime--;
-	if (DamagedCoolTime >= 0) DamagedCoolTime--;
-
 	ItemMovement();
 
 	enemyController.EnemyAction();
 
 	EnemyBulletAction();//敵の弾の処理
 
-	PlayerUseBomb();
-	PlayerShotAction();
+	PlayerMovement();
+
 	PlayerBulletAction(); //レイヤーの弾の処理
 
-	LevelUp();
-	ViewPlayer();//プレイヤー表示
-
 	ViewFadeWindow();
+
 	ViewStatus();	
 
 	if(BossActive) viewBossHpBar();
@@ -196,7 +191,6 @@ void talk()
 		TalkScene++;
 	}
 }
-
 void StageUpdater(SceneManager Next)
 {
 	if (StageModeUpdateTime >= 0) StageModeUpdateTime--;
@@ -245,46 +239,14 @@ void StageUpdater(SceneManager Next)
 
 void Update(void) //毎フレーム処理
 {
-	if (KeyState[KEY_INPUT_P] == TRUE)//デバッグ用
-	{
-		NowStageMode++;
-	}
+	if (KeyState[KEY_INPUT_P] == TRUE) NowStageMode++;//デバッグ用
 
 	ChangeScene();//fadeを用いたシーンチェンジ　ChangeSceneActive -> trueで実行
 
 	if (GameScene == Title_Scene) Title();
 	if (GameScene == MusicRoom_Scene) MusicRoom();
 	if (GameScene == Setting_Scene) Setting();
-	if (GameScene == DifficultyLvSelect_Scene)
-	{
-		DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, GetColor(0, 0, 0), 1);
-		if (KeyState[KEY_INPUT_UP] == TRUE && SelectDifficulty > 0) SelectDifficulty--;
-		else if (KeyState[KEY_INPUT_UP] == TRUE && SelectDifficulty == 0) SelectDifficulty = 3;
-		if (KeyState[KEY_INPUT_DOWN] == TRUE && SelectDifficulty < 3) SelectDifficulty++;
-		else if (KeyState[KEY_INPUT_DOWN] == TRUE && SelectDifficulty == 3) SelectDifficulty = 0;
-
-		for (int i = 0; i < 4; i++)
-		{
-			if (SelectDifficulty == i) DrawRotaGraph(450, 140 + (i * 170), 1, 0, DifficultyLv_img[i], TRUE);//画像表示
-			else
-			{
-				SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
-				DrawRotaGraph(450, 140 + (i * 170), 1, 0, DifficultyLv_img[i], TRUE);//画像表示
-				SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
-			}
-
-		}
-		if (KeyState[KEY_INPUT_Z] == TRUE)
-		{
-			ChangeSceneActive = true;
-			nextScene = Stage1_Scene;//シーン遷移用。この２つはセット
-		}
-		if (KeyState[KEY_INPUT_X] == TRUE)
-		{
-			ChangeSceneActive = true;
-			nextScene = Title_Scene;//シーン遷移用。この２つはセット
-		}
-	}
+	if (GameScene == DifficultyLvSelect_Scene) DifficultyLvSelect();
 	if (GameScene == Stage1_Scene)
 	{
 		PlayBGM(BGM[1 + BossBGM]);
@@ -321,7 +283,6 @@ void Update(void) //毎フレーム処理
 		StageUpdater(Title_Scene);
 	}
 }
-
 
 // プログラムは WinMain から始まる
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)

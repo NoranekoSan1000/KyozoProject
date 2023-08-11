@@ -15,8 +15,4 @@ extern float BombTime;
 extern float DamagedCoolTime;
 extern float P_ShotCoolTime;
 
-void PlayerUseBomb(void);
-void PlayerShotAction(void);
-void LevelUp(void);
-void PlayerMove(void);
-void ViewPlayer(void);
+void PlayerMovement();

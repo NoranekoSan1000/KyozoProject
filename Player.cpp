@@ -51,6 +51,7 @@ void PlayerUseBomb(void)
 
 void PlayerShotAction(void)
 {
+
 	if (KeyState[KEY_INPUT_Z] > 0)
 	{
 		if (P_ShotCoolTime > 0) return;
@@ -123,11 +124,21 @@ void PlayerMove(void)
 
 void ViewPlayer(void)
 {
-	PlayerMove();//プレイヤーの移動
-
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
 	DrawCircle(px, py, DamagedCoolTime, GetColor(100, 100, 255)); // 被弾クールタイム中
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
 	DrawRotaGraph(px, py, 1.0, 0, player_img[animation], TRUE); //プレイヤー画像の描画
 	DrawCircle(px, py, Player_HitBoxSize, GetColor(255, 255, 80)); // プレイヤーの当たり判定表示
+}
+
+void PlayerMovement()
+{
+	if (P_ShotCoolTime >= 0) P_ShotCoolTime--;
+	if (DamagedCoolTime >= 0) DamagedCoolTime--;
+
+	PlayerUseBomb();
+	PlayerShotAction();
+	LevelUp();
+	PlayerMove();//プレイヤーの移動
+	ViewPlayer();
 }
