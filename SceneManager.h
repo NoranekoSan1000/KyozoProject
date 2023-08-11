@@ -13,9 +13,6 @@ enum SceneManager
 	Setting_Scene,
 };
 
-extern bool FadeIn;
-extern bool FadeOut;
-extern int fadeALPHA;
 extern bool ChangeSceneActive;
 extern SceneManager nextScene;
 extern SceneManager GameScene;
